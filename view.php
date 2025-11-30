@@ -14,20 +14,20 @@ $action = filter_var($_GET['action'] ?? '', FILTER_SANITIZE_STRING);
 $bo_table = filter_var($_GET['bo_table'] ?? '', FILTER_SANITIZE_STRING);
 
 if (!$id || $id <= 0) {
-  header('Location: index.php');
+  header('Location: list.php');
   exit;
 }
 
 $post = getPost($id);
 if (!$post['wr_id']) {
-  header('Location: index.php');
+  header('Location: list.php');
   exit;
 }
 
 // CSRF 토큰 검증 (삭제 작업 시)
 if ($action === 'delete' && $id) {
-  if (!isAdmin()) {
-    header('Location: index.php');
+  if (!isAdmin() && $_SESSION['user'] !== $post['wr_name']) {
+    header('Location: list.php');
     exit;
   }
   
@@ -36,7 +36,7 @@ if ($action === 'delete' && $id) {
   }
   
   deletePost($id);
-  header('Location: index.php');
+  header('Location: list.php');
   exit;
 }
 
@@ -58,6 +58,11 @@ $post = [
 // 파일 포함 공격 방지
 $board_skin = 'default'; // 기본 스킨 설정
 $skin_path = "skin/{$board_skin}/view.skin.php";
+
+// 파일 및 댓글 가져오기
+$files = getPostFiles($id);
+$comments = getComments($id);
+
 if (file_exists($skin_path)) {
   $board_config = ['bo_subject' => $lang['board']];
   include $skin_path;

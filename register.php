@@ -3,7 +3,7 @@ require_once 'config.php';
 
 // 이미 로그인한 사용자는 리디렉션
 if (isLoggedIn()) {
-  header('Location: index.php');
+  header('Location: list.php');
   exit;
 }
 

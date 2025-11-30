@@ -36,7 +36,7 @@ $page_title = $page_title ?? 'MicroBoard';
             <nav class="main-nav">
                 <ul class="nav-menu">
                     <?php if (isLoggedIn()): ?>
-                        <li><a href="../index.php"><?php echo $lang['board_list']; ?></a></li>
+                        <li><a href="../list.php"><?php echo $lang['board_list']; ?></a></li>
                         <li><a href="../user/mypage.php"><?php echo $lang['mypage']; ?></a></li>
                         <?php if (isAdmin()): ?>
                             <li><a href="../admin/index.php"><?php echo $lang['welcome']; ?></a></li>

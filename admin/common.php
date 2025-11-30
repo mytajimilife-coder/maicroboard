@@ -32,6 +32,7 @@ $admin_title = $lang['admin_page_title'];
   <a href="../user/mypage.php" class="btn"><?php echo $lang['mypage']; ?></a>
   <a href="users.php" class="btn"><?php echo $lang['user_management']; ?></a>
   <a href="board.php" class="btn"><?php echo $lang['board_management']; ?></a>
+  <a href="config.php" class="btn"><?php echo $lang['config_management']; ?></a>
   <a href="../logout.php" class="btn logout"><?php echo $lang['logout']; ?></a>
 </div>
 

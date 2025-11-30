@@ -125,5 +125,13 @@ return [
     'default_skin' => '기본',
     'modern_skin' => '모던',
     'use_comment_label' => '댓글 사용',
+    'config_management' => '환경설정',
+    'point_settings' => '포인트 설정',
+    'use_point' => '포인트 사용',
+    'write_point' => '글작성 포인트',
+    'point_enabled' => '사용함',
+    'point_disabled' => '사용안함',
+    'settings_saved' => '설정이 저장되었습니다.',
+    'point' => '포인트',
 ];
 ?>

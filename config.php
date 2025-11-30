@@ -56,19 +56,90 @@ function createTables() {
     CREATE TABLE IF NOT EXISTS `g5_member` (
       `mb_id` varchar(50) NOT NULL,
       `mb_password` varchar(255) NOT NULL,
+      `mb_datetime` datetime DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (`mb_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   ");
+  $db->exec("
+    CREATE TABLE IF NOT EXISTS `g5_board_file` (
+      `bf_no` int(11) NOT NULL AUTO_INCREMENT,
+      `wr_id` int(11) NOT NULL,
+      `bf_source` varchar(255) NOT NULL,
+      `bf_file` varchar(255) NOT NULL,
+      `bf_download` int(11) NOT NULL DEFAULT 0,
+      `bf_content` text,
+      `bf_filesize` int(11) NOT NULL DEFAULT 0,
+      `bf_datetime` datetime NOT NULL,
+      PRIMARY KEY (`bf_no`),
+      KEY `wr_id` (`wr_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  ");
+  $db->exec("
+    CREATE TABLE IF NOT EXISTS `g5_comment` (
+      `co_id` int(11) NOT NULL AUTO_INCREMENT,
+      `wr_id` int(11) NOT NULL,
+      `co_content` text NOT NULL,
+      `co_name` varchar(50) NOT NULL,
+      `co_datetime` datetime NOT NULL,
+      PRIMARY KEY (`co_id`),
+      KEY `wr_id` (`wr_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  ");
+
   // 기본 사용자 추가 (admin/admin)
   $stmt = $db->prepare("INSERT IGNORE INTO `g5_member` (`mb_id`, `mb_password`) VALUES (?, ?)");
   $stmt->execute(['admin', password_hash('admin', PASSWORD_DEFAULT)]);
 }
 
 // 게시물 함수들
-function loadPosts() {
+function loadPosts($page = 1, $limit = 15, $stx = '', $sfl = '') {
   $db = getDB();
-  $stmt = $db->query('SELECT * FROM g5_board ORDER BY wr_id DESC');
+  $offset = ($page - 1) * $limit;
+  $where = '1';
+  $params = [];
+
+  if ($stx) {
+    if ($sfl === 'wr_subject') {
+      $where .= ' AND wr_subject LIKE ?';
+    } elseif ($sfl === 'wr_content') {
+      $where .= ' AND wr_content LIKE ?';
+    } elseif ($sfl === 'wr_name') {
+      $where .= ' AND wr_name LIKE ?';
+    } else {
+      $where .= ' AND (wr_subject LIKE ? OR wr_content LIKE ?)';
+      $params[] = "%$stx%";
+    }
+    $params[] = "%$stx%";
+  }
+
+  $sql = "SELECT * FROM g5_board WHERE $where ORDER BY wr_id DESC LIMIT $limit OFFSET $offset";
+  $stmt = $db->prepare($sql);
+  $stmt->execute($params);
   return $stmt->fetchAll();
+}
+
+function getTotalPostCount($stx = '', $sfl = '') {
+  $db = getDB();
+  $where = '1';
+  $params = [];
+
+  if ($stx) {
+    if ($sfl === 'wr_subject') {
+      $where .= ' AND wr_subject LIKE ?';
+    } elseif ($sfl === 'wr_content') {
+      $where .= ' AND wr_content LIKE ?';
+    } elseif ($sfl === 'wr_name') {
+      $where .= ' AND wr_name LIKE ?';
+    } else {
+      $where .= ' AND (wr_subject LIKE ? OR wr_content LIKE ?)';
+      $params[] = "%$stx%";
+    }
+    $params[] = "%$stx%";
+  }
+
+  $stmt = $db->prepare("SELECT COUNT(*) FROM g5_board WHERE $where");
+  $stmt->execute($params);
+  return $stmt->fetchColumn();
 }
 
 function insertPost($data) {
@@ -101,8 +172,75 @@ function incrementView($id) {
 
 function deletePost($id) {
   $db = getDB();
+  // 댓글 삭제
+  $stmt = $db->prepare('DELETE FROM g5_comment WHERE wr_id = ?');
+  $stmt->execute([$id]);
+  
+  // 파일 삭제 (실제 파일도 삭제해야 함 - 별도 처리 필요)
+  $files = getPostFiles($id);
+  foreach ($files as $file) {
+      @unlink('data/file/' . $file['bf_file']);
+  }
+  $stmt = $db->prepare('DELETE FROM g5_board_file WHERE wr_id = ?');
+  $stmt->execute([$id]);
+
   $stmt = $db->prepare('DELETE FROM g5_board WHERE wr_id = ?');
   $stmt->execute([$id]);
+}
+
+// 파일 관련 함수
+function insertFile($wr_id, $file) {
+    $upload_dir = 'data/file/';
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0777, true);
+    }
+
+    $filename = basename($file['name']);
+    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+    $new_filename = uniqid() . '.' . $ext;
+    $dest_path = $upload_dir . $new_filename;
+
+    if (move_uploaded_file($file['tmp_name'], $dest_path)) {
+        $db = getDB();
+        $stmt = $db->prepare("INSERT INTO g5_board_file (wr_id, bf_source, bf_file, bf_filesize, bf_datetime) VALUES (?, ?, ?, ?, NOW())");
+        $stmt->execute([$wr_id, $filename, $new_filename, $file['size']]);
+        return true;
+    }
+    return false;
+}
+
+function getPostFiles($wr_id) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT * FROM g5_board_file WHERE wr_id = ?");
+    $stmt->execute([$wr_id]);
+    return $stmt->fetchAll();
+}
+
+function getFile($bf_no) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT * FROM g5_board_file WHERE bf_no = ?");
+    $stmt->execute([$bf_no]);
+    return $stmt->fetch();
+}
+
+// 댓글 관련 함수
+function getComments($wr_id) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT * FROM g5_comment WHERE wr_id = ? ORDER BY co_id ASC");
+    $stmt->execute([$wr_id]);
+    return $stmt->fetchAll();
+}
+
+function insertComment($wr_id, $name, $content) {
+    $db = getDB();
+    $stmt = $db->prepare("INSERT INTO g5_comment (wr_id, co_name, co_content, co_datetime) VALUES (?, ?, ?, NOW())");
+    $stmt->execute([$wr_id, $name, $content]);
+}
+
+function deleteComment($co_id) {
+    $db = getDB();
+    $stmt = $db->prepare("DELETE FROM g5_comment WHERE co_id = ?");
+    $stmt->execute([$co_id]);
 }
 
 // 로그인 체크
@@ -253,6 +391,61 @@ function requireAdmin() {
     header('Location: ../login.php');
     exit;
   }
+}
+
+// 설정 관련 함수
+function get_config() {
+    $db = getDB();
+    // g5_config 테이블이 존재하는지 확인
+    try {
+        $stmt = $db->query("SELECT 1 FROM g5_config LIMIT 1");
+    } catch (Exception $e) {
+        return ['cf_use_point' => 0, 'cf_write_point' => 0];
+    }
+
+    $stmt = $db->query("SELECT * FROM g5_config LIMIT 1");
+    $config = $stmt->fetch();
+    if (!$config) {
+        return ['cf_use_point' => 0, 'cf_write_point' => 0];
+    }
+    return $config;
+}
+
+function update_config($data) {
+    $db = getDB();
+    // 기존 설정이 있는지 확인
+    $stmt = $db->query("SELECT COUNT(*) FROM g5_config");
+    if ($stmt->fetchColumn() > 0) {
+        $sql = "UPDATE g5_config SET cf_use_point = ?, cf_write_point = ?";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$data['cf_use_point'], $data['cf_write_point']]);
+    } else {
+        $sql = "INSERT INTO g5_config (cf_use_point, cf_write_point) VALUES (?, ?)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$data['cf_use_point'], $data['cf_write_point']]);
+    }
+}
+
+// 포인트 관련 함수
+function insert_point($mb_id, $point, $content = '', $rel_table = '', $rel_id = '', $rel_action = '') {
+    if ($point == 0) return;
+
+    $db = getDB();
+    
+    // 포인트 사용 여부 확인
+    $config = get_config();
+    if (!$config['cf_use_point']) return;
+
+    // 포인트 내역 추가
+    $sql = "INSERT INTO g5_point (mb_id, po_datetime, po_content, po_point, po_rel_table, po_rel_id, po_rel_action)
+            VALUES (?, NOW(), ?, ?, ?, ?, ?)";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$mb_id, $content, $point, $rel_table, $rel_id, $rel_action]);
+
+    // 회원 포인트 업데이트
+    $sql = "UPDATE g5_member SET mb_point = mb_point + ? WHERE mb_id = ?";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$point, $mb_id]);
 }
 
 // 스킨 설정
