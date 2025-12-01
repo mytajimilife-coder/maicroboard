@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 
                 // 테이블 생성
                 $sql = "
-                    CREATE TABLE IF NOT EXISTS `g5_board` (
+                    CREATE TABLE IF NOT EXISTS `mb1_board` (
                         `wr_id` int(11) NOT NULL AUTO_INCREMENT,
                         `wr_subject` varchar(255) NOT NULL,
                         `wr_content` longtext NOT NULL,
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         PRIMARY KEY (`wr_id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                     
-                    CREATE TABLE IF NOT EXISTS `g5_board_config` (
+                    CREATE TABLE IF NOT EXISTS `mb1_board_config` (
                         `bo_table` varchar(100) NOT NULL,
                         `bo_subject` varchar(255) NOT NULL,
                         `bo_admin` varchar(50) NOT NULL DEFAULT 'admin',
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         PRIMARY KEY (`bo_table`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                     
-                    CREATE TABLE IF NOT EXISTS `g5_member` (
+                    CREATE TABLE IF NOT EXISTS `mb1_member` (
                         `mb_id` varchar(50) NOT NULL,
                         `mb_password` varchar(255) NOT NULL,
                         PRIMARY KEY (`mb_id`)
@@ -104,12 +104,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 
                 // 기본 관리자 사용자 생성
                 $password_hash = password_hash($admin_password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO g5_member (mb_id, mb_password) VALUES (?, ?)");
+                $stmt = $pdo->prepare("INSERT INTO mb1_member (mb_id, mb_password) VALUES (?, ?)");
                 $stmt->execute([$admin_username, $password_hash]);
                 
                 // 기본 게시판 생성
-                $stmt = $pdo->prepare("INSERT INTO g5_board_config (bo_table, bo_subject) VALUES ('free', '자유게시판')");
-                $stmt->execute();
+                $stmt = $pdo->prepare("INSERT INTO mb1_board_config (bo_table, bo_subject) VALUES ('free', ?)");
+                $stmt->execute([$lang['free_board']]);
                 
                 // config.php 파일 생성
                 $config_content = "<?php
@@ -157,7 +157,7 @@ function getDB() {
 function createTables() {
   \$db = getDB();
   \$db->exec(\"
-    CREATE TABLE IF NOT EXISTS \`g5_board\` (
+    CREATE TABLE IF NOT EXISTS \`mb1_board\` (
       \`wr_id\` int(11) NOT NULL AUTO_INCREMENT,
       \`wr_subject\` varchar(255) NOT NULL,
       \`wr_content\` longtext NOT NULL,
@@ -168,7 +168,7 @@ function createTables() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   \");
   \$db->exec(\"
-    CREATE TABLE IF NOT EXISTS \`g5_board_config\` (
+    CREATE TABLE IF NOT EXISTS \`mb1_board_config\` (
       \`bo_table\` varchar(100) NOT NULL,
       \`bo_subject\` varchar(255) NOT NULL,
       \`bo_admin\` varchar(50) NOT NULL DEFAULT 'admin',
@@ -179,7 +179,7 @@ function createTables() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   \");
   \$db->exec(\"
-    CREATE TABLE IF NOT EXISTS \`g5_member\` (
+    CREATE TABLE IF NOT EXISTS \`mb1_member\` (
       \`mb_id\` varchar(50) NOT NULL,
       \`mb_password\` varchar(255) NOT NULL,
       PRIMARY KEY (\`mb_id\`)
@@ -190,13 +190,13 @@ function createTables() {
 // 게시물 함수들
 function loadPosts() {
   \$db = getDB();
-  \$stmt = \$db->query('SELECT * FROM g5_board ORDER BY wr_id DESC');
+  \$stmt = \$db->query('SELECT * FROM mb1_board ORDER BY wr_id DESC');
   return \$stmt->fetchAll();
 }
 
 function insertPost(\$data) {
   \$db = getDB();
-  \$sql = 'INSERT INTO g5_board (wr_subject, wr_content, wr_name, wr_datetime, wr_hit) VALUES (?, ?, ?, NOW(), 0)';
+  \$sql = 'INSERT INTO mb1_board (wr_subject, wr_content, wr_name, wr_datetime, wr_hit) VALUES (?, ?, ?, NOW(), 0)';
   \$stmt = \$db->prepare(\$sql);
   \$stmt->execute([\$data['title'], \$data['content'], \$data['writer']]);
   return \$db->lastInsertId();
@@ -204,27 +204,27 @@ function insertPost(\$data) {
 
 function updatePost(\$id, \$data) {
   \$db = getDB();
-  \$sql = 'UPDATE g5_board SET wr_subject = ?, wr_content = ?, wr_name = ?, wr_datetime = NOW() WHERE wr_id = ?';
+  \$sql = 'UPDATE mb1_board SET wr_subject = ?, wr_content = ?, wr_name = ?, wr_datetime = NOW() WHERE wr_id = ?';
   \$stmt = \$db->prepare(\$sql);
   \$stmt->execute([\$data['title'], \$data['content'], \$data['writer'], \$id]);
 }
 
 function getPost(\$id) {
   \$db = getDB();
-  \$stmt = \$db->prepare('SELECT * FROM g5_board WHERE wr_id = ?');
+  \$stmt = \$db->prepare('SELECT * FROM mb1_board WHERE wr_id = ?');
   \$stmt->execute([\$id]);
   return \$stmt->fetch() ?: ['wr_subject' => '', 'wr_content' => '', 'wr_name' => '', 'wr_datetime' => '', 'wr_hit' => 0];
 }
 
 function incrementView(\$id) {
   \$db = getDB();
-  \$stmt = \$db->prepare('UPDATE g5_board SET wr_hit = wr_hit + 1 WHERE wr_id = ?');
+  \$stmt = \$db->prepare('UPDATE mb1_board SET wr_hit = wr_hit + 1 WHERE wr_id = ?');
   \$stmt->execute([\$id]);
 }
 
 function deletePost(\$id) {
   \$db = getDB();
-  \$stmt = \$db->prepare('DELETE FROM g5_board WHERE wr_id = ?');
+  \$stmt = \$db->prepare('DELETE FROM mb1_board WHERE wr_id = ?');
   \$stmt->execute([\$id]);
 }
 
@@ -262,7 +262,7 @@ function verifyUser(\$id, \$pass) {
   }
   
   \$db = getDB();
-  \$stmt = \$db->prepare('SELECT mb_password FROM g5_member WHERE mb_id = ?');
+  \$stmt = \$db->prepare('SELECT mb_password FROM mb1_member WHERE mb_id = ?');
   \$stmt->execute([\$id]);
   \$user = \$stmt->fetch();
   return \$user && password_verify(\$pass, \$user['mb_password']);
@@ -283,7 +283,7 @@ function registerUser(\$username, \$password) {
   
   \$db = getDB();
   try {
-    \$stmt = \$db->prepare(\"INSERT INTO g5_member (mb_id, mb_password) VALUES (?, ?)\");
+    \$stmt = \$db->prepare(\"INSERT INTO mb1_member (mb_id, mb_password) VALUES (?, ?)\");
     return \$stmt->execute([\$username, \$password_hash]);
   } catch (Exception \$e) {
     // 중복 키 등 오류 처리
@@ -300,7 +300,7 @@ function isUsernameExists(\$username) {
   }
   
   \$db = getDB();
-  \$stmt = \$db->prepare('SELECT COUNT(*) as count FROM g5_member WHERE mb_id = ?');
+  \$stmt = \$db->prepare('SELECT COUNT(*) as count FROM mb1_member WHERE mb_id = ?');
   \$stmt->execute([\$username]);
   \$result = \$stmt->fetch();
   
@@ -316,7 +316,7 @@ function getUserPosts(\$username) {
   }
   
   \$db = getDB();
-  \$stmt = \$db->prepare('SELECT * FROM g5_board WHERE wr_name = ? ORDER BY wr_id DESC');
+  \$stmt = \$db->prepare('SELECT * FROM mb1_board WHERE wr_name = ? ORDER BY wr_id DESC');
   \$stmt->execute([\$username]);
   
   return \$stmt->fetchAll();
@@ -338,7 +338,7 @@ function getUserComments(\$username) {
 // 모든 회원 조회 함수
 function getAllUsers() {
   \$db = getDB();
-  \$stmt = \$db->prepare('SELECT mb_id, mb_datetime FROM g5_member ORDER BY mb_datetime DESC, mb_id ASC');
+  \$stmt = \$db->prepare('SELECT mb_id, mb_datetime FROM mb1_member ORDER BY mb_datetime DESC, mb_id ASC');
   \$stmt->execute();
   
   return \$stmt->fetchAll();
@@ -356,11 +356,11 @@ function deleteUser(\$username) {
   
   try {
     // 회원이 작성한 게시물도 함께 삭제
-    \$stmt = \$db->prepare('DELETE FROM g5_board WHERE wr_name = ?');
+    \$stmt = \$db->prepare('DELETE FROM mb1_board WHERE wr_name = ?');
     \$stmt->execute([\$username]);
     
     // 회원 삭제
-    \$stmt = \$db->prepare('DELETE FROM g5_member WHERE mb_id = ?');
+    \$stmt = \$db->prepare('DELETE FROM mb1_member WHERE mb_id = ?');
     return \$stmt->execute([\$username]);
   } catch (Exception \$e) {
     return false;

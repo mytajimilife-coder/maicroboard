@@ -53,7 +53,7 @@ $page_title = $page_title ?? 'MicroBoard';
                         <?php 
                         // 포인트 표시
                         $db = getDB();
-                        $stmt = $db->prepare("SELECT mb_point FROM g5_member WHERE mb_id = ?");
+                        $stmt = $db->prepare("SELECT mb_point FROM mb1_member WHERE mb_id = ?");
                         $stmt->execute([$_SESSION['user']]);
                         $member = $stmt->fetch();
                         if ($member) {

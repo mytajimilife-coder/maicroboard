@@ -31,7 +31,7 @@ function getDB() {
 function createTables() {
   $db = getDB();
   $db->exec("
-    CREATE TABLE IF NOT EXISTS `g5_board` (
+    CREATE TABLE IF NOT EXISTS `mb1_board` (
       `wr_id` int(11) NOT NULL AUTO_INCREMENT,
       `wr_subject` varchar(255) NOT NULL,
       `wr_content` longtext NOT NULL,
@@ -42,7 +42,7 @@ function createTables() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   ");
   $db->exec("
-    CREATE TABLE IF NOT EXISTS `g5_board_config` (
+    CREATE TABLE IF NOT EXISTS `mb1_board_config` (
       `bo_table` varchar(100) NOT NULL,
       `bo_subject` varchar(255) NOT NULL,
       `bo_admin` varchar(50) NOT NULL DEFAULT 'admin',
@@ -53,7 +53,7 @@ function createTables() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   ");
   $db->exec("
-    CREATE TABLE IF NOT EXISTS `g5_member` (
+    CREATE TABLE IF NOT EXISTS `mb1_member` (
       `mb_id` varchar(50) NOT NULL,
       `mb_password` varchar(255) NOT NULL,
       `mb_datetime` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -61,7 +61,7 @@ function createTables() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   ");
   $db->exec("
-    CREATE TABLE IF NOT EXISTS `g5_board_file` (
+    CREATE TABLE IF NOT EXISTS `mb1_board_file` (
       `bf_no` int(11) NOT NULL AUTO_INCREMENT,
       `wr_id` int(11) NOT NULL,
       `bf_source` varchar(255) NOT NULL,
@@ -75,7 +75,7 @@ function createTables() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   ");
   $db->exec("
-    CREATE TABLE IF NOT EXISTS `g5_comment` (
+    CREATE TABLE IF NOT EXISTS `mb1_comment` (
       `co_id` int(11) NOT NULL AUTO_INCREMENT,
       `wr_id` int(11) NOT NULL,
       `co_content` text NOT NULL,
@@ -87,7 +87,7 @@ function createTables() {
   ");
 
   // 기본 사용자 추가 (admin/admin)
-  $stmt = $db->prepare("INSERT IGNORE INTO `g5_member` (`mb_id`, `mb_password`) VALUES (?, ?)");
+  $stmt = $db->prepare("INSERT IGNORE INTO `mb1_member` (`mb_id`, `mb_password`) VALUES (?, ?)");
   $stmt->execute(['admin', password_hash('admin', PASSWORD_DEFAULT)]);
 }
 
@@ -112,7 +112,7 @@ function loadPosts($page = 1, $limit = 15, $stx = '', $sfl = '') {
     $params[] = "%$stx%";
   }
 
-  $sql = "SELECT * FROM g5_board WHERE $where ORDER BY wr_id DESC LIMIT $limit OFFSET $offset";
+  $sql = "SELECT * FROM mb1_board WHERE $where ORDER BY wr_id DESC LIMIT $limit OFFSET $offset";
   $stmt = $db->prepare($sql);
   $stmt->execute($params);
   return $stmt->fetchAll();
@@ -137,14 +137,14 @@ function getTotalPostCount($stx = '', $sfl = '') {
     $params[] = "%$stx%";
   }
 
-  $stmt = $db->prepare("SELECT COUNT(*) FROM g5_board WHERE $where");
+  $stmt = $db->prepare("SELECT COUNT(*) FROM mb1_board WHERE $where");
   $stmt->execute($params);
   return $stmt->fetchColumn();
 }
 
 function insertPost($data) {
   $db = getDB();
-  $sql = 'INSERT INTO g5_board (wr_subject, wr_content, wr_name, wr_datetime, wr_hit) VALUES (?, ?, ?, NOW(), 0)';
+  $sql = 'INSERT INTO mb1_board (wr_subject, wr_content, wr_name, wr_datetime, wr_hit) VALUES (?, ?, ?, NOW(), 0)';
   $stmt = $db->prepare($sql);
   $stmt->execute([$data['title'], $data['content'], $data['writer']]);
   return $db->lastInsertId();
@@ -152,21 +152,21 @@ function insertPost($data) {
 
 function updatePost($id, $data) {
   $db = getDB();
-  $sql = 'UPDATE g5_board SET wr_subject = ?, wr_content = ?, wr_name = ?, wr_datetime = NOW() WHERE wr_id = ?';
+  $sql = 'UPDATE mb1_board SET wr_subject = ?, wr_content = ?, wr_name = ?, wr_datetime = NOW() WHERE wr_id = ?';
   $stmt = $db->prepare($sql);
   $stmt->execute([$data['title'], $data['content'], $data['writer'], $id]);
 }
 
 function getPost($id) {
   $db = getDB();
-  $stmt = $db->prepare('SELECT * FROM g5_board WHERE wr_id = ?');
+  $stmt = $db->prepare('SELECT * FROM mb1_board WHERE wr_id = ?');
   $stmt->execute([$id]);
   return $stmt->fetch() ?: ['wr_subject' => '', 'wr_content' => '', 'wr_name' => '', 'wr_datetime' => '', 'wr_hit' => 0];
 }
 
 function incrementView($id) {
   $db = getDB();
-  $stmt = $db->prepare('UPDATE g5_board SET wr_hit = wr_hit + 1 WHERE wr_id = ?');
+  $stmt = $db->prepare('UPDATE mb1_board SET wr_hit = wr_hit + 1 WHERE wr_id = ?');
   $stmt->execute([$id]);
 }
 
@@ -183,7 +183,7 @@ function deletePost($id) {
               $post['wr_name'], 
               $config['cf_write_point'] * -1, 
               '글삭제', 
-              'g5_board', 
+              'mb1_board', 
               $id, 
               'delete'
           );
@@ -191,7 +191,7 @@ function deletePost($id) {
   }
 
   // 댓글 삭제
-  $stmt = $db->prepare('DELETE FROM g5_comment WHERE wr_id = ?');
+  $stmt = $db->prepare('DELETE FROM mb1_comment WHERE wr_id = ?');
   $stmt->execute([$id]);
   
   // 파일 삭제 (실제 파일도 삭제해야 함 - 별도 처리 필요)
@@ -199,10 +199,10 @@ function deletePost($id) {
   foreach ($files as $file) {
       @unlink('data/file/' . $file['bf_file']);
   }
-  $stmt = $db->prepare('DELETE FROM g5_board_file WHERE wr_id = ?');
+  $stmt = $db->prepare('DELETE FROM mb1_board_file WHERE wr_id = ?');
   $stmt->execute([$id]);
 
-  $stmt = $db->prepare('DELETE FROM g5_board WHERE wr_id = ?');
+  $stmt = $db->prepare('DELETE FROM mb1_board WHERE wr_id = ?');
   $stmt->execute([$id]);
 }
 
@@ -220,7 +220,7 @@ function insertFile($wr_id, $file) {
 
     if (move_uploaded_file($file['tmp_name'], $dest_path)) {
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO g5_board_file (wr_id, bf_source, bf_file, bf_filesize, bf_datetime) VALUES (?, ?, ?, ?, NOW())");
+        $stmt = $db->prepare("INSERT INTO mb1_board_file (wr_id, bf_source, bf_file, bf_filesize, bf_datetime) VALUES (?, ?, ?, ?, NOW())");
         $stmt->execute([$wr_id, $filename, $new_filename, $file['size']]);
         return true;
     }
@@ -229,14 +229,14 @@ function insertFile($wr_id, $file) {
 
 function getPostFiles($wr_id) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT * FROM g5_board_file WHERE wr_id = ?");
+    $stmt = $db->prepare("SELECT * FROM mb1_board_file WHERE wr_id = ?");
     $stmt->execute([$wr_id]);
     return $stmt->fetchAll();
 }
 
 function getFile($bf_no) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT * FROM g5_board_file WHERE bf_no = ?");
+    $stmt = $db->prepare("SELECT * FROM mb1_board_file WHERE bf_no = ?");
     $stmt->execute([$bf_no]);
     return $stmt->fetch();
 }
@@ -244,20 +244,20 @@ function getFile($bf_no) {
 // 댓글 관련 함수
 function getComments($wr_id) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT * FROM g5_comment WHERE wr_id = ? ORDER BY co_id ASC");
+    $stmt = $db->prepare("SELECT * FROM mb1_comment WHERE wr_id = ? ORDER BY co_id ASC");
     $stmt->execute([$wr_id]);
     return $stmt->fetchAll();
 }
 
 function insertComment($wr_id, $name, $content) {
     $db = getDB();
-    $stmt = $db->prepare("INSERT INTO g5_comment (wr_id, co_name, co_content, co_datetime) VALUES (?, ?, ?, NOW())");
+    $stmt = $db->prepare("INSERT INTO mb1_comment (wr_id, co_name, co_content, co_datetime) VALUES (?, ?, ?, NOW())");
     $stmt->execute([$wr_id, $name, $content]);
 }
 
 function deleteComment($co_id) {
     $db = getDB();
-    $stmt = $db->prepare("DELETE FROM g5_comment WHERE co_id = ?");
+    $stmt = $db->prepare("DELETE FROM mb1_comment WHERE co_id = ?");
     $stmt->execute([$co_id]);
 }
 
@@ -295,7 +295,7 @@ function verifyUser($id, $pass) {
   }
   
   $db = getDB();
-  $stmt = $db->prepare('SELECT mb_password FROM g5_member WHERE mb_id = ?');
+  $stmt = $db->prepare('SELECT mb_password FROM mb1_member WHERE mb_id = ?');
   $stmt->execute([$id]);
   $user = $stmt->fetch();
   return $user && password_verify($pass, $user['mb_password']);
@@ -316,7 +316,7 @@ function registerUser($username, $password) {
   
   $db = getDB();
   try {
-    $stmt = $db->prepare("INSERT INTO g5_member (mb_id, mb_password) VALUES (?, ?)");
+    $stmt = $db->prepare("INSERT INTO mb1_member (mb_id, mb_password) VALUES (?, ?)");
     return $stmt->execute([$username, $password_hash]);
   } catch (Exception $e) {
     // 중복 키 등 오류 처리
@@ -333,7 +333,7 @@ function isUsernameExists($username) {
   }
   
   $db = getDB();
-  $stmt = $db->prepare('SELECT COUNT(*) as count FROM g5_member WHERE mb_id = ?');
+  $stmt = $db->prepare('SELECT COUNT(*) as count FROM mb1_member WHERE mb_id = ?');
   $stmt->execute([$username]);
   $result = $stmt->fetch();
   
@@ -349,7 +349,7 @@ function getUserPosts($username) {
   }
   
   $db = getDB();
-  $stmt = $db->prepare('SELECT * FROM g5_board WHERE wr_name = ? ORDER BY wr_id DESC');
+  $stmt = $db->prepare('SELECT * FROM mb1_board WHERE wr_name = ? ORDER BY wr_id DESC');
   $stmt->execute([$username]);
   
   return $stmt->fetchAll();
@@ -371,7 +371,7 @@ function getUserComments($username) {
 // 모든 회원 조회 함수
 function getAllUsers() {
   $db = getDB();
-  $stmt = $db->prepare('SELECT mb_id, mb_datetime FROM g5_member ORDER BY mb_datetime DESC, mb_id ASC');
+  $stmt = $db->prepare('SELECT mb_id, mb_datetime FROM mb1_member ORDER BY mb_datetime DESC, mb_id ASC');
   $stmt->execute();
   
   return $stmt->fetchAll();
@@ -389,11 +389,11 @@ function deleteUser($username) {
   
   try {
     // 회원이 작성한 게시물도 함께 삭제
-    $stmt = $db->prepare('DELETE FROM g5_board WHERE wr_name = ?');
+    $stmt = $db->prepare('DELETE FROM mb1_board WHERE wr_name = ?');
     $stmt->execute([$username]);
     
     // 회원 삭제
-    $stmt = $db->prepare('DELETE FROM g5_member WHERE mb_id = ?');
+    $stmt = $db->prepare('DELETE FROM mb1_member WHERE mb_id = ?');
     return $stmt->execute([$username]);
   } catch (Exception $e) {
     return false;
@@ -414,14 +414,14 @@ function requireAdmin() {
 // 설정 관련 함수
 function get_config() {
     $db = getDB();
-    // g5_config 테이블이 존재하는지 확인
+    // mb1_config 테이블이 존재하는지 확인
     try {
-        $stmt = $db->query("SELECT 1 FROM g5_config LIMIT 1");
+        $stmt = $db->query("SELECT 1 FROM mb1_config LIMIT 1");
     } catch (Exception $e) {
         return ['cf_use_point' => 0, 'cf_write_point' => 0];
     }
 
-    $stmt = $db->query("SELECT * FROM g5_config LIMIT 1");
+    $stmt = $db->query("SELECT * FROM mb1_config LIMIT 1");
     $config = $stmt->fetch();
     if (!$config) {
         return ['cf_use_point' => 0, 'cf_write_point' => 0];
@@ -432,13 +432,13 @@ function get_config() {
 function update_config($data) {
     $db = getDB();
     // 기존 설정이 있는지 확인
-    $stmt = $db->query("SELECT COUNT(*) FROM g5_config");
+    $stmt = $db->query("SELECT COUNT(*) FROM mb1_config");
     if ($stmt->fetchColumn() > 0) {
-        $sql = "UPDATE g5_config SET cf_use_point = ?, cf_write_point = ?";
+        $sql = "UPDATE mb1_config SET cf_use_point = ?, cf_write_point = ?";
         $stmt = $db->prepare($sql);
         $stmt->execute([$data['cf_use_point'], $data['cf_write_point']]);
     } else {
-        $sql = "INSERT INTO g5_config (cf_use_point, cf_write_point) VALUES (?, ?)";
+        $sql = "INSERT INTO mb1_config (cf_use_point, cf_write_point) VALUES (?, ?)";
         $stmt = $db->prepare($sql);
         $stmt->execute([$data['cf_use_point'], $data['cf_write_point']]);
     }
@@ -455,13 +455,13 @@ function insert_point($mb_id, $point, $content = '', $rel_table = '', $rel_id = 
     if (!$config['cf_use_point']) return;
 
     // 포인트 내역 추가
-    $sql = "INSERT INTO g5_point (mb_id, po_datetime, po_content, po_point, po_rel_table, po_rel_id, po_rel_action)
+    $sql = "INSERT INTO mb1_point (mb_id, po_datetime, po_content, po_point, po_rel_table, po_rel_id, po_rel_action)
             VALUES (?, NOW(), ?, ?, ?, ?, ?)";
     $stmt = $db->prepare($sql);
     $stmt->execute([$mb_id, $content, $point, $rel_table, $rel_id, $rel_action]);
 
     // 회원 포인트 업데이트
-    $sql = "UPDATE g5_member SET mb_point = mb_point + ? WHERE mb_id = ?";
+    $sql = "UPDATE mb1_member SET mb_point = mb_point + ? WHERE mb_id = ?";
     $stmt = $db->prepare($sql);
     $stmt->execute([$point, $mb_id]);
 }

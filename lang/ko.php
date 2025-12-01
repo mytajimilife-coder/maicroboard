@@ -133,5 +133,14 @@ return [
     'point_disabled' => '사용안함',
     'settings_saved' => '설정이 저장되었습니다.',
     'point' => '포인트',
+    'admin_only_exec' => '관리자만 실행할 수 있습니다.',
+    'db_update_complete' => '모든 데이터베이스 업데이트가 완료되었습니다.',
+    'column_added' => '%s 테이블에 %s 컬럼 추가 완료',
+    'column_exists' => '%s 테이블에 %s 컬럼이 이미 존재합니다.',
+    'table_created' => '%s 테이블 생성 완료',
+    'data_added' => '기본 설정 데이터 추가 완료',
+    'error_occurred' => '오류 발생',
+    'point_description' => '글 작성 시 지급할 포인트 (음수 입력 시 차감)',
+    'free_board' => '자유게시판',
 ];
 ?>

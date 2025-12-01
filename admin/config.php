@@ -51,7 +51,7 @@ $config = get_config();
         <input type="number" name="cf_write_point" value="<?php echo $config['cf_write_point']; ?>" 
                style="width: 200px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
         <small style="display: block; margin-top: 5px; color: #666;">
-            글 작성 시 지급할 포인트 (음수 입력 시 차감)
+            <?php echo $lang['point_description']; ?>
         </small>
     </div>
     

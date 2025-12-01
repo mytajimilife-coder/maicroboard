@@ -30,7 +30,7 @@ if ($_POST) {
           $_SESSION['user'], 
           $config['cf_write_point'], 
           '글작성', 
-          'g5_board', 
+          'mb1_board', 
           $wr_id, 
           'write'
         );

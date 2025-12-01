@@ -22,7 +22,7 @@ $posts = loadPosts($page, $limit, $stx, $sfl);
 $board_skin = 'default'; // 기본 스킨
 if (!empty($_GET['bo_table'])) {
   $db = getDB();
-  $stmt = $db->prepare('SELECT bo_skin FROM g5_board_config WHERE bo_table = ?');
+  $stmt = $db->prepare('SELECT bo_skin FROM mb1_board_config WHERE bo_table = ?');
   $stmt->execute([$_GET['bo_table']]);
   $config = $stmt->fetch();
   $board_skin = $config['bo_skin'] ?? 'default';
