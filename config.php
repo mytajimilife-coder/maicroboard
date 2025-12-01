@@ -172,6 +172,24 @@ function incrementView($id) {
 
 function deletePost($id) {
   $db = getDB();
+  
+  // 포인트 차감 로직 (게시글 작성자 확인 필요)
+  $post = getPost($id);
+  if ($post['wr_name']) {
+      $config = get_config();
+      if ($config['cf_use_point'] && $config['cf_write_point'] != 0) {
+          // 이미 지급된 포인트만큼 차감 (음수로 지급)
+          insert_point(
+              $post['wr_name'], 
+              $config['cf_write_point'] * -1, 
+              '글삭제', 
+              'g5_board', 
+              $id, 
+              'delete'
+          );
+      }
+  }
+
   // 댓글 삭제
   $stmt = $db->prepare('DELETE FROM g5_comment WHERE wr_id = ?');
   $stmt->execute([$id]);

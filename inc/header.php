@@ -48,7 +48,19 @@ $page_title = $page_title ?? 'MicroBoard';
             
             <div class="user-info">
                 <?php if (isLoggedIn()): ?>
-                    <span class="username"><?php echo htmlspecialchars($_SESSION['user']); ?><?php echo $lang['user_suffix']; ?></span>
+                    <span class="username">
+                        <?php echo htmlspecialchars($_SESSION['user']); ?><?php echo $lang['user_suffix']; ?>
+                        <?php 
+                        // 포인트 표시
+                        $db = getDB();
+                        $stmt = $db->prepare("SELECT mb_point FROM g5_member WHERE mb_id = ?");
+                        $stmt->execute([$_SESSION['user']]);
+                        $member = $stmt->fetch();
+                        if ($member) {
+                            echo " <span style='font-size: 0.9em; color: #ffc107;'>(" . number_format($member['mb_point']) . " P)</span>";
+                        }
+                        ?>
+                    </span>
                     <a href="../logout.php" class="btn secondary"><?php echo $lang['logout']; ?></a>
                 <?php else: ?>
                     <a href="../login.php" class="btn"><?php echo $lang['login']; ?></a>
