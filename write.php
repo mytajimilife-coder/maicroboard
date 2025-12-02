@@ -19,10 +19,41 @@ if ($_POST) {
     ];
     if ($id !== null) {
       updatePost($id, $data);
+      $wr_id = $id;
     } else {
-      insertPost($data);
+      $wr_id = insertPost($data);
+      
+      // 포인트 지급
+      $config = get_config();
+      if ($config['cf_use_point'] && $config['cf_write_point'] != 0) {
+        insert_point(
+          $_SESSION['user'], 
+          $config['cf_write_point'], 
+          '글작성', 
+          'mb1_board', 
+          $wr_id, 
+          'write'
+        );
+      }
     }
-    header('Location: index.php');
+
+    // 파일 업로드 처리
+    if (!empty($_FILES['bf_file']['name'][0])) {
+        $files = $_FILES['bf_file'];
+        for ($i = 0; $i < count($files['name']); $i++) {
+            if ($files['error'][$i] === UPLOAD_ERR_OK) {
+                $file = [
+                    'name' => $files['name'][$i],
+                    'type' => $files['type'][$i],
+                    'tmp_name' => $files['tmp_name'][$i],
+                    'error' => $files['error'][$i],
+                    'size' => $files['size'][$i]
+                ];
+                insertFile($wr_id, $file);
+            }
+        }
+    }
+    header('Location: list.php');
     exit;
   }
 }

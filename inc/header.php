@@ -21,18 +21,22 @@ $page_title = $page_title ?? 'MicroBoard';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($page_title); ?> - MicroBoard</title>
     <link rel="stylesheet" href="../skin/inc/header.css">
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
 </head>
 <body>
     <header class="header">
         <div class="header-container">
             <div class="logo">
-                <a href="../index.php">MicroBoard</a>
+                <a href="../index.php" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: white;">
+                    <img src="../img/logo.svg" alt="MicroBoard Logo" style="height: 32px; width: 32px;">
+                    MicroBoard
+                </a>
             </div>
             
             <nav class="main-nav">
                 <ul class="nav-menu">
                     <?php if (isLoggedIn()): ?>
-                        <li><a href="../index.php"><?php echo $lang['board_list']; ?></a></li>
+                        <li><a href="../list.php"><?php echo $lang['board_list']; ?></a></li>
                         <li><a href="../user/mypage.php"><?php echo $lang['mypage']; ?></a></li>
                         <?php if (isAdmin()): ?>
                             <li><a href="../admin/index.php"><?php echo $lang['welcome']; ?></a></li>
@@ -44,7 +48,19 @@ $page_title = $page_title ?? 'MicroBoard';
             
             <div class="user-info">
                 <?php if (isLoggedIn()): ?>
-                    <span class="username"><?php echo htmlspecialchars($_SESSION['user']); ?><?php echo $lang['user_suffix']; ?></span>
+                    <span class="username">
+                        <?php echo htmlspecialchars($_SESSION['user']); ?><?php echo $lang['user_suffix']; ?>
+                        <?php 
+                        // 포인트 표시
+                        $db = getDB();
+                        $stmt = $db->prepare("SELECT mb_point FROM mb1_member WHERE mb_id = ?");
+                        $stmt->execute([$_SESSION['user']]);
+                        $member = $stmt->fetch();
+                        if ($member) {
+                            echo " <span style='font-size: 0.9em; color: #ffc107;'>(" . number_format($member['mb_point']) . " P)</span>";
+                        }
+                        ?>
+                    </span>
                     <a href="../logout.php" class="btn secondary"><?php echo $lang['logout']; ?></a>
                 <?php else: ?>
                     <a href="../login.php" class="btn"><?php echo $lang['login']; ?></a>

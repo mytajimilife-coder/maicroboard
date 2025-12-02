@@ -2,7 +2,7 @@
 require_once 'config.php';
 
 if (isLoggedIn()) {
-  header('Location: index.php');
+  header('Location: list.php');
   exit;
 }
 
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['login_time'] = time();
         // CSRF 토큰 재생성
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        header('Location: index.php');
+        header('Location: list.php');
         exit;
       } else {
         $error = $lang['login_failed'];

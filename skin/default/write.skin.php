@@ -1,24 +1,24 @@
-<h1><?php echo $lang['create_new_post']; ?></h1>
-<form method="post">
-  <div>
-    <label><?php echo $lang['post_subject']; ?>:</label>
-    <input type="text" name="title" value="<?php echo htmlspecialchars($post['wr_subject'] ?? ''); ?>" required>
-  </div>
-  <div>
-    <label><?php echo $lang['content']; ?>:</label>
-    <div id="summernote"><?php echo htmlspecialchars($post['wr_content'] ?? ''); ?></div>
-    <textarea name="content" style="display:none;"></textarea>
-  </div>
-  <button type="submit" class="btn"><?php echo $lang['save']; ?></button>
-</form>
-<script>
-$(document).ready(function() {
-  $('#summernote').summernote({
-    height: 300,
-    // Summernote 옵션 ...
-  });
-  $('form').on('submit', function() {
-    $('textarea[name="content"]').val($('#summernote').summernote('code'));
-  });
-});
-</script>
+<div class="write-form">
+    <h2><?php echo $page_title; ?></h2>
+    <form action="write.php<?php echo $id ? '?id=' . $id : ''; ?>" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title"><?php echo $lang['subject']; ?></label>
+            <input type="text" id="title" name="title" value="<?php echo $post['wr_subject']; ?>" required>
+        </div>
+        <div class="form-group">
+            <label for="content"><?php echo $lang['content']; ?></label>
+            <textarea id="summernote" name="content"><?php echo $post['wr_content']; ?></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>파일 첨부</label>
+            <input type="file" name="bf_file[]" multiple>
+            <p class="help-block" style="font-size: 0.9em; color: #888; margin-top: 5px;">여러 파일을 선택할 수 있습니다.</p>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn"><?php echo $lang['save']; ?></button>
+            <a href="list.php" class="btn btn-secondary"><?php echo $lang['cancel']; ?></a>
+        </div>
+    </form>
+</div>

@@ -25,7 +25,7 @@ if ($_POST) {
     'bo_skin' => $_POST['bo_skin'] ?? 'default'
   ];
   
-  $sql = "REPLACE INTO g5_board_config SET 
+  $sql = "REPLACE INTO mb1_board_config SET 
     bo_table = :bo_table, 
     bo_subject = :bo_subject, 
     bo_admin = :bo_admin, 
@@ -41,7 +41,7 @@ if ($_POST) {
 
 // 게시판 삭제
 if ($action === 'delete' && $bo_table) {
-  $stmt = $db->prepare("DELETE FROM g5_board_config WHERE bo_table = ?");
+  $stmt = $db->prepare("DELETE FROM mb1_board_config WHERE bo_table = ?");
   $stmt->execute([$bo_table]);
   header('Location: board.php');
   exit;
@@ -49,12 +49,12 @@ if ($action === 'delete' && $bo_table) {
 
 $board = [];
 if ($bo_table) {
-  $stmt = $db->prepare("SELECT * FROM g5_board_config WHERE bo_table = ?");
+  $stmt = $db->prepare("SELECT * FROM mb1_board_config WHERE bo_table = ?");
   $stmt->execute([$bo_table]);
   $board = $stmt->fetch();
 }
 
-$boards = $db->query("SELECT * FROM g5_board_config ORDER BY bo_table")->fetchAll();
+$boards = $db->query("SELECT * FROM mb1_board_config ORDER BY bo_table")->fetchAll();
 ?>
 <h2><?php echo $lang['board_manager']; ?></h2>
 <a href="board.php?action=create" class="btn"><?php echo $lang['create_board']; ?></a>
