@@ -10,12 +10,12 @@
     <form action="list.php" method="get">
         <input type="hidden" name="bo_table" value="<?php echo htmlspecialchars($bo_table); ?>">
         <select name="sfl" style="padding: 5px;">
-            <option value="wr_subject" <?php echo $sfl === 'wr_subject' ? 'selected' : ''; ?>>제목</option>
-            <option value="wr_content" <?php echo $sfl === 'wr_content' ? 'selected' : ''; ?>>내용</option>
-            <option value="wr_name" <?php echo $sfl === 'wr_name' ? 'selected' : ''; ?>>작성자</option>
+            <option value="wr_subject" <?php echo $sfl === 'wr_subject' ? 'selected' : ''; ?>><?php echo $lang['subject']; ?></option>
+            <option value="wr_content" <?php echo $sfl === 'wr_content' ? 'selected' : ''; ?>><?php echo $lang['content']; ?></option>
+            <option value="wr_name" <?php echo $sfl === 'wr_name' ? 'selected' : ''; ?>><?php echo $lang['writer']; ?></option>
         </select>
-        <input type="text" name="stx" value="<?php echo htmlspecialchars($stx); ?>" placeholder="검색어" style="padding: 5px;">
-        <button type="submit" class="btn btn-sm">검색</button>
+        <input type="text" name="stx" value="<?php echo htmlspecialchars($stx); ?>" placeholder="<?php echo $lang['search_term']; ?>" style="padding: 5px;">
+        <button type="submit" class="btn btn-sm"><?php echo $lang['search']; ?></button>
     </form>
 </div>
 

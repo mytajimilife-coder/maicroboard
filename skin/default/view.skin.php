@@ -4,7 +4,7 @@
         <div class="post-meta">
             <span class="writer"><?php echo $post['wr_name']; ?></span>
             <span class="date"><?php echo $post['wr_datetime']; ?></span>
-            <span class="hit">조회 <?php echo $post['wr_hit']; ?></span>
+            <span class="hit"><?php echo $lang['hit']; ?> <?php echo $post['wr_hit']; ?></span>
         </div>
     </div>
 
@@ -15,7 +15,7 @@
     <!-- 첨부파일 -->
     <?php if (!empty($files)): ?>
     <div class="post-files" style="margin-top: 30px; padding: 15px; background: #f9f9f9; border-radius: 5px;">
-        <h3 style="font-size: 1.1em; margin-top: 0; margin-bottom: 10px;">첨부파일</h3>
+        <h3 style="font-size: 1.1em; margin-top: 0; margin-bottom: 10px;"><?php echo $lang['attachments']; ?></h3>
         <ul style="list-style: none; padding: 0;">
             <?php foreach ($files as $file): ?>
             <li style="margin-bottom: 5px;">
@@ -40,7 +40,7 @@
 
     <!-- 댓글 -->
     <div class="comments-section" style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
-        <h3>댓글</h3>
+        <h3><?php echo $lang['comments']; ?></h3>
         
         <!-- 댓글 목록 -->
         <div class="comment-list">
@@ -54,7 +54,7 @@
                         <input type="hidden" name="action" value="delete">
                         <input type="hidden" name="wr_id" value="<?php echo $post['wr_id']; ?>">
                         <input type="hidden" name="co_id" value="<?php echo $comment['co_id']; ?>">
-                        <button type="submit" style="border: none; background: none; color: #e74c3c; cursor: pointer; padding: 0;" onclick="return confirm('삭제하시겠습니까?');">[삭제]</button>
+                        <button type="submit" style="border: none; background: none; color: #e74c3c; cursor: pointer; padding: 0;" onclick="return confirm('<?php echo $lang['delete_confirm']; ?>');">[<?php echo $lang['delete']; ?>]</button>
                     </form>
                     <?php endif; ?>
                 </div>
@@ -71,10 +71,10 @@
                 <input type="hidden" name="action" value="insert">
                 <input type="hidden" name="wr_id" value="<?php echo $post['wr_id']; ?>">
                 <div class="form-group">
-                    <textarea name="co_content" required placeholder="댓글을 입력하세요" style="width: 100%; height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                    <textarea name="co_content" required placeholder="<?php echo $lang['comment_placeholder']; ?>" style="width: 100%; height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
                 </div>
                 <div style="text-align: right; margin-top: 10px;">
-                    <button type="submit" class="btn btn-sm">댓글 등록</button>
+                    <button type="submit" class="btn btn-sm"><?php echo $lang['submit_comment']; ?></button>
                 </div>
             </form>
         </div>

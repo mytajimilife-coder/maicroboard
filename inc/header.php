@@ -47,6 +47,18 @@ $page_title = $page_title ?? 'MicroBoard';
             </nav>
             
             <div class="user-info">
+                <div class="lang-selector" style="margin-right: 15px; display: flex; gap: 8px; align-items: center;">
+                    <?php 
+                    $langs = ['ko' => '🇰🇷', 'en' => '🇺🇸', 'ja' => '🇯🇵', 'zh' => '🇨🇳'];
+                    foreach ($langs as $code => $flag) {
+                        $params = $_GET;
+                        $params['lang'] = $code;
+                        $url = '?' . http_build_query($params);
+                        $opacity = ($lang_code === $code) ? '1' : '0.4';
+                        echo "<a href=\"{$url}\" style=\"text-decoration: none; opacity: {$opacity}; transition: opacity 0.2s; font-size: 1.2em; filter: grayscale(" . ($lang_code === $code ? '0' : '1') . ");\">{$flag}</a>";
+                    }
+                    ?>
+                </div>
                 <?php if (isLoggedIn()): ?>
                     <span class="username">
                         <?php echo htmlspecialchars($_SESSION['user']); ?><?php echo $lang['user_suffix']; ?>

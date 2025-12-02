@@ -125,6 +125,19 @@ if (empty($_SESSION['csrf_token'])) {
   </style>
 </head>
 <body class="register-page">
+  <div style="position: absolute; top: 20px; right: 20px;">
+    <?php 
+    $lang_code = $_SESSION['lang'] ?? 'ko';
+    $langs = ['ko' => '🇰🇷', 'en' => '🇺🇸', 'ja' => '🇯🇵', 'zh' => '🇨🇳'];
+    foreach ($langs as $code => $flag) {
+        $params = $_GET;
+        $params['lang'] = $code;
+        $url = '?' . http_build_query($params);
+        $opacity = ($lang_code === $code) ? '1' : '0.4';
+        echo "<a href=\"{$url}\" style=\"text-decoration: none; opacity: {$opacity}; margin-left: 10px; font-size: 1.5em; filter: grayscale(" . ($lang_code === $code ? '0' : '1') . ");\">{$flag}</a>";
+    }
+    ?>
+  </div>
   <h2><?php echo $lang['register']; ?></h2>
   
   <?php if ($error): ?>

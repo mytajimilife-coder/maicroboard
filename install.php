@@ -116,7 +116,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 session_start();
 
 // 선택된 언어 설정
-if (!isset(\$_SESSION['lang'])) {
+if (isset(\$_GET['lang']) && in_array(\$_GET['lang'], ['ko', 'en', 'ja', 'zh'])) {
+    \$_SESSION['lang'] = \$_GET['lang'];
+} elseif (!isset(\$_SESSION['lang'])) {
     \$_SESSION['lang'] = '{$language}';
 }
 

@@ -10,6 +10,22 @@ define('DB_NAME', 'gnuboard5');
 // 버전 정보
 define('MICROBOARD_VERSION', '1.0.0');
 
+// 선택된 언어 설정
+if (isset($_GET['lang']) && in_array($_GET['lang'], ['ko', 'en', 'ja', 'zh'])) {
+    $_SESSION['lang'] = $_GET['lang'];
+} elseif (!isset($_SESSION['lang'])) {
+    $_SESSION['lang'] = 'ko'; // 기본값 한국어
+}
+
+// 언어 파일 로드
+$lang_path = __DIR__ . '/lang/';
+$lang_code = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ko';
+if (file_exists($lang_path . $lang_code . '.php')) {
+    $lang = require $lang_path . $lang_code . '.php';
+} else {
+    $lang = require $lang_path . 'ja.php'; // Fallback
+}
+
 // DB 연결
 function getDB() {
   static $pdo = null;
@@ -21,7 +37,8 @@ function getDB() {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
       ]);
     } catch (PDOException $e) {
-      die('DB 연결 실패: ' . $e->getMessage());
+      global $lang;
+      die($lang['db_conn_failed'] . ': ' . $e->getMessage());
     }
   }
   return $pdo;

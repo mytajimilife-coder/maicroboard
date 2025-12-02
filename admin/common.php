@@ -45,7 +45,7 @@ $admin_title = $lang['admin_page_title'];
       <option value="ja" <?php echo $lang_code == 'ja' ? 'selected' : ''; ?>>日本語</option>
       <option value="zh" <?php echo $lang_code == 'zh' ? 'selected' : ''; ?>>中文</option>
     </select>
-    <noscript><input type="submit" value="적용"></noscript>
+    <noscript><input type="submit" value="<?php echo $lang['apply']; ?>"></noscript>
   </form>
 </div>
 

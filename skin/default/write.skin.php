@@ -11,9 +11,9 @@
         </div>
         
         <div class="form-group">
-            <label>파일 첨부</label>
+            <label><?php echo $lang['file_upload']; ?></label>
             <input type="file" name="bf_file[]" multiple>
-            <p class="help-block" style="font-size: 0.9em; color: #888; margin-top: 5px;">여러 파일을 선택할 수 있습니다.</p>
+            <p class="help-block" style="font-size: 0.9em; color: #888; margin-top: 5px;"><?php echo $lang['file_upload_help']; ?></p>
         </div>
 
         <div class="form-actions">
