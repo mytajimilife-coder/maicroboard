@@ -96,7 +96,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     CREATE TABLE IF NOT EXISTS `mb1_member` (
                         `mb_id` varchar(50) NOT NULL,
                         `mb_password` varchar(255) NOT NULL,
+                        `oauth_provider` varchar(50) DEFAULT NULL,
                         PRIMARY KEY (`mb_id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                    
+                    CREATE TABLE IF NOT EXISTS `mb1_oauth_config` (
+                        `provider` varchar(50) NOT NULL,
+                        `client_id` varchar(255) NOT NULL,
+                        `client_secret` varchar(255) NOT NULL,
+                        `enabled` tinyint(1) NOT NULL DEFAULT 0,
+                        PRIMARY KEY (`provider`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                    
+                    CREATE TABLE IF NOT EXISTS `mb1_oauth_users` (
+                        `mb_id` varchar(50) NOT NULL,
+                        `provider` varchar(50) NOT NULL,
+                        `provider_user_id` varchar(255) NOT NULL,
+                        `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        PRIMARY KEY (`provider`, `provider_user_id`),
+                        KEY `mb_id` (`mb_id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 ";
                 
@@ -110,6 +128,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 // 기본 게시판 생성
                 $stmt = $pdo->prepare("INSERT INTO mb1_board_config (bo_table, bo_subject) VALUES ('free', ?)");
                 $stmt->execute([$lang['free_board']]);
+                
+                // OAuth 기본 설정 추가
+                $providers = ['google', 'line', 'apple'];
+                foreach ($providers as $provider) {
+                    $stmt = $pdo->prepare("INSERT INTO mb1_oauth_config (provider, client_id, client_secret, enabled) VALUES (?, '', '', 0)");
+                    $stmt->execute([$provider]);
+                }
                 
                 // config.php 파일 생성
                 $config_content = "<?php

@@ -75,6 +75,43 @@ if (empty($_SESSION['csrf_token'])) {
   </form>
   <p><?php echo $lang['test']; ?>: admin / admin</p>
   
+  <?php
+  // OAuth 소셜 로그인 버튼
+  require_once 'inc/oauth.php';
+  $enabled_providers = getEnabledOAuthProviders();
+  if (!empty($enabled_providers)):
+  ?>
+  <div style="margin-top: 30px; padding: 20px; border-top: 1px solid #ddd;">
+    <p style="text-align: center; color: #666; margin-bottom: 15px;"><?php echo $lang['oauth_login_with'] ?? '소셜 계정으로 로그인'; ?></p>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <?php foreach ($enabled_providers as $provider): 
+        $login_url = getOAuthLoginUrl($provider);
+        if ($login_url):
+      ?>
+        <?php if ($provider === 'google'): ?>
+          <a href="<?php echo htmlspecialchars($login_url); ?>" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #fff; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333; font-weight: 500; transition: all 0.2s;">
+            <img src="https://www.google.com/favicon.ico" width="20" height="20" alt="Google">
+            <span>Google<?php echo $lang['oauth_login_suffix'] ?? '로 로그인'; ?></span>
+          </a>
+        <?php elseif ($provider === 'line'): ?>
+          <a href="<?php echo htmlspecialchars($login_url); ?>" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #00B900; border: 1px solid #00B900; border-radius: 4px; text-decoration: none; color: white; font-weight: 500; transition: all 0.2s;">
+            <span style="font-weight: bold;">LINE</span>
+            <span><?php echo $lang['oauth_login_suffix'] ?? '로 로그인'; ?></span>
+          </a>
+        <?php elseif ($provider === 'apple'): ?>
+          <a href="<?php echo htmlspecialchars($login_url); ?>" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #000; border: 1px solid #000; border-radius: 4px; text-decoration: none; color: white; font-weight: 500; transition: all 0.2s;">
+            <img src="https://www.apple.com/favicon.ico" width="20" height="20" alt="Apple">
+            <span>Apple<?php echo $lang['oauth_login_suffix'] ?? '로 로그인'; ?></span>
+          </a>
+        <?php endif; ?>
+      <?php 
+        endif;
+      endforeach; 
+      ?>
+    </div>
+  </div>
+  <?php endif; ?>
+  
   <div style="margin-top: 30px; padding: 15px; border-top: 1px solid #ddd; text-align: center;">
     <p><?php echo $lang['first_visit']; ?> <a href="register.php" style="color: #28a745; text-decoration: none; font-weight: bold;"><?php echo $lang['register']; ?></a></p>
   </div>
