@@ -61,11 +61,102 @@
                         <strong>🌍 Multi-language Support:</strong> Native support for Korean, English, Japanese, and Chinese.
                     </li>
                     <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
-                        <strong>🔒 Secure:</strong> Built-in protection against common web vulnerabilities.
+                        <strong>🔐 OAuth Social Login:</strong> Support for Google, LINE, and Apple login integration.
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                        <strong>🔒 Secure:</strong> Built-in protection against common web vulnerabilities (CSRF, SQL Injection, XSS).
                     </li>
                     <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
                         <strong>📱 Responsive Design:</strong> Works perfectly on desktop, tablet, and mobile devices.
                     </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                        <strong>⭐ Point System:</strong> Reward users with points for posting and engagement.
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                        <strong>🎨 Multiple Skins:</strong> Choose from different board layouts and themes.
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                        <strong>📝 Rich Text Editor:</strong> Summernote WYSIWYG editor with image upload support.
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                        <strong>👥 User Management:</strong> Complete admin panel for managing users and boards.
+                    </li>
+                </ul>
+                
+                <h3 style="margin-top: 30px; color: #333;">OAuth Social Login</h3>
+                <p style="line-height: 1.6; color: #444;">
+                    MicroBoard supports seamless integration with popular OAuth providers:
+                </p>
+                <div style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #4285f4;">
+                        <strong style="color: #4285f4;">🔵 Google</strong>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9em; color: #666;">Login with Google Account</p>
+                    </div>
+                    <div style="flex: 1; min-width: 200px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #00B900;">
+                        <strong style="color: #00B900;">🟢 LINE</strong>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9em; color: #666;">Login with LINE Account</p>
+                    </div>
+                    <div style="flex: 1; min-width: 200px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #000;">
+                        <strong style="color: #000;">⚫ Apple</strong>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9em; color: #666;">Sign in with Apple</p>
+                    </div>
+                </div>
+                <p style="line-height: 1.6; color: #444; font-size: 0.9em;">
+                    <strong>Easy Setup:</strong> Configure OAuth providers directly from the admin panel. 
+                    Social login buttons automatically appear when configured and enabled.
+                </p>
+            </div>
+
+            <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px;">
+                <h2 style="border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 20px; color: #007cba;">
+                    Quick Start
+                </h2>
+                
+                <h3 style="color: #333;">Installation</h3>
+                <ol style="line-height: 1.8; color: #444;">
+                    <li>Download or clone the repository</li>
+                    <li>Upload files to your web server</li>
+                    <li>Navigate to <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px;">http://your-domain.com/install.php</code></li>
+                    <li>Follow the installation wizard</li>
+                    <li>Configure database settings and admin account</li>
+                    <li>Complete installation and start using MicroBoard!</li>
+                </ol>
+                
+                <h3 style="margin-top: 25px; color: #333;">Requirements</h3>
+                <ul style="line-height: 1.8; color: #444;">
+                    <li>PHP 7.4 or higher</li>
+                    <li>MySQL 5.7 or higher / MariaDB 10.2 or higher</li>
+                    <li>Apache or Nginx web server</li>
+                    <li>PDO PHP Extension</li>
+                    <li>cURL PHP Extension (for OAuth)</li>
+                </ul>
+                
+                <h3 style="margin-top: 25px; color: #333;">OAuth Configuration</h3>
+                <p style="line-height: 1.6; color: #444;">
+                    After installation, configure OAuth providers in the admin panel:
+                </p>
+                <ol style="line-height: 1.8; color: #444;">
+                    <li>Login as admin</li>
+                    <li>Go to Admin Panel → OAuth Settings</li>
+                    <li>Enter Client ID and Client Secret for each provider</li>
+                    <li>Enable the providers you want to use</li>
+                    <li>Social login buttons will automatically appear on login/register pages</li>
+                </ol>
+                <p style="line-height: 1.6; color: #444; background: #fff3cd; padding: 10px; border-radius: 4px; border-left: 4px solid #ffc107;">
+                    <strong>📖 Documentation:</strong> See <code>OAUTH_SETUP.md</code> for detailed OAuth setup instructions.
+                </p>
+            </div>
+
+            <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px;">
+                <h2 style="border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 20px; color: #007cba;">
+                    Admin Features
+                </h2>
+                <ul style="line-height: 1.8; color: #444;">
+                    <li><strong>User Management:</strong> View, manage, and delete users</li>
+                    <li><strong>Board Management:</strong> Create and configure multiple boards</li>
+                    <li><strong>OAuth Settings:</strong> Configure Google, LINE, and Apple login</li>
+                    <li><strong>Point System:</strong> Enable/disable points and set rewards</li>
+                    <li><strong>Multi-language:</strong> Switch between 4 supported languages</li>
                 </ul>
             </div>
 

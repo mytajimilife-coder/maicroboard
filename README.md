@@ -1,55 +1,182 @@
 # MicroBoard
 
-MicroBoard is a lightweight, easy-to-install bulletin board system (BBS) built with PHP and MySQL. It supports multiple languages (Korean, English, Japanese, Chinese) and provides essential features for community engagement.
+A lightweight, high-performance bulletin board system designed for simplicity and ease of use.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://www.php.net/)
+[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/yourusername/microboard)
 
-## Requirements
+## ✨ Features
 
-*   **PHP**: 7.4 or higher
-*   **MySQL**: 5.7 or higher (or MariaDB equivalent)
-*   **Web Server**: Apache, Nginx, or any server capable of running PHP
+- 🚀 **Lightweight & Fast** - Optimized for performance with minimal dependencies
+- 🌍 **Multi-language Support** - Korean, English, Japanese, and Chinese
+- 🔐 **OAuth Social Login** - Google, LINE, and Apple integration
+- 🔒 **Secure** - Built-in CSRF, SQL Injection, and XSS protection
+- 📱 **Responsive Design** - Works on desktop, tablet, and mobile
+- ⭐ **Point System** - Reward users for posting and engagement
+- 🎨 **Multiple Skins** - Choose from different board layouts
+- 📝 **Rich Text Editor** - Summernote WYSIWYG with image upload
+- 👥 **User Management** - Complete admin panel
 
-## Installation
+## 🔐 OAuth Social Login
 
-1.  **Download**: Clone or download this repository to your web server's document root or a subdirectory.
-    ```bash
-    git clone https://github.com/yourusername/microboard.git
-    ```
-2.  **Permissions**: Ensure the web server has write permissions to the root directory of the project. The installer needs to create a `config.php` file.
-    ```bash
-    chmod 777 . 
-    # OR better yet, give ownership to the web user (e.g., www-data)
-    # chown www-data:www-data .
-    ```
-3.  **Run Installer**: Open your web browser and navigate to the installation page.
-    *   Example: `http://yourdomain.com/microboard/install.php`
-    *   If you access `index.php` before installation, you will be automatically redirected to `install.php`.
-4.  **Configuration**: Fill in the required information on the installation screen:
-    *   **Language**: Select your preferred language.
-    *   **Database Settings**: Enter your database host, username, password, and the desired database name.
-    *   **Admin Settings**: Create an administrator account (username and password).
-    *   **License**: Read and agree to the license terms.
-5.  **Complete**: Click the "Install" button. Once installation is successful, you will be redirected to the login page.
+MicroBoard supports seamless integration with popular OAuth providers:
 
-## Usage
+| Provider | Status | Setup Guide |
+|----------|--------|-------------|
+| 🔵 Google | ✅ Supported | [Google Cloud Console](https://console.cloud.google.com/) |
+| 🟢 LINE | ✅ Supported | [LINE Developers](https://developers.line.biz/console/) |
+| ⚫ Apple | ✅ Supported | [Apple Developer](https://developer.apple.com/account/) |
 
-### Login
-*   Access the login page (`login.php`) and enter the administrator credentials you created during installation.
-*   Standard users can register via `register.php`.
+### OAuth Features
+- ✅ Automatic button visibility based on configuration
+- ✅ Visual status indicators in admin panel
+- ✅ Secure state parameter for CSRF protection
+- ✅ Automatic user account creation
+- ✅ Multi-language support for all OAuth flows
 
-### Dashboard / Board List
-*   After logging in, you will see the main board list.
-*   The default installation creates a "Free Board" (자유게시판).
+See [OAUTH_SETUP.md](OAUTH_SETUP.md) for detailed setup instructions.
 
-### Writing Posts
-*   Click on a board to view posts.
-*   Click the "Write" button to create a new post.
-*   You can edit or delete your own posts. Administrators can manage all posts.
+## 📋 Requirements
 
-### Administration
-*   The admin user has full control over the board.
-*   (Future features may include more granular admin panels).
+- PHP 7.4 or higher
+- MySQL 5.7+ / MariaDB 10.2+
+- Apache or Nginx web server
+- PDO PHP Extension
+- cURL PHP Extension (for OAuth)
 
-## License
+## 🚀 Quick Start
+
+### Installation
+
+1. Download or clone the repository
+```bash
+git clone https://github.com/yourusername/microboard.git
+```
+
+2. Upload files to your web server
+
+3. Navigate to `http://your-domain.com/install.php`
+
+4. Follow the installation wizard:
+   - Choose your preferred language
+   - Configure database settings
+   - Create admin account
+   - Complete installation
+
+5. Login and start using MicroBoard!
+
+### OAuth Configuration
+
+After installation, configure OAuth providers:
+
+1. Login as admin
+2. Go to **Admin Panel** → **OAuth Settings**
+3. For each provider:
+   - Enter **Client ID**
+   - Enter **Client Secret**
+   - Check **Enable** checkbox
+4. Social login buttons will automatically appear
+
+**Note:** Buttons only appear when all credentials are configured and enabled.
+
+## 🌍 Supported Languages
+
+- 🇰🇷 Korean (한국어)
+- 🇺🇸 English
+- 🇯🇵 Japanese (日本語)
+- 🇨🇳 Chinese (中文)
+
+Switch languages from the language selector on any page.
+
+## 👨‍💼 Admin Features
+
+Access the admin panel at `/admin/index.php`:
+
+- **User Management** - View, manage, and delete users
+- **Board Management** - Create and configure multiple boards
+- **OAuth Settings** - Configure social login providers
+- **Point System** - Enable/disable points and set rewards
+- **Configuration** - Customize board settings
+
+## 📁 Project Structure
+
+```
+microboard/
+├── admin/              # Admin panel
+│   ├── oauth.php      # OAuth settings
+│   ├── users.php      # User management
+│   └── board.php      # Board management
+├── inc/               # Include files
+│   └── oauth.php      # OAuth helper functions
+├── lang/              # Language files
+│   ├── ko.php         # Korean
+│   ├── en.php         # English
+│   ├── ja.php         # Japanese
+│   └── zh.php         # Chinese
+├── skin/              # Board skins
+├── install.php        # Installation wizard
+├── oauth_callback.php # OAuth callback handler
+└── OAUTH_SETUP.md     # OAuth setup guide
+```
+
+## 🔧 Configuration
+
+### Database Migration
+
+For existing installations, run database updates:
+
+```
+http://your-domain.com/update_db_oauth.php
+```
+
+This adds OAuth tables and configurations.
+
+### Point System
+
+Configure in Admin Panel → Configuration:
+- Enable/disable point system
+- Set points awarded for posting
+- Points are automatically tracked per user
+
+## 🛡️ Security
+
+MicroBoard includes built-in security features:
+
+- ✅ CSRF token protection
+- ✅ Prepared statements (SQL Injection prevention)
+- ✅ XSS protection with htmlspecialchars
+- ✅ Session timeout (30 minutes)
+- ✅ Password hashing with bcrypt
+- ✅ OAuth state parameter validation
+- ✅ Input validation and sanitization
+
+## 📖 Documentation
+
+- [OAuth Setup Guide](OAUTH_SETUP.md) - Detailed OAuth configuration
+- [Security Guide](SECURITY.md) - Security best practices
+- [GitHub Pages](https://yourusername.github.io/microboard/) - Online documentation
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Summernote](https://summernote.org/) - WYSIWYG editor
+- [jQuery](https://jquery.com/) - JavaScript library
+
+## 📧 Support
+
+- Create an [Issue](https://github.com/yourusername/microboard/issues)
+- Check the [Documentation](https://yourusername.github.io/microboard/)
+
+---
+
+Made with ❤️ by MicroBoard Team
+
+**Version 1.0.0** | [Documentation](https://yourusername.github.io/microboard/) | [Report Bug](https://github.com/yourusername/microboard/issues)
