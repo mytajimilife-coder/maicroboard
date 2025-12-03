@@ -16,6 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || ($action === 'delete' && $bo_table)
 // 게시판 생성/수정
 if ($_POST) {
   $bo_table = $_POST['bo_table'];
+  
+  // 테이블명 검증 (영문, 숫자, 언더스코어만 허용)
+  if (!preg_match('/^[a-zA-Z0-9_]+$/', $bo_table)) {
+    die($lang['invalid_table_name'] ?? '잘못된 테이블명입니다. 영문, 숫자, 언더스코어만 사용 가능합니다.');
+  }
+  
   $data = [
     'bo_table' => $bo_table,
     'bo_subject' => $_POST['bo_subject'],
@@ -25,6 +31,12 @@ if ($_POST) {
     'bo_skin' => $_POST['bo_skin'] ?? 'default'
   ];
   
+  // 기존 게시판인지 확인
+  $stmt = $db->prepare("SELECT COUNT(*) FROM mb1_board_config WHERE bo_table = ?");
+  $stmt->execute([$bo_table]);
+  $is_existing = $stmt->fetchColumn() > 0;
+  
+  // 게시판 설정 저장
   $sql = "REPLACE INTO mb1_board_config SET 
     bo_table = :bo_table, 
     bo_subject = :bo_subject, 
@@ -35,14 +47,94 @@ if ($_POST) {
   
   $stmt = $db->prepare($sql);
   $stmt->execute($data);
+  
+  // 새 게시판인 경우 테이블 생성
+  if (!$is_existing) {
+    try {
+      // 게시판 테이블 생성 (mb1_write_{bo_table})
+      $write_table = "mb1_write_" . $bo_table;
+      $db->exec("
+        CREATE TABLE IF NOT EXISTS `{$write_table}` (
+          `wr_id` int(11) NOT NULL AUTO_INCREMENT,
+          `wr_subject` varchar(255) NOT NULL,
+          `wr_content` longtext NOT NULL,
+          `wr_name` varchar(50) NOT NULL,
+          `wr_datetime` datetime NOT NULL,
+          `wr_hit` int(11) NOT NULL DEFAULT 0,
+          `wr_comment` int(11) NOT NULL DEFAULT 0,
+          PRIMARY KEY (`wr_id`),
+          KEY `wr_name` (`wr_name`),
+          KEY `wr_datetime` (`wr_datetime`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+      ");
+      
+      // 댓글 테이블 생성 (mb1_comment_{bo_table})
+      $comment_table = "mb1_comment_" . $bo_table;
+      $db->exec("
+        CREATE TABLE IF NOT EXISTS `{$comment_table}` (
+          `co_id` int(11) NOT NULL AUTO_INCREMENT,
+          `wr_id` int(11) NOT NULL,
+          `co_content` text NOT NULL,
+          `co_name` varchar(50) NOT NULL,
+          `co_datetime` datetime NOT NULL,
+          PRIMARY KEY (`co_id`),
+          KEY `wr_id` (`wr_id`),
+          KEY `co_name` (`co_name`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+      ");
+      
+      // 파일 테이블 생성 (mb1_board_file_{bo_table})
+      $file_table = "mb1_board_file_" . $bo_table;
+      $db->exec("
+        CREATE TABLE IF NOT EXISTS `{$file_table}` (
+          `bf_no` int(11) NOT NULL AUTO_INCREMENT,
+          `wr_id` int(11) NOT NULL,
+          `bf_source` varchar(255) NOT NULL,
+          `bf_file` varchar(255) NOT NULL,
+          `bf_download` int(11) NOT NULL DEFAULT 0,
+          `bf_content` text,
+          `bf_filesize` int(11) NOT NULL DEFAULT 0,
+          `bf_datetime` datetime NOT NULL,
+          PRIMARY KEY (`bf_no`),
+          KEY `wr_id` (`wr_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+      ");
+      
+    } catch (PDOException $e) {
+      die($lang['table_creation_failed'] ?? '테이블 생성 실패: ' . $e->getMessage());
+    }
+  }
+  
   header('Location: board.php');
   exit;
 }
 
 // 게시판 삭제
 if ($action === 'delete' && $bo_table) {
-  $stmt = $db->prepare("DELETE FROM mb1_board_config WHERE bo_table = ?");
-  $stmt->execute([$bo_table]);
+  // 테이블명 검증
+  if (!preg_match('/^[a-zA-Z0-9_]+$/', $bo_table)) {
+    die($lang['invalid_table_name'] ?? '잘못된 테이블명입니다.');
+  }
+  
+  try {
+    // 게시판 설정 삭제
+    $stmt = $db->prepare("DELETE FROM mb1_board_config WHERE bo_table = ?");
+    $stmt->execute([$bo_table]);
+    
+    // 관련 테이블 삭제
+    $write_table = "mb1_write_" . $bo_table;
+    $comment_table = "mb1_comment_" . $bo_table;
+    $file_table = "mb1_board_file_" . $bo_table;
+    
+    // 테이블이 존재하는지 확인 후 삭제
+    $db->exec("DROP TABLE IF EXISTS `{$write_table}`");
+    $db->exec("DROP TABLE IF EXISTS `{$comment_table}`");
+    $db->exec("DROP TABLE IF EXISTS `{$file_table}`");
+    
+  } catch (PDOException $e) {
+    die($lang['table_deletion_failed'] ?? '테이블 삭제 실패: ' . $e->getMessage());
+  }
+  
   header('Location: board.php');
   exit;
 }
