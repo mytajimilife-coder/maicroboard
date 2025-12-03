@@ -39,19 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // CSRF 토큰 생성
 if (empty($_SESSION['csrf_token'])) {
-  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <title>MicroBoard - <?php echo $lang['login']; ?></title>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="skin/default/style.css">
-</head>
-<body class="login-page">
-  <div style="position: absolute; top: 20px; right: 20px;">
-    <?php 
     $lang_code = $_SESSION['lang'] ?? 'ko';
     $langs = ['ko' => '🇰🇷', 'en' => '🇺🇸', 'ja' => '🇯🇵', 'zh' => '🇨🇳'];
     foreach ($langs as $code => $flag) {

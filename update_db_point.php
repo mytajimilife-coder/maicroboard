@@ -16,29 +16,6 @@ if (!isAdmin()) {
 }
 
 $db = getDB();
-
-try {
-    // 1. mb1_member 테이블에 mb_point 컬럼 추가
-    try {
-        $db->exec("ALTER TABLE mb1_member ADD COLUMN mb_point int(11) NOT NULL DEFAULT 0");
-        echo sprintf($lang['column_added'], 'mb1_member', 'mb_point') . "<br>";
-    } catch (PDOException $e) {
-        // 이미 존재하는 경우 무시
-        if (strpos($e->getMessage(), 'Duplicate column name') !== false) {
-            echo sprintf($lang['column_exists'], 'mb1_member', 'mb_point') . "<br>";
-        } else {
-            throw $e;
-        }
-    }
-
-    // 2. mb1_config 테이블 생성
-    $db->exec("
-        CREATE TABLE IF NOT EXISTS `mb1_config` (
-            `cf_id` int(11) NOT NULL AUTO_INCREMENT,
-            `cf_title` varchar(255) NOT NULL DEFAULT 'MicroBoard',
-            `cf_use_point` tinyint(1) NOT NULL DEFAULT 0,
-            `cf_write_point` int(11) NOT NULL DEFAULT 0,
-            PRIMARY KEY (`cf_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ");
     echo sprintf($lang['table_created'], 'mb1_config') . "<br>";
@@ -46,7 +23,7 @@ try {
     // 기본 설정 데이터 추가
     $stmt = $db->query("SELECT COUNT(*) FROM mb1_config");
     if ($stmt->fetchColumn() == 0) {
-        $db->exec("INSERT INTO mb1_config (cf_title, cf_use_point, cf_write_point) VALUES ('MicroBoard', 0, 0)");
+        $db->exec("INSERT INTO mb1_config (cf_title, cf_use_point, cf_write_point) VALUES ('MaicroBoard', 0, 0)");
         echo $lang['data_added'] . "<br>";
     }
 

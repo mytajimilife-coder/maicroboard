@@ -8,7 +8,7 @@ define('DB_PASS', '');
 define('DB_NAME', 'gnuboard5');
 
 // 버전 정보
-define('MICROBOARD_VERSION', '1.0.0');
+define('MAICROBOARD_VERSION', '1.0.0');
 
 // 선택된 언어 설정
 if (isset($_GET['lang']) && in_array($_GET['lang'], ['ko', 'en', 'ja', 'zh'])) {

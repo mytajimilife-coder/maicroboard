@@ -1,11 +1,11 @@
-/* Header Styles - MicroBoard Header Component */
+/* Header Styles - MaicroBoard Header Component */
 
 /* 헤더 기본 스타일 */
 .header {
     background: #2c3e50;
     color: white;
     padding: 15px 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -59,12 +59,12 @@
 }
 
 .nav-menu a:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
 }
 
 .nav-menu a:active {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 /* 현재 페이지 표시 */
@@ -131,7 +131,7 @@
     .header-container {
         padding: 0 15px;
     }
-    
+
     .nav-menu {
         gap: 15px;
     }
@@ -143,30 +143,30 @@
         gap: 15px;
         padding: 0 10px;
     }
-    
+
     .main-nav {
         margin-left: 0;
         order: 3;
         width: 100%;
     }
-    
+
     .nav-menu {
         flex-wrap: wrap;
         justify-content: center;
         gap: 10px;
     }
-    
+
     .user-info {
         flex-direction: column;
         gap: 10px;
         align-items: center;
         order: 2;
     }
-    
+
     .logo {
         order: 1;
     }
-    
+
     .main-content {
         padding: 15px 0;
     }
@@ -176,20 +176,20 @@
     .header-container {
         padding: 0 5px;
     }
-    
+
     .nav-menu {
         gap: 5px;
     }
-    
+
     .nav-menu a {
         padding: 6px 12px;
         font-size: 13px;
     }
-    
+
     .logo {
         font-size: 20px;
     }
-    
+
     .user-info .username {
         font-size: 13px;
     }
@@ -201,6 +201,7 @@
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -222,7 +223,7 @@
     .header {
         display: none;
     }
-    
+
     .main-content {
         padding: 0;
     }

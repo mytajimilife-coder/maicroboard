@@ -4,19 +4,6 @@ requireLogin();
 
 $username = $_SESSION['user'];
 
-// 내가 쓴 글 조회
-$user_posts = getUserPosts($username);
-
-// 내가 쓴 댓글 조회 (기본 구조만 제공, 댓글 기능이 구현되지 않은 경우를 대비)
-$user_comments = getUserComments($username);
-
-// 페이지네이션 처리
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$posts_per_page = 10;
-$comments_per_page = 10;
-
-// 게시물 페이지네이션
-$total_posts = count($user_posts);
 $total_post_pages = ceil($total_posts / $posts_per_page);
 $offset = ($page - 1) * $posts_per_page;
 $paginated_posts = array_slice($user_posts, $offset, $posts_per_page);
@@ -30,7 +17,7 @@ $paginated_comments = array_slice($user_comments, $comment_offset, $comments_per
 <!DOCTYPE html>
 <html>
 <head>
-  <title><?php echo $lang['mypage']; ?> - MicroBoard</title>
+  <title><?php echo $lang['mypage']; ?> - MaicroBoard</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../skin/default/style.css">
   <style>

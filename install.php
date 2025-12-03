@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $db_host = $_POST['db_host'] ?? 'localhost';
     $db_user = $_POST['db_user'] ?? 'root';
     $db_pass = $_POST['db_pass'] ?? '';
-    $db_name = $_POST['db_name'] ?? 'microboard';
+    $db_name = $_POST['db_name'] ?? 'maicroboard';
     $admin_username = $_POST['admin_username'] ?? 'admin';
     $admin_password = $_POST['admin_password'] ?? 'admin';
     $admin_password_confirm = $_POST['admin_password_confirm'] ?? '';
@@ -427,7 +427,7 @@ define('SKIN_DIR', './skin/default');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MicroBoard - <?php echo $lang['install_title']; ?></title>
+    <title>MaicroBoard - <?php echo $lang['install_title']; ?></title>
     <link rel="stylesheet" href="skin/default/style.css">
     <style>
         .install-container {
@@ -550,7 +550,7 @@ define('SKIN_DIR', './skin/default');
 <body>
     <div class="install-container">
         <div class="language-selector">
-            <h2>MicroBoard - <?php echo $lang['install_title']; ?></h2>
+            <h2>MaicroBoard - <?php echo $lang['install_title']; ?></h2>
             <form method="post" style="display: inline;">
                 <input type="hidden" name="language" id="selected_language" value="<?php echo htmlspecialchars($language); ?>">
                 <div class="language-options">
@@ -558,93 +558,6 @@ define('SKIN_DIR', './skin/default');
                         🇯🇵 日本語
                     </div>
                     <div class="language-option <?php echo $language === 'ko' ? 'selected' : ''; ?>" data-lang="ko">
-                        🇰🇷 한국어
-                    </div>
-                    <div class="language-option <?php echo $language === 'en' ? 'selected' : ''; ?>" data-lang="en">
-                        🇺🇸 English
-                    </div>
-                    <div class="language-option <?php echo $language === 'zh' ? 'selected' : ''; ?>" data-lang="zh">
-                        🇨🇳 中文
-                    </div>
-                </div>
-            </form>
-            
-            <div style="margin-top: 15px;">
-                <button type="button" class="btn-secondary" onclick="showLicense()" style="background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">
-                    📄 <?php echo $lang['license']; ?>
-                </button>
-            </div>
-        </div>
-        
-        <!-- 라이선스 모달 -->
-        <div id="license-modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
-            <div style="background-color: white; margin: 5% auto; padding: 20px; border-radius: 8px; width: 80%; max-height: 80vh; overflow-y: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3>MicroBoard License</h3>
-                    <button type="button" onclick="hideLicense()" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">×</button>
-                </div>
-                <div style="white-space: pre-line; font-family: monospace; font-size: 12px; line-height: 1.4; max-height: 60vh; overflow-y: auto;">
-<?php
-$license_file = 'LICENSE.txt';
-if (file_exists($license_file)) {
-    echo htmlspecialchars(file_get_contents($license_file));
-} else {
-    echo "MIT License
-
-Copyright (c) 2025 YECHANHO
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the \"Software\"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.";
-}
-?>
-                </div>
-                <div style="text-align: center; margin-top: 15px;">
-                    <button type="button" onclick="agreeToLicense()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-right: 10px;">
-                        <?php echo $lang['agree']; ?>
-                    </button>
-                    <button type="button" onclick="hideLicense()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
-                        <?php echo $lang['close']; ?>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <?php if ($error): ?>
-            <div class="error"><?php echo htmlspecialchars($error); ?></div>
-        <?php endif; ?>
-        
-        <?php if ($success): ?>
-            <div class="success"><?php echo htmlspecialchars($success); ?></div>
-            <a href="login.php" class="btn"><?php echo $lang['go_to_login']; ?></a>
-        <?php else: ?>
-            <form method="post" id="install-form">
-                <input type="hidden" name="action" value="install">
-                <input type="hidden" name="language" value="<?php echo htmlspecialchars($language); ?>">
-                <input type="hidden" name="license_agreed" id="license_agreed" value="0">
-                
-                <h3><?php echo $lang['db_settings']; ?></h3>
-                <div class="form-group">
-                    <label for="db_host"><?php echo $lang['db_host']; ?>:</label>
-                    <input type="text" name="db_host" id="db_host" value="localhost" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="db_user"><?php echo $lang['username']; ?>:</label>
                     <input type="text" name="db_user" id="db_user" value="root" required>
                 </div>
                 
@@ -655,7 +568,7 @@ SOFTWARE.";
                 
                 <div class="form-group">
                     <label for="db_name"><?php echo $lang['db_name']; ?> :</label>
-                    <input type="text" name="db_name" id="db_name" value="microboard" required>
+                    <input type="text" name="db_name" id="db_name" value="maicroboard" required>
                 </div>
                 
                 <h3><?php echo $lang['admin_settings']; ?></h3>

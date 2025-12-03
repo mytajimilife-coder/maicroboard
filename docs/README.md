@@ -1,15 +1,15 @@
-# MicroBoard Documentation
+# MaicroBoard Documentation
 
-Welcome to the official documentation for MicroBoard!
+Welcome to the official documentation for MaicroBoard!
 
 ## 🌐 Live Documentation
 
 Visit our GitHub Pages site for complete documentation:
-**[https://mytajimilife-coder.github.io/microboard/](https://mytajimilife-coder.github.io/microboard/)**
+**[https://mytajimilife-coder.github.io/maicroboard/](https://mytajimilife-coder.github.io/maicroboard/)**
 
 ## 📚 What's Included
 
-- **Features Overview** - Complete list of MicroBoard features
+- **Features Overview** - Complete list of MaicroBoard features
 - **OAuth Social Login** - Google, LINE, and Apple integration guide
 - **Installation Guide** - Step-by-step setup instructions
 - **Admin Features** - User and board management documentation
@@ -17,14 +17,14 @@ Visit our GitHub Pages site for complete documentation:
 
 ## 🚀 Quick Links
 
-- [Main Repository](https://github.com/mytajimilife-coder/microboard)
+- [Main Repository](https://github.com/mytajimilife-coder/maicroboard)
 - [OAuth Setup Guide](../OAUTH_SETUP.md)
 - [Security Guide](../SECURITY.md)
 - [License](../LICENSE)
 
 ## 🔐 OAuth Social Login
 
-MicroBoard now supports OAuth authentication with:
+MaicroBoard now supports OAuth authentication with:
 - 🔵 **Google** - Login with Google Account
 - 🟢 **LINE** - Login with LINE Account  
 - ⚫ **Apple** - Sign in with Apple

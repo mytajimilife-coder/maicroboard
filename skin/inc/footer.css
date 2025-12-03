@@ -1,4 +1,4 @@
-/* Footer Styles - MicroBoard Footer Component */
+/* Footer Styles - MaicroBoard Footer Component */
 
 /* 푸터 기본 스타일 */
 .footer {
@@ -136,22 +136,22 @@
     .footer-container {
         padding: 0 10px;
     }
-    
+
     .footer-content {
         gap: 20px;
     }
-    
+
     .footer-section {
         flex: 1 1 100%;
         min-width: 100%;
     }
-    
+
     .footer-bottom {
         flex-direction: column;
         text-align: center;
         gap: 10px;
     }
-    
+
     .language-selector {
         justify-content: center;
     }
@@ -161,27 +161,27 @@
     .footer-container {
         padding: 0 5px;
     }
-    
+
     .footer {
         padding: 30px 0 15px;
     }
-    
+
     .footer-content {
         gap: 15px;
     }
-    
+
     .footer-section h3 {
         font-size: 16px;
     }
-    
+
     .footer-section h4 {
         font-size: 14px;
     }
-    
+
     .footer-section a {
         font-size: 13px;
     }
-    
+
     .copyright {
         font-size: 12px;
     }
@@ -193,6 +193,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -229,12 +230,12 @@
         color: #000;
         border-top: 1px solid #000;
     }
-    
+
     .footer-section a {
         color: #000;
         text-decoration: underline;
     }
-    
+
     .copyright {
         color: #000;
         font-weight: bold;
@@ -246,7 +247,7 @@
     .footer {
         background: #2c3e50;
     }
-    
+
     .footer-container {
         color: #ecf0f1;
     }

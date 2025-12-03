@@ -12,28 +12,15 @@ if (file_exists($lang_file)) {
 }
 
 // 페이지 제목 설정
-$page_title = $page_title ?? 'MicroBoard';
+$page_title = $page_title ?? 'MaicroBoard';
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo substr($lang_code, 0, 2); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page_title); ?> - MicroBoard</title>
+    <title><?php echo htmlspecialchars($page_title); ?> - MaicroBoard</title>
     <link rel="stylesheet" href="../skin/inc/header.css">
-    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
-</head>
-<body>
-    <header class="header">
-        <div class="header-container">
-            <div class="logo">
-                <a href="../index.php" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: white;">
-                    <img src="../img/logo.svg" alt="MicroBoard Logo" style="height: 32px; width: 32px;">
-                    MicroBoard
-                </a>
-            </div>
-            
-            <nav class="main-nav">
                 <ul class="nav-menu">
                     <?php if (isLoggedIn()): ?>
                         <li><a href="../list.php"><?php echo $lang['board_list']; ?></a></li>
