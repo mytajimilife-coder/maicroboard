@@ -489,6 +489,115 @@ function insert_point($mb_id, $point, $content = '', $rel_table = '', $rel_id = 
     $stmt->execute([$point, $mb_id]);
 }
 
+// 회원 차단 함수
+function blockMember($mb_id, $reason = '') {
+    if (empty($mb_id) || $mb_id === 'admin') {
+        return false; // 관리자는 차단 불가
+    }
+    
+    $db = getDB();
+    try {
+        $stmt = $db->prepare("UPDATE mb1_member SET mb_blocked = 1, mb_blocked_reason = ? WHERE mb_id = ?");
+        return $stmt->execute([$reason, $mb_id]);
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+// 회원 차단 해제 함수
+function unblockMember($mb_id) {
+    if (empty($mb_id)) {
+        return false;
+    }
+    
+    $db = getDB();
+    try {
+        $stmt = $db->prepare("UPDATE mb1_member SET mb_blocked = 0, mb_blocked_reason = NULL WHERE mb_id = ?");
+        return $stmt->execute([$mb_id]);
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+// 회원 등급 변경 함수
+function updateMemberLevel($mb_id, $level) {
+    if (empty($mb_id) || $mb_id === 'admin') {
+        return false; // 관리자 등급은 변경 불가
+    }
+    
+    // 등급은 1-10 사이
+    $level = max(1, min(10, (int)$level));
+    
+    $db = getDB();
+    try {
+        $stmt = $db->prepare("UPDATE mb1_member SET mb_level = ? WHERE mb_id = ?");
+        return $stmt->execute([$level, $mb_id]);
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+// 회원 정보 조회 함수
+function getMemberInfo($mb_id) {
+    if (empty($mb_id)) {
+        return null;
+    }
+    
+    $db = getDB();
+    $stmt = $db->prepare("SELECT * FROM mb1_member WHERE mb_id = ?");
+    $stmt->execute([$mb_id]);
+    return $stmt->fetch();
+}
+
+// 회원 차단 여부 확인
+function isMemberBlocked($mb_id) {
+    $member = getMemberInfo($mb_id);
+    return $member && $member['mb_blocked'] == 1;
+}
+
+// 회원 탈퇴 함수 (본인만 가능)
+function withdrawMember($mb_id, $password) {
+    if (empty($mb_id) || $mb_id === 'admin') {
+        return false; // 관리자는 탈퇴 불가
+    }
+    
+    // 비밀번호 확인
+    if (!verifyUser($mb_id, $password)) {
+        return false;
+    }
+    
+    $db = getDB();
+    try {
+        // 탈퇴일 기록 (실제 삭제하지 않고 표시만)
+        $stmt = $db->prepare("UPDATE mb1_member SET mb_leave_date = NOW(), mb_blocked = 1, mb_blocked_reason = '회원 탈퇴' WHERE mb_id = ?");
+        return $stmt->execute([$mb_id]);
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+// 로그인 시 차단 여부 확인 (기존 verifyUser 함수 수정 필요)
+function verifyUserWithBlock($id, $pass) {
+    // 기본 인증
+    if (!verifyUser($id, $pass)) {
+        return ['success' => false, 'message' => 'login_failed'];
+    }
+    
+    // 차단 여부 확인
+    $member = getMemberInfo($id);
+    if ($member && $member['mb_blocked'] == 1) {
+        $reason = $member['mb_blocked_reason'] ?? '관리자에 의해 차단되었습니다.';
+        return ['success' => false, 'message' => 'account_blocked', 'reason' => $reason];
+    }
+    
+    // 탈퇴 여부 확인
+    if ($member && $member['mb_leave_date'] !== null) {
+        return ['success' => false, 'message' => 'account_withdrawn'];
+    }
+    
+    return ['success' => true];
+}
+
 // 스킨 설정
 define('SKIN_DIR', './skin/default');
 ?>

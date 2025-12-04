@@ -201,6 +201,19 @@ $paginated_comments = array_slice($user_comments, $comment_offset, $comments_per
           <div class="stat-number">0</div>
           <div class="stat-label"><?php echo $lang['followers']; ?></div>
         </div>
+        <div class="stat-item">
+          <?php 
+          $member_info = getMemberInfo($username);
+          $level = $member_info['mb_level'] ?? 1;
+          ?>
+          <div class="stat-number">Lv.<?php echo $level; ?></div>
+          <div class="stat-label"><?php echo $lang['member_level']; ?></div>
+        </div>
+      </div>
+      <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #dee2e6;">
+        <a href="withdraw.php" style="color: #dc3545; text-decoration: none; font-size: 14px;">
+          <?php echo $lang['withdraw_account']; ?> →
+        </a>
       </div>
     </div>
 

@@ -6,7 +6,12 @@ if (isLoggedIn()) {
   exit;
 }
 
-$error = '';
+// 탈퇴 완료 메시지
+if (isset($_GET['withdrawn'])) {
+  $error = $lang['withdraw_success'];
+}
+
+$error = $error ?? '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // CSRF 토큰 검증
   if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
@@ -22,8 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (empty($username) || empty($password)) {
       $error = $lang['login_input_required'];
     } else {
-      // SQL 인젝션 방지를 위한 파라미터화된 쿼리 사용
-      if (verifyUser($username, $password)) {
+      // 차단 및 탈퇴 확인을 포함한 인증
+      $result = verifyUserWithBlock($username, $password);
+      
+      if ($result['success']) {
         $_SESSION['user'] = $username;
         $_SESSION['login_time'] = time();
         // CSRF 토큰 재생성
@@ -31,7 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: list.php');
         exit;
       } else {
-        $error = $lang['login_failed'];
+        // 에러 메시지 처리
+        if ($result['message'] === 'account_blocked') {
+          $error = $lang['account_blocked'] . '<br><small>' . htmlspecialchars($result['reason'] ?? '') . '</small>';
+        } elseif ($result['message'] === 'account_withdrawn') {
+          $error = $lang['account_withdrawn'];
+        } else {
+          $error = $lang['login_failed'];
+        }
       }
     }
   }
