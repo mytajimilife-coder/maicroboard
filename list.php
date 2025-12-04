@@ -18,20 +18,36 @@ $total_pages = ceil($total_posts / $limit);
 $posts = loadPosts($page, $limit, $stx, $sfl);
 ?>
 
-<?php
-$board_skin = 'default'; // 기본 스킨
+$board = [];
+$board_skin = 'default';
+
 if (!empty($_GET['bo_table'])) {
-  $db = getDB();
-  $stmt = $db->prepare('SELECT bo_skin FROM mb1_board_config WHERE bo_table = ?');
-  $stmt->execute([$_GET['bo_table']]);
-  $config = $stmt->fetch();
-  $board_skin = $config['bo_skin'] ?? 'default';
+    $db = getDB();
+    $stmt = $db->prepare('SELECT * FROM mb1_board_config WHERE bo_table = ?');
+    $stmt->execute([$_GET['bo_table']]);
+    $board = $stmt->fetch();
+    
+    if ($board) {
+        $board_skin = $board['bo_skin'] ?? 'default';
+        
+        // 플러그인 로드
+        if (!empty($board['bo_plugins'])) {
+            $plugins = explode(',', $board['bo_plugins']);
+            foreach ($plugins as $plugin) {
+                $plugin_file = "plugin/" . trim($plugin) . "/index.php";
+                if (file_exists($plugin_file)) {
+                    include_once $plugin_file;
+                }
+            }
+        }
+    }
 }
 ?>
 
 <link rel="stylesheet" href="skin/<?php echo $board_skin; ?>/style.css">
 
 <div class="content-wrapper">
+  <?php run_event('board_head', $board); ?>
   <?php
   $skin_path = "skin/$board_skin/list.skin.php";
   if (file_exists($skin_path)) {

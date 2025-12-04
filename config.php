@@ -631,6 +631,42 @@ function updatePolicy($policy_type, $title, $content) {
     }
 }
 
+// 훅 시스템 (Plugin Support)
+global $mb_hooks;
+$mb_hooks = [];
+
+function add_event($event_name, $callback, $priority = 10) {
+    global $mb_hooks;
+    $mb_hooks[$event_name][] = ['callback' => $callback, 'priority' => $priority];
+    
+    // 우선순위 정렬
+    usort($mb_hooks[$event_name], function($a, $b) {
+        return $a['priority'] <=> $b['priority'];
+    });
+}
+
+function run_event($event_name, ...$args) {
+    global $mb_hooks;
+    if (isset($mb_hooks[$event_name])) {
+        foreach ($mb_hooks[$event_name] as $hook) {
+            if (is_callable($hook['callback'])) {
+                call_user_func_array($hook['callback'], $args);
+            }
+        }
+    }
+}
+
 // 스킨 설정
 define('SKIN_DIR', './skin/default');
+
+// start 폴더의 모든 PHP 파일 자동 로드 (그누보드 extend 기능과 유사)
+$start_dir = __DIR__ . '/start';
+if (is_dir($start_dir)) {
+    $files = glob($start_dir . '/*.php');
+    if ($files) {
+        foreach ($files as $file) {
+            include_once $file;
+        }
+    }
+}
 ?>

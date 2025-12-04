@@ -22,13 +22,17 @@ if ($_POST) {
     die($lang['invalid_table_name'] ?? '잘못된 테이블명입니다. 영문, 숫자, 언더스코어만 사용 가능합니다.');
   }
   
+  // 플러그인 목록 처리
+  $bo_plugins = isset($_POST['bo_plugins']) && is_array($_POST['bo_plugins']) ? implode(',', $_POST['bo_plugins']) : '';
+  
   $data = [
     'bo_table' => $bo_table,
     'bo_subject' => $_POST['bo_subject'],
     'bo_admin' => $_POST['bo_admin'],
     'bo_list_count' => (int)$_POST['bo_list_count'],
     'bo_use_comment' => isset($_POST['bo_use_comment']) ? 1 : 0,
-    'bo_skin' => $_POST['bo_skin'] ?? 'default'
+    'bo_skin' => $_POST['bo_skin'] ?? 'default',
+    'bo_plugins' => $bo_plugins
   ];
   
   // 기존 게시판인지 확인
@@ -43,7 +47,8 @@ if ($_POST) {
     bo_admin = :bo_admin, 
     bo_list_count = :bo_list_count, 
     bo_use_comment = :bo_use_comment,
-    bo_skin = :bo_skin";
+    bo_skin = :bo_skin,
+    bo_plugins = :bo_plugins";
   
   $stmt = $db->prepare($sql);
   $stmt->execute($data);
@@ -147,6 +152,19 @@ if ($bo_table) {
 }
 
 $boards = $db->query("SELECT * FROM mb1_board_config ORDER BY bo_table")->fetchAll();
+
+// 플러그인 목록 가져오기
+$plugin_dir = '../plugin';
+$available_plugins = [];
+if (is_dir($plugin_dir)) {
+    $dirs = glob($plugin_dir . '/*', GLOB_ONLYDIR);
+    if ($dirs) {
+        foreach ($dirs as $dir) {
+            $plugin_name = basename($dir);
+            $available_plugins[] = $plugin_name;
+        }
+    }
+}
 ?>
 <h2><?php echo $lang['board_manager']; ?></h2>
 <a href="board.php?action=create" class="btn"><?php echo $lang['create_board']; ?></a>
@@ -212,7 +230,27 @@ $boards = $db->query("SELECT * FROM mb1_board_config ORDER BY bo_table")->fetchA
       <option value="modern" <?php echo ($board['bo_skin'] ?? 'default') === 'modern' ? 'selected' : ''; ?>><?php echo $lang['modern_skin']; ?></option>
     </select>
   </div>
-  <button type="submit" class="btn"><?php echo $lang['save']; ?></button>
+  
+  <!-- 플러그인 선택 -->
+  <div style="margin-top: 20px; padding: 15px; background: var(--bg-secondary); border-radius: 5px; border: 1px solid var(--border-color);">
+    <label style="display: block; margin-bottom: 10px; font-weight: bold;">플러그인 설정 (Plugins)</label>
+    <?php if (empty($available_plugins)): ?>
+        <p style="color: #666;">설치된 플러그인이 없습니다. (plugin 폴더에 플러그인을 추가하세요)</p>
+    <?php else: ?>
+        <?php 
+        $active_plugins = isset($board['bo_plugins']) ? explode(',', $board['bo_plugins']) : [];
+        foreach ($available_plugins as $plugin): 
+        ?>
+        <label style="display: inline-block; margin-right: 15px; margin-bottom: 5px;">
+            <input type="checkbox" name="bo_plugins[]" value="<?php echo htmlspecialchars($plugin); ?>" 
+                   <?php echo in_array($plugin, $active_plugins) ? 'checked' : ''; ?>>
+            <?php echo htmlspecialchars($plugin); ?>
+        </label>
+        <?php endforeach; ?>
+    <?php endif; ?>
+  </div>
+  
+  <button type="submit" class="btn" style="margin-top: 20px;"><?php echo $lang['save']; ?></button>
 </form>
 <?php endif; ?>
 </body>
