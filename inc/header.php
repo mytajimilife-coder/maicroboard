@@ -1,6 +1,31 @@
 <?php
 // 페이지 제목 설정
 $page_title = $page_title ?? 'MicroBoard';
+
+// 루트 경로 계산
+$root_path = './';
+if (file_exists('./config.php')) {
+    $root_path = './';
+} elseif (file_exists('../config.php')) {
+    $root_path = '../';
+} elseif (file_exists('../../config.php')) {
+    $root_path = '../../';
+}
+
+// 설정 가져오기
+$config = get_config();
+$default_theme = $config['cf_theme'] ?? 'light';
+$bg_type = $config['cf_bg_type'] ?? 'color';
+$bg_value = $config['cf_bg_value'] ?? '#ffffff';
+
+// 배경 스타일 생성
+$custom_bg_style = '';
+if ($bg_type === 'image') {
+    // 이미지 경로에 루트 경로 적용
+    $custom_bg_style = "url('" . $root_path . htmlspecialchars($bg_value) . "')";
+} else {
+    $custom_bg_style = $bg_value;
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo substr($lang_code ?? 'ko', 0, 2); ?>">
@@ -8,32 +33,66 @@ $page_title = $page_title ?? 'MicroBoard';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($page_title); ?> - MicroBoard</title>
-    <link rel="stylesheet" href="skin/default/style.css">
-    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="<?php echo $root_path; ?>skin/default/style.css">
+    <link rel="icon" type="image/png" href="<?php echo $root_path; ?>img/favicon.png">
+    <style>
+        /* 관리자 설정 배경 적용 */
+        :root {
+            --body-bg: <?php echo $custom_bg_style; ?>;
+        }
+        
+        <?php if ($bg_type === 'image'): ?>
+        body {
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        <?php endif; ?>
+    </style>
+    <script>
+        // 테마 초기화 스크립트
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const defaultTheme = '<?php echo $default_theme; ?>';
+            const theme = savedTheme || defaultTheme;
+            
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+        })();
+    </script>
 </head>
 <body>
     <header class="main-header">
         <div class="header-container">
             <div class="logo">
-                <a href="list.php">
-                    <img src="img/logo.png" alt="MicroBoard Logo" style="height: 40px;">
+                <a href="<?php echo $root_path; ?>list.php">
+                    <img src="<?php echo $root_path; ?>img/logo.png" alt="MicroBoard Logo" style="height: 40px;">
                 </a>
             </div>
             
             <nav class="main-nav">
                 <ul class="nav-menu">
                     <?php if (isLoggedIn()): ?>
-                        <li><a href="list.php"><?php echo $lang['board_list']; ?></a></li>
-                        <li><a href="user/mypage.php"><?php echo $lang['mypage']; ?></a></li>
+                        <li><a href="<?php echo $root_path; ?>list.php"><?php echo $lang['board_list']; ?></a></li>
+                        <li><a href="<?php echo $root_path; ?>user/mypage.php"><?php echo $lang['mypage']; ?></a></li>
                         <?php if (isAdmin()): ?>
-                            <li><a href="admin/index.php"><?php echo $lang['admin_home']; ?></a></li>
-                            <li><a href="admin/users.php"><?php echo $lang['user_management']; ?></a></li>
+                            <li><a href="<?php echo $root_path; ?>admin/index.php"><?php echo $lang['admin_home']; ?></a></li>
+                            <li><a href="<?php echo $root_path; ?>admin/users.php"><?php echo $lang['user_management']; ?></a></li>
                         <?php endif; ?>
                     <?php endif; ?>
                 </ul>
             </nav>
             
             <div class="user-info">
+                <!-- 테마 토글 버튼 -->
+                <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme" style="margin-right: 15px;">
+                    <span class="icon-sun">☀️</span>
+                    <span class="icon-moon" style="display: none;">🌙</span>
+                </button>
+
                 <div class="lang-selector" style="margin-right: 15px; display: flex; gap: 8px; align-items: center;">
                     <?php 
                     $langs = ['ko' => '🇰🇷', 'en' => '🇺🇸', 'ja' => '🇯🇵', 'zh' => '🇨🇳'];
@@ -51,7 +110,6 @@ $page_title = $page_title ?? 'MicroBoard';
                     <span class="username">
                         <?php echo htmlspecialchars($_SESSION['user']); ?><?php echo $lang['user_suffix']; ?>
                         <?php 
-                        // 포인트 표시
                         $db = getDB();
                         $stmt = $db->prepare("SELECT mb_point FROM mb1_member WHERE mb_id = ?");
                         $stmt->execute([$_SESSION['user']]);
@@ -61,13 +119,48 @@ $page_title = $page_title ?? 'MicroBoard';
                         }
                         ?>
                     </span>
-                    <a href="logout.php" class="btn secondary"><?php echo $lang['logout']; ?></a>
+                    <a href="<?php echo $root_path; ?>logout.php" class="btn secondary"><?php echo $lang['logout']; ?></a>
                 <?php else: ?>
-                    <a href="login.php" class="btn"><?php echo $lang['login']; ?></a>
-                    <a href="register.php" class="btn secondary"><?php echo $lang['register']; ?></a>
+                    <a href="<?php echo $root_path; ?>login.php" class="btn"><?php echo $lang['login']; ?></a>
+                    <a href="<?php echo $root_path; ?>register.php" class="btn secondary"><?php echo $lang['register']; ?></a>
                 <?php endif; ?>
             </div>
         </div>
     </header>
 
     <main class="main-content">
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('theme-toggle');
+        const iconSun = toggleBtn.querySelector('.icon-sun');
+        const iconMoon = toggleBtn.querySelector('.icon-moon');
+        
+        function updateIcon() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                iconSun.style.display = 'none';
+                iconMoon.style.display = 'inline';
+            } else {
+                iconSun.style.display = 'inline';
+                iconMoon.style.display = 'none';
+            }
+        }
+        
+        updateIcon();
+        
+        toggleBtn.addEventListener('click', function() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            
+            updateIcon();
+        });
+    });
+    </script>
