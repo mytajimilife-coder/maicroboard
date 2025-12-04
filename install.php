@@ -14,17 +14,25 @@ $error = '';
 $success = '';
 
 // 언어 파일 로드
-$language = $_POST['language'] ?? 'ja';
+// 언어 파일 로드
+if (isset($_POST['language'])) {
+    $language = $_POST['language'];
+} else {
+    // 브라우저 언어 감지
+    $browser_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
+    $language = in_array($browser_lang, ['ko', 'en', 'ja', 'zh']) ? $browser_lang : 'en';
+}
+
 $lang_file = "lang/{$language}.php";
 if (file_exists($lang_file)) {
     $lang = require $lang_file;
 } else {
-    $lang = require 'lang/ja.php';
+    $lang = require 'lang/en.php';
 }
 
 // 설치 처리
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'install') {
-    $language = $_POST['language'] ?? 'ja';
+    $language = $_POST['language'] ?? 'en';
     $db_host = $_POST['db_host'] ?? 'localhost';
     $db_user = $_POST['db_user'] ?? 'root';
     $db_pass = $_POST['db_pass'] ?? '';

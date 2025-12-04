@@ -14,16 +14,22 @@ define('MICROBOARD_VERSION', '1.0.0');
 if (isset($_GET['lang']) && in_array($_GET['lang'], ['ko', 'en', 'ja', 'zh'])) {
     $_SESSION['lang'] = $_GET['lang'];
 } elseif (!isset($_SESSION['lang'])) {
-    $_SESSION['lang'] = 'ko'; // 기본값 한국어
+    // 브라우저 언어 감지
+    $browser_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
+    if (in_array($browser_lang, ['ko', 'en', 'ja', 'zh'])) {
+        $_SESSION['lang'] = $browser_lang;
+    } else {
+        $_SESSION['lang'] = 'en'; // 지원하지 않는 언어일 경우 영어 기본
+    }
 }
 
 // 언어 파일 로드
 $lang_path = __DIR__ . '/lang/';
-$lang_code = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ko';
+$lang_code = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en';
 if (file_exists($lang_path . $lang_code . '.php')) {
     $lang = require $lang_path . $lang_code . '.php';
 } else {
-    $lang = require $lang_path . 'ja.php'; // Fallback
+    $lang = require $lang_path . 'en.php'; // Fallback
 }
 
 // DB 연결
