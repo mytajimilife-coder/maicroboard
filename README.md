@@ -1,10 +1,10 @@
-# MaicroBoard
+# MicroBoard
 
 A lightweight, high-performance bulletin board system designed for simplicity and ease of use.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://www.php.net/)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/mytajimilife-coder/maicroboard)
+[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/mytajimilife-coder/microboard)
 
 ## ✨ Features
 
@@ -20,7 +20,7 @@ A lightweight, high-performance bulletin board system designed for simplicity an
 
 ## 🔐 OAuth Social Login
 
-MaicroBoard supports seamless integration with popular OAuth providers:
+MicroBoard supports seamless integration with popular OAuth providers:
 
 | Provider | Status | Setup Guide |
 |----------|--------|-------------|
@@ -51,7 +51,7 @@ See [OAUTH_SETUP.md](OAUTH_SETUP.md) for detailed setup instructions.
 
 1. Download or clone the repository
 ```bash
-git clone https://github.com/mytajimilife-coder/maicroboard.git
+git clone https://github.com/mytajimilife-coder/microboard.git
 ```
 
 2. Upload files to your web server
@@ -64,7 +64,7 @@ git clone https://github.com/mytajimilife-coder/maicroboard.git
    - Create admin account
    - Complete installation
 
-5. Login and start using MaicroBoard!
+5. Login and start using MicroBoard!
 
 ### OAuth Configuration
 
@@ -102,7 +102,7 @@ Access the admin panel at `/admin/index.php`:
 ## 📁 Project Structure
 
 ```
-maicroboard/
+microboard/
 ├── admin/              # Admin panel
 │   ├── oauth.php      # OAuth settings
 │   ├── users.php      # User management
@@ -141,7 +141,7 @@ Configure in Admin Panel → Configuration:
 
 ## 🛡️ Security
 
-MaicroBoard includes built-in security features:
+MicroBoard includes built-in security features:
 
 - ✅ CSRF token protection
 - ✅ Prepared statements (SQL Injection prevention)
@@ -155,7 +155,7 @@ MaicroBoard includes built-in security features:
 
 - [OAuth Setup Guide](OAUTH_SETUP.md) - Detailed OAuth configuration
 - [Security Guide](SECURITY.md) - Security best practices
-- [GitHub Pages](https://mytajimilife-coder.github.io/maicroboard/) - Online documentation
+- [GitHub Pages](https://mytajimilife-coder.github.io/microboard/) - Online documentation
 
 ## 🤝 Contributing
 
@@ -172,11 +172,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Support
 
-- Create an [Issue](https://github.com/mytajimilife-coder/maicroboard/issues)
-- Check the [Documentation](https://mytajimilife-coder.github.io/maicroboard/)
+- Create an [Issue](https://github.com/mytajimilife-coder/microboard/issues)
+- Check the [Documentation](https://mytajimilife-coder.github.io/microboard/)
 
 ---
 
-Made with ❤️ by MaicroBoard Team
+Made with ❤️ by MicroBoard Team
 
-**Version 1.0.0** | [Documentation](https://mytajimilife-coder.github.io/maicroboard/) | [Report Bug](https://github.com/mytajimilife-coder/maicroboard/issues)
+**Version 1.0.0** | [Documentation](https://mytajimilife-coder.github.io/microboard/) | [Report Bug](https://github.com/mytajimilife-coder/microboard/issues)

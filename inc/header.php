@@ -12,14 +12,14 @@ if (file_exists($lang_file)) {
 }
 
 // 페이지 제목 설정
-$page_title = $page_title ?? 'MaicroBoard';
+$page_title = $page_title ?? 'MicroBoard';
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo substr($lang_code, 0, 2); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page_title); ?> - MaicroBoard</title>
+    <title><?php echo htmlspecialchars($page_title); ?> - MicroBoard</title>
     <link rel="stylesheet" href="../skin/inc/header.css">
                 <ul class="nav-menu">
                     <?php if (isLoggedIn()): ?>

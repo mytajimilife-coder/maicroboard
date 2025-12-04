@@ -1,6 +1,6 @@
 # OAuth Social Login Setup Guide
 
-MaicroBoard supports social login with Google, LINE, and Apple.
+MicroBoard supports social login with Google, LINE, and Apple.
 
 ## Setup Instructions
 
@@ -40,7 +40,7 @@ You can check the configuration status of each provider in the admin panel:
    ```
 7. Copy the Client ID and Client Secret.
 
-### 2. MaicroBoard Setup
+### 2. MicroBoard Setup
 - Client ID: Enter the Client ID received from Google.
 - Client Secret: Enter the Client Secret received from Google.
 - Check "Enable".
@@ -58,7 +58,7 @@ You can check the configuration status of each provider in the admin panel:
      ```
 5. Check Channel ID and Channel Secret in the "Basic settings" tab.
 
-### 2. MaicroBoard Setup
+### 2. MicroBoard Setup
 - Client ID: Enter LINE Channel ID.
 - Client Secret: Enter LINE Channel Secret.
 - Check "Enable".
@@ -71,7 +71,7 @@ You can check the configuration status of each provider in the admin panel:
 3. Click "Identifiers" → "+" button.
 4. Select "App IDs" and enable "Sign in with Apple".
 5. Create "Services IDs":
-   - Enter Identifier (e.g., com.yourcompany.maicroboard).
+   - Enter Identifier (e.g., com.yourcompany.microboard).
    - Enable "Sign in with Apple".
    - Configure Return URLs:
      ```
@@ -81,7 +81,7 @@ You can check the configuration status of each provider in the admin panel:
    - Enable "Sign in with Apple".
    - Download Key ID and Private Key.
 
-### 2. MaicroBoard Setup
+### 2. MicroBoard Setup
 - Client ID: Enter Apple Service ID.
 - Client Secret: Enter Apple Team ID.
 - **Note**: Apple requires additional configuration (Key ID, Private Key, etc.).
@@ -129,7 +129,7 @@ https://your-domain.com/oauth_callback.php
 - enabled: Enable status
 
 **mb1_oauth_users**: Stores OAuth user linkage information
-- mb_id: MaicroBoard User ID
+- mb_id: MicroBoard User ID
 - provider: OAuth Provider
 - provider_user_id: User ID from the provider
 - created_at: Linkage creation time

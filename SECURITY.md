@@ -13,7 +13,7 @@ If you discover a security vulnerability within this project, please report it v
 
 ## Security Measures Implemented
 
-MaicroBoard prioritizes security and implements the following measures to protect user data and system integrity.
+MicroBoard prioritizes security and implements the following measures to protect user data and system integrity.
 
 ### 1. Authentication & Authorization
 - **Session Management**: Secure session handling with timeouts (30 minutes) to prevent session hijacking.

@@ -17,7 +17,7 @@ $paginated_comments = array_slice($user_comments, $comment_offset, $comments_per
 <!DOCTYPE html>
 <html>
 <head>
-  <title><?php echo $lang['mypage']; ?> - MaicroBoard</title>
+  <title><?php echo $lang['mypage']; ?> - MicroBoard</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../skin/default/style.css">
   <style>

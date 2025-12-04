@@ -40,7 +40,7 @@ if (empty($_SESSION['csrf_token'])) {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MaicroBoard - <?php echo $lang['register']; ?></title>
+  <title>MicroBoard - <?php echo $lang['register']; ?></title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="skin/default/style.css">
   <style>

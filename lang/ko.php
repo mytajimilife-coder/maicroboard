@@ -156,7 +156,7 @@ return [
     'feature_responsive' => '반응형 디자인',
     'feature_responsive_desc' => '데스크톱, 태블릿, 모바일 기기에서 완벽하게 작동합니다.',
     'license_title' => '라이선스',
-    'license_description' => 'MaicroBoard는 MIT 라이선스에 따라 라이선스가 부여된 오픈 소스 소프트웨어입니다.',
+    'license_description' => 'MicroBoard는 MIT 라이선스에 따라 라이선스가 부여된 오픈 소스 소프트웨어입니다.',
     'all_rights_reserved' => '모든 권리 보유.',
     'language' => '언어',
     'post_write_action' => '글작성',

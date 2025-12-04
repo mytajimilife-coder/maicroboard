@@ -9,7 +9,7 @@ require_once 'inc/header.php';
 
 <div class="landing-hero">
     <div class="hero-content">
-        <h1><?php echo $lang['welcome_to_maicroboard']; ?></h1>
+        <h1><?php echo $lang['welcome_to_microboard']; ?></h1>
         <p><?php echo $lang['landing_description']; ?></p>
         
         <div class="hero-actions">

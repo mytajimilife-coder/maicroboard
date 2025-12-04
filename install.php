@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $db_host = $_POST['db_host'] ?? 'localhost';
     $db_user = $_POST['db_user'] ?? 'root';
     $db_pass = $_POST['db_pass'] ?? '';
-    $db_name = $_POST['db_name'] ?? 'maicroboard';
+    $db_name = $_POST['db_name'] ?? 'microboard';
     $admin_username = $_POST['admin_username'] ?? 'admin';
     $admin_password = $_POST['admin_password'] ?? 'admin';
     $admin_password_confirm = $_POST['admin_password_confirm'] ?? '';
@@ -427,7 +427,7 @@ define('SKIN_DIR', './skin/default');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaicroBoard - <?php echo $lang['install_title']; ?></title>
+    <title>MicroBoard - <?php echo $lang['install_title']; ?></title>
     <link rel="stylesheet" href="skin/default/style.css">
     <style>
         .install-container {
@@ -550,7 +550,7 @@ define('SKIN_DIR', './skin/default');
 <body>
     <div class="install-container">
         <div class="language-selector">
-            <h2>MaicroBoard - <?php echo $lang['install_title']; ?></h2>
+            <h2>MicroBoard - <?php echo $lang['install_title']; ?></h2>
             <form method="post" style="display: inline;">
                 <input type="hidden" name="language" id="selected_language" value="<?php echo htmlspecialchars($language); ?>">
                 <div class="language-options">
@@ -568,7 +568,7 @@ define('SKIN_DIR', './skin/default');
                 
                 <div class="form-group">
                     <label for="db_name"><?php echo $lang['db_name']; ?> :</label>
-                    <input type="text" name="db_name" id="db_name" value="maicroboard" required>
+                    <input type="text" name="db_name" id="db_name" value="microboard" required>
                 </div>
                 
                 <h3><?php echo $lang['admin_settings']; ?></h3>

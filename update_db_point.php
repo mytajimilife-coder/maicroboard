@@ -23,7 +23,7 @@ $db = getDB();
     // 기본 설정 데이터 추가
     $stmt = $db->query("SELECT COUNT(*) FROM mb1_config");
     if ($stmt->fetchColumn() == 0) {
-        $db->exec("INSERT INTO mb1_config (cf_title, cf_use_point, cf_write_point) VALUES ('MaicroBoard', 0, 0)");
+        $db->exec("INSERT INTO mb1_config (cf_title, cf_use_point, cf_write_point) VALUES ('MicroBoard', 0, 0)");
         echo $lang['data_added'] . "<br>";
     }
 
