@@ -29,7 +29,7 @@ return [
     'register_success' => '회원가입이 완료되었습니다. 로그인해주세요.',
     'username_exists' => '이미 사용중인 아이디입니다.',
     'invalid_username' => '아이디는 3~20자 이내여야 합니다.',
-    'invalid_password' => '비밀번호는 최소 6자以上이어야 합니다.',
+    'invalid_password' => '비밀번호는 최소 6자 이상이어야 합니다.',
     'password_mismatch' => '비밀번호가 일치하지 않습니다.',
     'invalid_format' => '아이디는 영문, 숫자, 언더스코어만 사용할 수 있습니다.',
     'posts_written' => '내가 쓴 글',

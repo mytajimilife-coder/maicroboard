@@ -70,6 +70,16 @@ if ($_POST) {
 </head>
 <body class="write-page">
 <?php
+// 스킨 설정
+$board_skin = 'default'; // 기본 스킨
+if (!empty($_GET['bo_table'])) {
+  $db = getDB();
+  $stmt = $db->prepare('SELECT bo_skin FROM mb1_board_config WHERE bo_table = ?');
+  $stmt->execute([$_GET['bo_table']]);
+  $config = $stmt->fetch();
+  $board_skin = $config['bo_skin'] ?? 'default';
+}
+
 $skin_path = "skin/$board_skin/write.skin.php";
 if (file_exists($skin_path)) {
   $board_config = ['bo_subject' => $lang['write_post']];

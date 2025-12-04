@@ -1,15 +1,10 @@
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['language'])) {
-        $selected_lang = $_POST['language'];
-        if (in_array($selected_lang, ['ko', 'en', 'ja', 'zh'])) {
-            $_SESSION['lang'] = $selected_lang;
-            header('Location: ' . $_SERVER['PHP_SELF']);
-            exit;
-        }
-    }
-    ?>
+    </main>
     
-    <link rel="stylesheet" href="../skin/inc/footer.css">
-    <link rel="stylesheet" href="../skin/inc/content.css">
+    <footer class="main-footer">
+        <div class="footer-container">
+            <p>&copy; <?php echo date('Y'); ?> MicroBoard v<?php echo MICROBOARD_VERSION; ?>. <?php echo $lang['all_rights_reserved'] ?? 'All rights reserved.'; ?></p>
+        </div>
+    </footer>
     
     <script>
         // 기본 자바스크립트 기능
@@ -22,7 +17,7 @@
             const deleteForms = document.querySelectorAll('form[action*="delete"]');
             deleteForms.forEach(function(form) {
                 form.addEventListener('submit', function(e) {
-                    if (!confirm('<?php echo $lang['delete_confirm']; ?>')) {
+                    if (!confirm('<?php echo $lang['delete_confirm'] ?? '정말 삭제하시겠습니까?'; ?>')) {
                         e.preventDefault();
                     }
                 });

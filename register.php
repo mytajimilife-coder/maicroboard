@@ -32,6 +32,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       // 중복 체크
       if (isUsernameExists($username)) {
+        $error = $lang['username_exists'];
+      } else {
+        // 회원가입 처리
+        if (registerUser($username, $password)) {
+          $success = $lang['register_success'];
+        } else {
+          $error = $lang['register_failed'];
+        }
+      }
+    }
+  }
+}
+
 // CSRF 토큰 생성
 if (empty($_SESSION['csrf_token'])) {
   $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -43,6 +56,7 @@ if (empty($_SESSION['csrf_token'])) {
   <title>MicroBoard - <?php echo $lang['register']; ?></title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="skin/default/style.css">
+  <link rel="icon" type="image/png" href="img/favicon.png">
   <style>
     .register-page {
       max-width: 400px;

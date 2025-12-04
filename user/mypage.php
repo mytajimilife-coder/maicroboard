@@ -4,6 +4,19 @@ requireLogin();
 
 $username = $_SESSION['user'];
 
+// 사용자 게시물 가져오기
+$user_posts = getUserPosts($username);
+$total_posts = count($user_posts);
+
+// 사용자 댓글 가져오기 (현재는 빈 배열)
+$user_comments = getUserComments($username);
+
+// 페이지네이션 설정
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$posts_per_page = 10;
+$comments_per_page = 10;
+
+// 게시물 페이지네이션
 $total_post_pages = ceil($total_posts / $posts_per_page);
 $offset = ($page - 1) * $posts_per_page;
 $paginated_posts = array_slice($user_posts, $offset, $posts_per_page);
@@ -20,6 +33,7 @@ $paginated_comments = array_slice($user_comments, $comment_offset, $comments_per
   <title><?php echo $lang['mypage']; ?> - MicroBoard</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../skin/default/style.css">
+  <link rel="icon" type="image/png" href="../img/favicon.png">
   <style>
     .mypage-container {
       max-width: 1200px;

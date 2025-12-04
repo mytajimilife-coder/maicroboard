@@ -16,6 +16,24 @@ if (!isAdmin()) {
 }
 
 $db = getDB();
+
+try {
+    // 1. mb1_member 테이블에 mb_point 컬럼 추가
+    $stmt = $db->query("SHOW COLUMNS FROM mb1_member LIKE 'mb_point'");
+    if ($stmt->rowCount() == 0) {
+        $db->exec("ALTER TABLE mb1_member ADD COLUMN mb_point int(11) NOT NULL DEFAULT 0");
+        echo sprintf($lang['column_added'], 'mb1_member', 'mb_point') . "<br>";
+    } else {
+        echo sprintf($lang['column_exists'], 'mb1_member', 'mb_point') . "<br>";
+    }
+
+    // 2. mb1_config 테이블 생성
+    $db->exec("
+        CREATE TABLE IF NOT EXISTS `mb1_config` (
+            `cf_title` varchar(255) NOT NULL DEFAULT 'MicroBoard',
+            `cf_use_point` tinyint(1) NOT NULL DEFAULT 0,
+            `cf_write_point` int(11) NOT NULL DEFAULT 0,
+            PRIMARY KEY (`cf_title`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ");
     echo sprintf($lang['table_created'], 'mb1_config') . "<br>";
