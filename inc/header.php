@@ -18,6 +18,14 @@ $default_theme = $config['cf_theme'] ?? 'light';
 $bg_type = $config['cf_bg_type'] ?? 'color';
 $bg_value = $config['cf_bg_value'] ?? '#ffffff';
 
+// SEO 메타 데이터 설정 (기본값)
+$page_title = $page_title ?? 'MicroBoard';
+$meta_description = $meta_description ?? 'MicroBoard - 가볍고 강력한 PHP 게시판';
+$meta_keywords = $meta_keywords ?? 'microboard, php board, community, 게시판';
+$og_image = $og_image ?? $root_path . 'img/logo.png';
+$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+$canonical_url = $canonical_url ?? $current_url;
+
 // 배경 스타일 생성
 $custom_bg_style = '';
 if ($bg_type === 'image') {
@@ -32,7 +40,27 @@ if ($bg_type === 'image') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
     <title><?php echo htmlspecialchars($page_title); ?> - MicroBoard</title>
+    <meta name="description" content="<?php echo htmlspecialchars($meta_description); ?>">
+    <meta name="keywords" content="<?php echo htmlspecialchars($meta_keywords); ?>">
+    <link rel="canonical" href="<?php echo htmlspecialchars($canonical_url); ?>">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="<?php echo htmlspecialchars($page_title); ?>">
+    <meta property="og:description" content="<?php echo htmlspecialchars($meta_description); ?>">
+    <meta property="og:image" content="<?php echo htmlspecialchars($og_image); ?>">
+    <meta property="og:url" content="<?php echo htmlspecialchars($canonical_url); ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="MicroBoard">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo htmlspecialchars($page_title); ?>">
+    <meta name="twitter:description" content="<?php echo htmlspecialchars($meta_description); ?>">
+    <meta name="twitter:image" content="<?php echo htmlspecialchars($og_image); ?>">
+    
     <link rel="stylesheet" href="<?php echo $root_path; ?>skin/default/style.css">
     <link rel="icon" type="image/png" href="<?php echo $root_path; ?>img/favicon.png">
     <style>

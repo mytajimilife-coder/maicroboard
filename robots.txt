@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /plugin/
+Disallow: /skin/
+Disallow: /start/
+Disallow: /inc/
+Disallow: /lib/
+Disallow: /data/
+
+# Please replace with your actual domain
+# Sitemap: http://www.example.com/sitemap.php
