@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# robots.txt -> robots.php
+RewriteRule ^robots\.txt$ robots.php [L]
+
+# sitemap.xml -> sitemap.php
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+</IfModule>
