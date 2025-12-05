@@ -227,5 +227,18 @@ return [
     'edit_privacy' => 'Edit Privacy Policy',
     'last_updated' => 'Last Updated',
     'no_content' => 'Content has not been set yet.',
+    
+    // Landing Page
+    'home' => 'Home',
+    'why_microboard' => 'Why MicroBoard?',
+    'microboard_desc' => 'Simple, Fast, and Modern PHP Bulletin Board System designed for community.',
+    'fast_performance' => 'Fast Performance',
+    'fast_performance_desc' => 'Optimized for speed with minimal overhead. Light on resources, heavy on performance.',
+    'modern_design' => 'Modern Design',
+    'modern_design_desc' => 'Beautiful, responsive UI out of the box. Dark mode support and customizable themes.',
+    'secure' => 'Secure',
+    'secure_desc' => 'Built with security in mind. XSS protection, CSRF prevention, and secure authentication.',
+    'explore' => 'Explore',
+    'join_discussion' => 'Join the discussion in %s',
 ];
 ?>

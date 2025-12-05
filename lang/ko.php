@@ -227,5 +227,18 @@ return [
     'edit_privacy' => '개인정보 보호정책 편집',
     'last_updated' => '최종 업데이트',
     'no_content' => '내용이 아직 설정되지 않았습니다.',
+
+    // 랜딩 페이지
+    'home' => '홈',
+    'why_microboard' => 'MicroBoard를 선택해야 하는 이유',
+    'microboard_desc' => '커뮤니티를 위해 설계된, 빠르고 현대적인 PHP 게시판 시스템입니다.',
+    'fast_performance' => '빠른 성능',
+    'fast_performance_desc' => '최소한의 오버헤드로 속도에 최적화되었습니다. 리소스는 적게, 성능은 강력하게.',
+    'modern_design' => '모던한 디자인',
+    'modern_design_desc' => '아름답고 반응형 UI가 기본 제공됩니다. 다크 모드와 커스터마이징 가능한 테마를 지원합니다.',
+    'secure' => '보안',
+    'secure_desc' => '보안을 최우선으로 고려했습니다. XSS 방지, CSRF 보호, 안전한 인증 시스템이 포함되어 있습니다.',
+    'explore' => '둘러보기',
+    'join_discussion' => '%s에서 대화에 참여하세요',
 ];
 ?>

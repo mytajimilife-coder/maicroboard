@@ -59,13 +59,13 @@ if (!empty($boards)):
                     </a>
                 </h3>
                 <p style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">
-                    <?php echo !empty($board['bo_description']) ? htmlspecialchars($board['bo_description']) : 'Join the discussion in ' . htmlspecialchars($board['bo_subject']); ?>
+                    <?php echo !empty($board['bo_description']) ? htmlspecialchars($board['bo_description']) : sprintf($lang['join_discussion'] ?? 'Join the discussion in %s', htmlspecialchars($board['bo_subject'])); ?>
                 </p>
             </div>
             <div style="margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 0.85rem; color: var(--text-muted);">Admin: <?php echo htmlspecialchars($board['bo_admin']); ?></span>
+                <span style="font-size: 0.85rem; color: var(--text-muted);"><?php echo isset($lang['admin_role']) ? $lang['admin_role'] : 'Admin'; ?>: <?php echo htmlspecialchars($board['bo_admin']); ?></span>
                 <a href="list.php?bo_table=<?php echo $board['bo_table']; ?>" style="color: var(--primary-color); font-weight: 600; font-size: 0.9rem; text-decoration: none;">
-                    Explore &rarr;
+                    <?php echo isset($lang['explore']) ? $lang['explore'] : 'Explore'; ?> &rarr;
                 </a>
             </div>
         </div>
@@ -78,26 +78,26 @@ if (!empty($boards)):
 <div class="features-section">
     <div class="content-wrapper">
         <div class="section-header">
-            <span class="section-tag">Features</span>
-            <h2 class="section-title">Why MicroBoard?</h2>
-            <p style="color: var(--text-light); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Simple, Fast, and Modern PHP Bulletin Board System designed for community.</p>
+            <span class="section-tag"><?php echo isset($lang['function']) ? $lang['function'] : 'Features'; ?></span>
+            <h2 class="section-title"><?php echo $lang['why_microboard']; ?></h2>
+            <p style="color: var(--text-light); font-size: 1.1rem; max-width: 600px; margin: 0 auto;"><?php echo $lang['microboard_desc']; ?></p>
         </div>
         
         <div class="feature-grid">
             <div class="feature-item">
                 <div class="feature-icon">⚡</div>
-                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-color);">Fast Performance</h3>
-                <p style="color: var(--text-light); line-height: 1.6;">Optimized for speed with minimal overhead. Light on resources, heavy on performance.</p>
+                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-color);"><?php echo $lang['fast_performance']; ?></h3>
+                <p style="color: var(--text-light); line-height: 1.6;"><?php echo $lang['fast_performance_desc']; ?></p>
             </div>
             <div class="feature-item">
                 <div class="feature-icon">🎨</div>
-                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-color);">Modern Design</h3>
-                <p style="color: var(--text-light); line-height: 1.6;">Beautiful, responsive UI out of the box. Dark mode support and customizable themes.</p>
+                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-color);"><?php echo $lang['modern_design']; ?></h3>
+                <p style="color: var(--text-light); line-height: 1.6;"><?php echo $lang['modern_design_desc']; ?></p>
             </div>
             <div class="feature-item">
                 <div class="feature-icon">🛡️</div>
-                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-color);">Secure</h3>
-                <p style="color: var(--text-light); line-height: 1.6;">Built with security in mind. XSS protection, CSRF prevention, and secure authentication.</p>
+                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-color);"><?php echo $lang['secure']; ?></h3>
+                <p style="color: var(--text-light); line-height: 1.6;"><?php echo $lang['secure_desc']; ?></p>
             </div>
         </div>
     </div>
