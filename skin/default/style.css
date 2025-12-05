@@ -164,38 +164,42 @@ a:hover {
   font-size: 0.9rem;
 }
 
-/* Landing Page */
+/* Landing Page Enhancements */
 .landing-hero {
+  min-height: 60vh;
+  background: linear-gradient(135deg, var(--bg-color), var(--bg-tertiary));
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 70px);
+  padding: 4rem 1.5rem;
   text-align: center;
-  padding: 3rem 1.5rem;
-  background: linear-gradient(135deg, var(--bg-color) 0%, var(--bg-secondary) 100%);
 }
 
-.hero-content h1 {
+.hero-content {
+  max-width: 800px;
+  width: 100%;
+}
+
+.hero-title {
   font-size: clamp(2.5rem, 5vw, 4rem);
   margin-bottom: 1.5rem;
-  color: var(--secondary-color);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  background: linear-gradient(to right, var(--primary-color), var(--primary-light));
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
+  font-weight: 800;
+  line-height: 1.1;
 }
 
-.hero-content p {
+.hero-desc {
   font-size: clamp(1.1rem, 2vw, 1.25rem);
   color: var(--text-light);
   margin-bottom: 2.5rem;
+  line-height: 1.6;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.7;
 }
 
 .hero-actions {
@@ -203,6 +207,120 @@ a:hover {
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.hero-btn {
+  padding: 1rem 2.5rem;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: transform 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary-pill {
+  background: var(--primary-color);
+  color: white !important;
+  border: none;
+}
+
+.btn-outline-pill {
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color) !important;
+  background: transparent;
+}
+
+.btn-outline-pill:hover {
+  background: var(--primary-color);
+  color: white !important;
+}
+
+/* Feature Section */
+.features-section {
+  background: var(--bg-secondary);
+  padding: 5rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-tag {
+  color: var(--primary-color);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  display: block;
+}
+
+.section-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--secondary-color);
+  margin: 0.5rem 0 1rem;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-item {
+  text-align: center;
+  padding: 1rem;
+}
+
+.feature-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  background: var(--bg-color);
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border-radius: 50%;
+  margin: 0 auto 1.5rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Board Cards */
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.board-card {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+}
+
+.board-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
 }
 
 /* Buttons */
@@ -626,20 +744,4 @@ textarea {
 .card:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-}
-
-/* Badge */
-.badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 9999px;
-  background: var(--primary-color);
-  color: #ffffff;
-}
-
-.badge.secondary {
-  background: var(--bg-secondary);
-  color: var(--text-color);
 }

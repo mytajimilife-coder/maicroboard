@@ -39,6 +39,7 @@ if (isset($admin_title_key) && isset($lang[$admin_title_key])) {
 <title><?php echo $admin_title; ?></title>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="../skin/default/style.css">
+<style>
 /* 관리자 페이지 전용 스타일 */
 :root {
   --admin-sidebar-width: 250px;
