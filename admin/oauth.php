@@ -241,7 +241,7 @@ $is_configured = !empty($apple_config['client_id']) && !empty($apple_config['cli
             <div>
                 <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;"><?php echo $lang['oauth_client_secret']; ?> (Team ID)</label>
                 <input type="text" name="client_secret" value="<?php echo htmlspecialchars($oauth_configs['apple']['client_secret'] ?? ''); ?>" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--bg-secondary); color: var(--text-color);">
-                <small style="color: var(--text-light); display: block; margin-top: 0.25rem;">Apple의 경우 Key ID, Private Key 등 추가 설정이 필요할 수 있습니다.</small>
+                <small style="color: var(--text-light); display: block; margin-top: 0.25rem;"><?php echo $lang['apple_key_help']; ?></small>
             </div>
         </div>
         

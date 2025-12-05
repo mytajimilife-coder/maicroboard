@@ -11,7 +11,9 @@ define('DB_NAME', 'microboard');
 define('MICROBOARD_VERSION', '1.0.0');
 
 // 선택된 언어 설정
-if (isset($_GET['lang']) && in_array($_GET['lang'], ['ko', 'en', 'ja', 'zh'])) {
+if (isset($_REQUEST['language']) && in_array($_REQUEST['language'], ['ko', 'en', 'ja', 'zh'])) {
+    $_SESSION['lang'] = $_REQUEST['language'];
+} elseif (isset($_GET['lang']) && in_array($_GET['lang'], ['ko', 'en', 'ja', 'zh'])) {
     $_SESSION['lang'] = $_GET['lang'];
 } elseif (!isset($_SESSION['lang'])) {
     // 브라우저 언어 감지

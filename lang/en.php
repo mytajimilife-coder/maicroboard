@@ -255,5 +255,6 @@ return [
     'plugin_settings' => 'Plugin Settings',
     'no_plugins_installed' => 'No plugins installed.',
     'table_name_help' => 'Only letters, numbers, and underscores (_) are allowed.',
+    'apple_key_help' => 'For Apple, additional settings like Key ID and Private Key may be required.',
 ];
 ?>

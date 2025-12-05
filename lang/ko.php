@@ -255,5 +255,6 @@ return [
     'plugin_settings' => '플러그인 설정',
     'no_plugins_installed' => '설치된 플러그인이 없습니다.',
     'table_name_help' => '영문, 숫자, 언더스코어(_)만 입력 가능합니다.',
+    'apple_key_help' => 'Apple의 경우 Key ID, Private Key 등 추가 설정이 필요할 수 있습니다.',
 ];
 ?>
