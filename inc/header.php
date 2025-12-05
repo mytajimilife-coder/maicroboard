@@ -62,7 +62,8 @@ if ($bg_type === 'image') {
     <meta name="twitter:image" content="<?php echo htmlspecialchars($og_image); ?>">
     
     <link rel="stylesheet" href="<?php echo $root_path; ?>skin/default/style.css">
-    <link rel="icon" type="image/png" href="<?php echo $root_path; ?>img/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="<?php echo $root_path; ?>img/favicon.svg">
+    <link rel="alternate icon" href="<?php echo $root_path; ?>img/favicon.svg">
     <style>
         /* 관리자 설정 배경 적용 */
         :root {
@@ -96,8 +97,9 @@ if ($bg_type === 'image') {
     <header class="main-header">
         <div class="header-container">
             <div class="logo">
-                <a href="<?php echo $root_path; ?>list.php">
-                    <img src="<?php echo $root_path; ?>img/logo.png" alt="MicroBoard Logo" style="height: 40px;">
+                <a href="<?php echo $root_path; ?>index.php" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+                    <img src="<?php echo $root_path; ?>img/logo.svg" alt="MicroBoard Logo" style="height: 36px; width: 36px;">
+                    <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">MicroBoard</span>
                 </a>
             </div>
             

@@ -59,6 +59,7 @@ if (empty($_SESSION['csrf_token'])) {
 $page_title = $lang['login'];
 require_once 'inc/header.php';
 ?>
+<div class="content-wrapper">
 <div class="login-container">
   <div class="lang-selector" style="position: absolute; top: 20px; right: 20px; display: flex; gap: 8px;">
     <?php
@@ -125,5 +126,6 @@ require_once 'inc/header.php';
   <div style="margin-top: 30px; padding: 15px; border-top: 1px solid #ddd; text-align: center;">
     <p><?php echo $lang['first_visit']; ?> <a href="register.php" style="color: #28a745; text-decoration: none; font-weight: bold;"><?php echo $lang['register']; ?></a></p>
   </div>
+</div>
 </div>
 <?php require_once 'inc/footer.php'; ?>

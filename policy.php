@@ -29,100 +29,99 @@ if (!$policy) {
 }
 
 $page_title = $policy['policy_title'];
+require_once 'inc/header.php';
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title><?php echo htmlspecialchars($page_title); ?> - MicroBoard</title>
-    <link rel="stylesheet" href="skin/default/style.css">
-    <link rel="icon" type="image/png" href="img/favicon.png">
-    <style>
-        .policy-container {
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 40px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .policy-header {
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        .policy-header h1 {
-            margin: 0 0 10px 0;
-            color: #333;
-        }
-        .policy-updated {
-            color: #666;
-            font-size: 14px;
-        }
-        .policy-content {
-            line-height: 1.8;
-            color: #444;
-        }
-        .policy-content h2 {
-            color: #007bff;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-        .policy-content h3 {
-            color: #333;
-            margin-top: 25px;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-        .policy-content p {
-            margin-bottom: 15px;
-        }
-        .policy-content ul, .policy-content ol {
-            margin-bottom: 15px;
-            padding-left: 30px;
-        }
-        .policy-content li {
-            margin-bottom: 8px;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 10px 20px;
-            background: #6c757d;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-        .back-link:hover {
-            background: #5a6268;
-        }
-        .policy-tabs {
-            margin-bottom: 30px;
-            display: flex;
-            gap: 10px;
-        }
-        .policy-tab {
-            padding: 10px 20px;
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #333;
-            transition: all 0.2s;
-        }
-        .policy-tab:hover {
-            background: #e9ecef;
-        }
-        .policy-tab.active {
-            background: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-    </style>
-</head>
-<body>
+<style>
+    .policy-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: var(--bg-color);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+    }
+    .policy-header {
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .policy-header h1 {
+        margin: 0 0 0.5rem 0;
+        color: var(--secondary-color);
+        font-size: 2rem;
+    }
+    .policy-updated {
+        color: var(--text-light);
+        font-size: 0.875rem;
+    }
+    .policy-content {
+        line-height: 1.8;
+        color: var(--text-color);
+    }
+    .policy-content h2 {
+        color: var(--primary-color);
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-size: 1.5em;
+    }
+    .policy-content h3 {
+        color: var(--secondary-color);
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-size: 1.2em;
+    }
+    .policy-content p {
+        margin-bottom: 1rem;
+    }
+    .policy-content ul, .policy-content ol {
+        margin-bottom: 1rem;
+        padding-left: 2rem;
+    }
+    .policy-content li {
+        margin-bottom: 0.5rem;
+    }
+    .back-link {
+        display: inline-block;
+        margin-top: 2rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--bg-secondary);
+        color: var(--text-color);
+        text-decoration: none;
+        border-radius: var(--radius);
+        transition: var(--transition);
+        border: 1px solid var(--border-color);
+    }
+    .back-link:hover {
+        background: var(--bg-tertiary);
+    }
+    .policy-tabs {
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    .policy-tab {
+        padding: 0.75rem 1.5rem;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius);
+        text-decoration: none;
+        color: var(--text-color);
+        transition: var(--transition);
+        font-weight: 500;
+    }
+    .policy-tab:hover {
+        background: var(--bg-tertiary);
+    }
+    .policy-tab.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+</style>
+
+<div class="content-wrapper">
     <div class="policy-container">
         <div class="policy-tabs">
             <a href="?type=terms" class="policy-tab <?php echo $policy_type === 'terms' ? 'active' : ''; ?>">
@@ -148,5 +147,5 @@ $page_title = $policy['policy_title'];
         
         <a href="javascript:history.back()" class="back-link"><?php echo $lang['list']; ?></a>
     </div>
-</body>
-</html>
+</div>
+<?php require_once 'inc/footer.php'; ?>
