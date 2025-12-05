@@ -123,6 +123,7 @@ Access the admin panel at `/admin/index.php`:
 
 ## 📁 Project Structure
 
+```
 microboard/
 ├── admin/                  # Admin panel
 │   ├── board.php          # Board management
@@ -156,6 +157,7 @@ microboard/
 ├── sitemap.php             # Sitemap generator
 ├── robots.php              # Robots.txt generator
 └── OAUTH_SETUP.md          # OAuth setup guide
+```
 
 
 ## 🔧 Configuration
