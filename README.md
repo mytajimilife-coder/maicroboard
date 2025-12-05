@@ -30,7 +30,8 @@ A lightweight, high-performance bulletin board system designed for simplicity an
 ### Extensibility
 - 🔌 **Plugin System** - Hook-based plugin architecture for unlimited extensions
 - 🎨 **Multiple Skins** - Choose from different board layouts
-- 📄 **Policy Management** - Manage Terms of Service and Privacy Policy
+- 📄 **Policy Management** - Auto-install default Terms & Privacy Policy in 4 languages
+- 📋 **Board Directory** - Visual card-style directory for all available boards
 - 🌐 **SEO Optimized** - Auto-generated sitemaps and meta tags
 
 ### Admin Features
