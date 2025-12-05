@@ -5,7 +5,7 @@ session_start();
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_NAME', 'gnuboard5');
+define('DB_NAME', 'microboard');
 
 // 버전 정보
 define('MICROBOARD_VERSION', '1.0.0');
