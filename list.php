@@ -65,7 +65,7 @@ if (!$bo_table) {
                 <div class="board-card">
                     <div style="flex: 1;">
                         <h3 style="margin: 0 0 1rem 0; font-size: 1.5rem; color: var(--text-color);">
-                            <a href="list.php?bo_table=<?php echo $board['bo_table']; ?>" style="color: inherit; text-decoration: none;">
+                            <a href="list.php?bo_table=<?php echo htmlspecialchars($board['bo_table']); ?>" style="color: inherit; text-decoration: none;">
                                 <?php echo htmlspecialchars($board['bo_subject']); ?>
                             </a>
                         </h3>
@@ -75,7 +75,7 @@ if (!$bo_table) {
                     </div>
                     <div style="margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 0.85rem; color: var(--text-muted);"><?php echo isset($lang['admin_role']) ? $lang['admin_role'] : 'Admin'; ?>: <?php echo htmlspecialchars($board['bo_admin']); ?></span>
-                        <a href="list.php?bo_table=<?php echo $board['bo_table']; ?>" style="color: var(--primary-color); font-weight: 600; font-size: 0.9rem; text-decoration: none;">
+                        <a href="list.php?bo_table=<?php echo htmlspecialchars($board['bo_table']); ?>" style="color: var(--primary-color); font-weight: 600; font-size: 0.9rem; text-decoration: none;">
                             <?php echo isset($lang['explore']) ? $lang['explore'] : 'Explore'; ?> &rarr;
                         </a>
                     </div>

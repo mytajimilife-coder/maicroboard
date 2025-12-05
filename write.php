@@ -17,6 +17,11 @@ $post['wr_content'] = $post['wr_content'] ?? '';
 $post['wr_name'] = $_SESSION['user'];
 
 if ($_POST) {
+  // CSRF 토큰 검증
+  if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
+      die('CSRF token validation failed');
+  }
+
   $title = trim($_POST['title']);
   $content = $_POST['content'];  // HTML 보존, trim 제거
   if ($title && $content) {
@@ -50,6 +55,13 @@ if ($_POST) {
         $files = $_FILES['bf_file'];
         for ($i = 0; $i < count($files['name']); $i++) {
             if ($files['error'][$i] === UPLOAD_ERR_OK) {
+                // 파일 확장자 검사 (화이트리스트 방식)
+                $ext = strtolower(pathinfo($files['name'][$i], PATHINFO_EXTENSION));
+                $allowed_ext = ['jpg', 'jpeg', 'png', 'gif', 'txt', 'pdf', 'zip', 'hwp', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
+                if (!in_array($ext, $allowed_ext)) {
+                    continue; // 허용되지 않는 확장자 무시
+                }
+
                 $file = [
                     'name' => $files['name'][$i],
                     'type' => $files['type'][$i],

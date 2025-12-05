@@ -31,15 +31,21 @@ MicroBoard prioritizes security and implements the following measures to protect
 
 ### 4. Cross-Site Request Forgery (CSRF) Protection
 - **Token Validation**: Anti-CSRF tokens are generated per session and validated on all state-changing requests (POST, DELETE).
-- **Coverage**: Includes Login, Registration, Post Creation/Edit/Delete, File Upload, and Admin Board Management.
+- **Strict Implementation**: CSRF validation is strictly enforced on critical actions including Login, Registration, Post Creation/Edit/Delete, Comment Management, and Admin Settings.
+- **Session Bind**: Tokens are cryptographically bound to the user session.
 
 ### 5. File Upload Security
-- **Authentication Check**: Only logged-in users can upload files.
-- **Extension Whitelisting**: Strictly limits allowed file extensions to images (`jpg`, `jpeg`, `png`, `gif`, `bmp`).
-- **MIME Type Validation**: Verifies the actual file content type using `finfo_file`.
+- **Authentication Check**: Only authorized users can upload files.
+- **Strict Extension Whitelisting**: Allows only safe file extensions (Images: `jpg`, `png`, `gif`; Docs: `pdf`, `txt`, `doc`, `xls`, `ppt`, `hwp`, `zip`). Direct execution files like `.php`, `.html`, `.exe` are strictly blocked.
+- **MIME Type Validation**: Verifies the actual file content type using `finfo_file` to prevent extension spoofing.
 - **Content Inspection**: Scans file contents for malicious PHP tags (`<?php`, `<?`, `<%`) to prevent Web Shell uploads.
-- **Randomized Filenames**: Uploaded files are renamed with a timestamp and random hash to prevent overwriting and guessing.
-- **Directory Protection**: Upload directory permissions are managed to prevent execution of scripts (server configuration dependent).
+- **Randomized Filenames**: Uploaded files are automatically renamed with timestamps and random hashes to prevent overwriting and direct file access attacks.
+- **Execution Prevention**: Recommended server configuration to disable script execution in the upload directory.
+
+### 6. Permission & Access Control
+- **Strict Role Checking**: Granular permission checks for board actions (Read/Write/Comment/Download).
+- **Ownership Validation**: Strict ownership verification for editing/deleting posts and comments. Non-admin users can never modify others' content.
+- **Admin Isolation**: Admin panel (`/admin`) requires explicit administrator privileges (level 10).
 
 ### 6. Installation Security
 - **Database Connection**: Supports both shared hosting (direct DB connection) and VPS (DB creation) environments securely.
