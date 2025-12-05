@@ -9,20 +9,30 @@ if (!in_array($policy_type, ['terms', 'privacy'])) {
 }
 
 // 정책 내용 가져오기
-$policy = getPolicy($policy_type);
+$lang_code = $_SESSION['lang'] ?? 'ko';
+$lang_policy_type = $policy_type . '_' . $lang_code;
 
+// 1. 해당 언어의 정책 시도
+$policy = getPolicy($lang_policy_type);
+
+// 2. 없으면 기본(한국어/영어 상관없이 기본 설정된) 정책 시도
+if (!$policy) {
+    $policy = getPolicy($policy_type);
+}
+
+// 3. 그래도 없으면 기본 텍스트 표시
 if (!$policy) {
     // 기본 내용
     if ($policy_type === 'terms') {
         $policy = [
             'policy_title' => $lang['terms_of_service'],
-            'policy_content' => '<h2>이용약관</h2><p>이용약관이 아직 설정되지 않았습니다.</p>',
+            'policy_content' => '<p>' . ($lang['no_content'] ?? '내용이 없습니다.') . '</p>',
             'updated_at' => null
         ];
     } else {
         $policy = [
             'policy_title' => $lang['privacy_policy'],
-            'policy_content' => '<h2>개인정보 보호정책</h2><p>개인정보 보호정책이 아직 설정되지 않았습니다.</p>',
+            'policy_content' => '<p>' . ($lang['no_content'] ?? '내용이 없습니다.') . '</p>',
             'updated_at' => null
         ];
     }

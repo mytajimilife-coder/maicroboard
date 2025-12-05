@@ -226,5 +226,6 @@ return [
     'edit_terms' => '이용약관 편집',
     'edit_privacy' => '개인정보 보호정책 편집',
     'last_updated' => '최종 업데이트',
+    'no_content' => '내용이 아직 설정되지 않았습니다.',
 ];
 ?>

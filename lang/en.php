@@ -226,5 +226,6 @@ return [
     'edit_terms' => 'Edit Terms of Service',
     'edit_privacy' => 'Edit Privacy Policy',
     'last_updated' => 'Last Updated',
+    'no_content' => 'Content has not been set yet.',
 ];
 ?>

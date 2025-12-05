@@ -226,5 +226,6 @@ return [
     'edit_terms' => '编辑服务条款',
     'edit_privacy' => '编辑隐私政策',
     'last_updated' => '最后更新',
+    'no_content' => '内容尚未设置。',
 ];
 ?>

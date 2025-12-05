@@ -226,5 +226,6 @@ return [
     'edit_terms' => '利用規約編集',
     'edit_privacy' => '個人情報保護方針編集',
     'last_updated' => '最終更新',
+    'no_content' => 'コンテンツはまだ設定されていません。',
 ];
 ?>
