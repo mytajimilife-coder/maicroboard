@@ -605,6 +605,29 @@ function verifyUserWithBlock($id, $pass) {
     return ['success' => true];
 }
 
+// XSS 방지 함수 (HTML 허용 시 필수)
+function clean_xss($content) {
+    if (empty($content)) return '';
+    
+    // 1. script 스타일 등 위험 태그 제거 (내용 포함)
+    $content = preg_replace('/<(script|style|iframe|object|embed|form|applet|meta|link)\b[^>]*>.*?<\/\1>/is', "", $content);
+    // 닫는 태그가 없는 경우도 처리
+    $content = preg_replace('/<(script|style|iframe|object|embed|form|applet|meta|link)\b[^>]*>/i', "", $content);
+    
+    // 2. 이벤트 핸들러 제거 (on... 속성)
+    // 따옴표로 감싸진 경우
+    $content = preg_replace('/\s(on[a-z]+)\s*=\s*([\'"]).*?\2/i', "", $content);
+    // 따옴표 없는 경우
+    $content = preg_replace('/\s(on[a-z]+)\s*=\s*[^ >]+/i', "", $content);
+    
+    // 3. javascript: 프로토콜 제거
+    // href, src, action 속성 등
+    $content = preg_replace('/\s(href|src|action)\s*=\s*([\'"])\s*javascript:[^>]*?\2/i', ' $1="#"', $content);
+    $content = preg_replace('/\s(href|src|action)\s*=\s*javascript:[^ >]+/i', ' $1="#"', $content);
+    
+    return $content;
+}
+
 // 정책 페이지 관련 함수
 function getPolicy($policy_type) {
     $db = getDB();

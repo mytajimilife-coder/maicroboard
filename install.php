@@ -269,142 +269,219 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MicroBoard - <?php echo $lang['install_title']; ?></title>
     <link rel="stylesheet" href="skin/default/style.css">
+<link rel="stylesheet" href="skin/default/style.css">
     <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #111827;
+            --text-light: #6b7280;
+            --border-color: #e5e7eb;
+            --radius: 0.5rem;
+            --radius-lg: 0.75rem;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .install-container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 30px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 650px;
+            margin: 2rem 1rem;
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            background: var(--card-bg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .install-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--secondary-color);
+        }
+
+        .install-title h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 0.95rem;
         }
         
         .form-group input, .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            background-color: #f9fafb;
+            transition: all 0.2s;
             box-sizing: border-box;
         }
         
         .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #007bff;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
         
         .btn {
-            background: #007bff;
+            background: var(--primary-color);
             color: white;
-            padding: 12px 24px;
+            padding: 0.85rem 1.5rem;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--radius);
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
+            font-weight: 600;
             width: 100%;
+            transition: background 0.2s, transform 0.1s;
         }
         
         .btn:hover {
-            background: #0056b3;
+            background: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
         }
         
         .btn:disabled {
-            background: #ccc;
+            background: var(--text-light);
             cursor: not-allowed;
+            opacity: 0.7;
         }
         
         .error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #ef4444;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error::before {
+            content: "⚠️";
         }
         
         .success {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
+            background: #dcfce7;
+            color: #15803d;
+            padding: 2rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border: 1px solid #bbf7d0;
         }
         
         .language-selector {
             text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .language-selector h2 {
-            margin: 0 0 15px 0;
-            color: #333;
+            margin-bottom: 2rem;
         }
         
         .language-options {
             display: flex;
-            gap: 10px;
+            gap: 0.75rem;
             justify-content: center;
             flex-wrap: wrap;
         }
         
         .language-option {
-            padding: 10px 20px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: #fff;
+            transition: all 0.2s;
+            background: white;
+            font-weight: 500;
+            color: var(--text-color);
         }
         
         .language-option:hover {
-            border-color: #007bff;
-            background: #f8f9fa;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: #f5f3ff;
         }
         
         .language-option.selected {
-            border-color: #007bff;
-            background: #e3f2fd;
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow);
         }
         
         .license-agreement {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
             text-align: center;
         }
-        
-        .success-message {
-            text-align: center;
+
+        .license-agreement input[type="checkbox"] {
+            accent-color: var(--primary-color);
+            transform: scale(1.1);
         }
         
         .success-message a {
             display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: #007bff;
+            margin-top: 1.5rem;
+            padding: 0.75rem 2rem;
+            background: var(--primary-color);
             color: white;
             text-decoration: none;
-            border-radius: 4px;
+            border-radius: var(--radius);
+            font-weight: 600;
         }
         
         .success-message a:hover {
-            background: #0056b3;
+            background: var(--primary-hover);
         }
         
-        /* License Modal Styles */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -413,26 +490,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.5);
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
         }
         
         .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 0;
-            border: 1px solid #888;
-            border-radius: 8px;
-            width: 80%;
+            background-color: var(--card-bg);
+            margin: 5vh auto;
+            border-radius: var(--radius-lg);
+            width: 90%;
             max-width: 700px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
         }
         
         .modal-header {
-            padding: 20px;
-            background: #007bff;
-            color: white;
-            border-radius: 8px 8px 0 0;
+            padding: 1.25rem 1.5rem;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -440,74 +519,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         
         .modal-header h2 {
             margin: 0;
-            font-size: 1.5em;
+            font-size: 1.25rem;
+            color: var(--secondary-color);
         }
         
         .close {
-            color: white;
-            font-size: 28px;
+            color: var(--text-light);
+            font-size: 1.75rem;
             font-weight: bold;
             cursor: pointer;
             background: none;
             border: none;
             padding: 0;
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
+            width: 2rem;
+            height: 2rem;
+            line-height: 2rem;
             text-align: center;
+            border-radius: 50%;
+            transition: background 0.2s;
         }
         
-        .close:hover,
-        .close:focus {
-            color: #ddd;
+        .close:hover {
+            background: rgba(0,0,0,0.05);
+            color: var(--text-color);
         }
         
         .modal-body {
-            padding: 20px;
-            max-height: 60vh;
+            padding: 1.5rem;
             overflow-y: auto;
+            flex: 1;
         }
         
         .modal-body pre {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-            border: 1px solid #dee2e6;
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 1.5rem;
+            border-radius: var(--radius);
             white-space: pre-wrap;
             word-wrap: break-word;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
             line-height: 1.6;
-            color: #333;
         }
         
         .modal-footer {
-            padding: 15px 20px;
-            background: #f8f9fa;
-            border-radius: 0 0 8px 8px;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
             text-align: right;
-            border-top: 1px solid #dee2e6;
+            background: var(--bg-color);
         }
-        
-        .modal-footer button {
-            padding: 10px 20px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        .modal-footer button:hover {
-            background: #0056b3;
+
+        @media (max-width: 640px) {
+            .install-container {
+                margin: 0;
+                border-radius: 0;
+                padding: 1.5rem;
+                min-height: 100vh;
+                border: none;
+            }
         }
     </style>
 </head>
 <body>
     <div class="install-container">
+        <div class="install-title">
+            <h1>MicroBoard</h1>
+            <p style="color: var(--text-light); margin: 0;"><?php echo $lang['install_title']; ?></p>
+        </div>
+
         <div class="language-selector">
-            <h2>MicroBoard - <?php echo $lang['install_title']; ?></h2>
             <form method="post" style="display: inline;">
                 <input type="hidden" name="language" id="selected_language" value="<?php echo htmlspecialchars($language); ?>">
                 <div class="language-options">
@@ -533,6 +614,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         
         <?php if ($success): ?>
             <div class="success success-message">
+                <h3 style="margin: 0 0 1rem 0; color: #15803d;">🎉 Installation Complete!</h3>
                 <p><?php echo htmlspecialchars($success); ?></p>
                 <a href="index.php"><?php echo $lang['go_to_main']; ?></a>
             </div>
@@ -542,41 +624,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <input type="hidden" name="language" value="<?php echo htmlspecialchars($language); ?>">
                 <input type="hidden" name="license_agreed" id="license_agreed" value="0">
                 
-                <h3><?php echo $lang['db_settings']; ?></h3>
+                <div class="section-title"><?php echo $lang['db_settings']; ?></div>
                 <div class="form-group">
-                    <label for="db_host"><?php echo $lang['db_host']; ?>:</label>
-                    <input type="text" name="db_host" id="db_host" value="localhost" required>
+                    <label for="db_host"><?php echo $lang['db_host']; ?></label>
+                    <input type="text" name="db_host" id="db_host" value="localhost" placeholder="e.g., localhost" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="db_user"><?php echo $lang['username']; ?>:</label>
-                    <input type="text" name="db_user" id="db_user" value="root" required>
+                    <label for="db_user"><?php echo $lang['username']; ?></label>
+                    <input type="text" name="db_user" id="db_user" value="root" placeholder="e.g., root" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="db_pass"><?php echo $lang['password']; ?>:</label>
-                    <input type="password" name="db_pass" id="db_pass" value="">
+                    <label for="db_pass"><?php echo $lang['password']; ?></label>
+                    <input type="password" name="db_pass" id="db_pass" value="" placeholder="DB Password">
                 </div>
                 
                 <div class="form-group">
-                    <label for="db_name"><?php echo $lang['db_name']; ?>:</label>
-                    <input type="text" name="db_name" id="db_name" value="microboard" required>
+                    <label for="db_name"><?php echo $lang['db_name']; ?></label>
+                    <input type="text" name="db_name" id="db_name" value="microboard" placeholder="e.g., microboard" required>
                 </div>
                 
-                <h3><?php echo $lang['admin_settings']; ?></h3>
+                <div class="section-title"><?php echo $lang['admin_settings']; ?></div>
                 <div class="form-group">
-                    <label for="admin_username"><?php echo $lang['username']; ?>:</label>
-                    <input type="text" name="admin_username" id="admin_username" value="admin" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="admin_password"><?php echo $lang['password']; ?>:</label>
-                    <input type="password" name="admin_password" id="admin_password" required>
+                    <label for="admin_username"><?php echo $lang['username']; ?></label>
+                    <input type="text" name="admin_username" id="admin_username" value="admin" placeholder="Admin ID" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="admin_password_confirm"><?php echo $lang['password_confirm']; ?>:</label>
-                    <input type="password" name="admin_password_confirm" id="admin_password_confirm" required>
+                    <label for="admin_password"><?php echo $lang['password']; ?></label>
+                    <input type="password" name="admin_password" id="admin_password" placeholder="Min. 6 characters" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="admin_password_confirm"><?php echo $lang['password_confirm']; ?></label>
+                    <input type="password" name="admin_password_confirm" id="admin_password_confirm" placeholder="Confirm Password" required>
                 </div>
                 
                 <div class="license-agreement">

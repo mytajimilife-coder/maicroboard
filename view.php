@@ -59,8 +59,8 @@ $post_view = [
   'wr_id' => $post['wr_id'],
   'wr_subject' => htmlspecialchars($post['wr_subject'], ENT_QUOTES, 'UTF-8'),
   // 에디터 사용 시 HTML을 그대로 출력해야 함 (XSS 방지는 입력 시 처리하거나 HTMLPurifier 등을 사용 권장)
-  // 여기서는 에디터 호환성을 위해 htmlspecialchars 및 nl2br 제거
-  'wr_content' => $post['wr_content'], 
+  // config.php에 추가된 clean_xss 함수로 필터링
+  'wr_content' => clean_xss($post['wr_content']), 
   'wr_name' => htmlspecialchars($post['wr_name'], ENT_QUOTES, 'UTF-8'),
   'wr_datetime' => $post['wr_datetime'],
   'wr_hit' => $post['wr_hit']
