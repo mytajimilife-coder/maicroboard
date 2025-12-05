@@ -59,73 +59,322 @@ if (empty($_SESSION['csrf_token'])) {
 $page_title = $lang['login'];
 require_once 'inc/header.php';
 ?>
-<div class="content-wrapper">
-<div class="login-container">
-  <div class="lang-selector" style="position: absolute; top: 20px; right: 20px; display: flex; gap: 8px;">
-    <?php
-    $lang_code = $_SESSION['lang'] ?? 'ko';
-    $langs = ['ko' => '🇰🇷', 'en' => '🇺🇸', 'ja' => '🇯🇵', 'zh' => '🇨🇳'];
-    foreach ($langs as $code => $flag) {
-        $params = $_GET;
-        $params['lang'] = $code;
-        $url = '?' . http_build_query($params);
-        $opacity = ($lang_code === $code) ? '1' : '0.4';
-        echo "<a href=\"{$url}\" style=\"text-decoration: none; opacity: {$opacity}; margin-left: 10px; font-size: 1.5em; filter: grayscale(" . ($lang_code === $code ? '0' : '1') . ");\">{$flag}</a>";
-    }
-    ?>
-  </div>
-  <h2><?php echo $lang['login']; ?></h2>
-  <?php if ($error): ?>
-    <p class="error"><?php echo $error; ?></p>
-  <?php endif; ?>
-  <form method="post">
-    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-    <input type="text" name="username" placeholder="<?php echo $lang['username']; ?>" maxlength="50" required>
-    <input type="password" name="password" placeholder="<?php echo $lang['password']; ?>" maxlength="255" required>
-    <button type="submit"><?php echo $lang['login']; ?></button>
-  </form>
-  <p><?php echo $lang['test']; ?>: admin / admin</p>
+<style>
+.login-page-wrapper {
+  min-height: calc(100vh - 70px - 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.login-header {
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+}
+
+.login-header h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+}
+
+.login-header p {
+  margin: 0.5rem 0 0;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+.login-body {
+  padding: 2rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  background: var(--bg-secondary);
+}
+
+.form-group input:focus {
+  border-color: var(--primary-color);
+  background: var(--bg-color);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 0.5rem;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger-color);
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.test-account {
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--text-light);
+}
+
+.test-account strong {
+  color: var(--text-color);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: var(--text-light);
+  font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.divider span {
+  padding: 0 1rem;
+}
+
+.oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+  background: var(--bg-color);
+}
+
+.oauth-btn:hover {
+  border-color: var(--primary-color);
+  background: var(--bg-secondary);
+  transform: translateY(-1px);
+}
+
+.oauth-btn.google {
+  color: var(--text-color);
+}
+
+.oauth-btn.line {
+  background: #00B900;
+  border-color: #00B900;
+  color: white;
+}
+
+.oauth-btn.line:hover {
+  background: #00a000;
+  border-color: #00a000;
+}
+
+.oauth-btn.apple {
+  background: #000;
+  border-color: #000;
+  color: white;
+}
+
+.oauth-btn.apple:hover {
+  background: #333;
+  border-color: #333;
+}
+
+.login-footer {
+  padding: 1.5rem 2rem;
+  background: var(--bg-secondary);
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+}
+
+.login-footer p {
+  margin: 0;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.login-footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.login-footer a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    border-radius: var(--radius-lg);
+  }
   
-  <?php
-  // OAuth 소셜 로그인 버튼
-  require_once 'inc/oauth.php';
-  $enabled_providers = getEnabledOAuthProviders();
-  if (!empty($enabled_providers)):
-  ?>
-  <div style="margin-top: 30px; padding: 20px; border-top: 1px solid #ddd;">
-    <p style="text-align: center; color: #666; margin-bottom: 15px;"><?php echo $lang['oauth_login_with'] ?? '소셜 계정으로 로그인'; ?></p>
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-      <?php foreach ($enabled_providers as $provider): 
-        $login_url = getOAuthLoginUrl($provider);
-        if ($login_url):
+  .login-header {
+    padding: 2rem 1.5rem 1.5rem;
+  }
+  
+  .login-header h2 {
+    font-size: 1.75rem;
+  }
+  
+  .login-body {
+    padding: 1.5rem;
+  }
+}
+</style>
+
+<div class="login-page-wrapper">
+  <div class="login-card">
+    <div class="login-header">
+      <h2>🔐 <?php echo $lang['login']; ?></h2>
+      <p><?php echo $lang['welcome_to_microboard'] ?? 'Welcome to MicroBoard'; ?></p>
+    </div>
+    
+    <div class="login-body">
+      <?php if ($error): ?>
+        <div class="error-message"><?php echo $error; ?></div>
+      <?php endif; ?>
+      
+      <form method="post" class="login-form">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+        
+        <div class="form-group">
+          <label for="username"><?php echo $lang['username']; ?></label>
+          <input type="text" id="username" name="username" placeholder="<?php echo $lang['username']; ?>" maxlength="50" required autofocus>
+        </div>
+        
+        <div class="form-group">
+          <label for="password"><?php echo $lang['password']; ?></label>
+          <input type="password" id="password" name="password" placeholder="<?php echo $lang['password']; ?>" maxlength="255" required>
+        </div>
+        
+        <button type="submit" class="login-btn"><?php echo $lang['login']; ?></button>
+      </form>
+      
+      <div class="test-account">
+        <strong><?php echo $lang['test']; ?>:</strong> admin / admin
+      </div>
+      
+      <?php
+      // OAuth 소셜 로그인 버튼
+      require_once 'inc/oauth.php';
+      $enabled_providers = getEnabledOAuthProviders();
+      if (!empty($enabled_providers)):
       ?>
-        <?php if ($provider === 'google'): ?>
-          <a href="<?php echo htmlspecialchars($login_url); ?>" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #fff; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333; font-weight: 500; transition: all 0.2s;">
-            <img src="https://www.google.com/favicon.ico" width="20" height="20" alt="Google">
-            <span>Google<?php echo $lang['oauth_login_suffix'] ?? '로 로그인'; ?></span>
-          </a>
-        <?php elseif ($provider === 'line'): ?>
-          <a href="<?php echo htmlspecialchars($login_url); ?>" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #00B900; border: 1px solid #00B900; border-radius: 4px; text-decoration: none; color: white; font-weight: 500; transition: all 0.2s;">
-            <span style="font-weight: bold;">LINE</span>
-            <span><?php echo $lang['oauth_login_suffix'] ?? '로 로그인'; ?></span>
-          </a>
-        <?php elseif ($provider === 'apple'): ?>
-          <a href="<?php echo htmlspecialchars($login_url); ?>" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #000; border: 1px solid #000; border-radius: 4px; text-decoration: none; color: white; font-weight: 500; transition: all 0.2s;">
-            <img src="https://www.apple.com/favicon.ico" width="20" height="20" alt="Apple">
-            <span>Apple<?php echo $lang['oauth_login_suffix'] ?? '로 로그인'; ?></span>
-          </a>
-        <?php endif; ?>
-      <?php 
-        endif;
-      endforeach; 
-      ?>
+      <div class="divider">
+        <span><?php echo $lang['oauth_login_with'] ?? '소셜 계정으로 로그인'; ?></span>
+      </div>
+      
+      <div class="oauth-buttons">
+        <?php foreach ($enabled_providers as $provider): 
+          $login_url = getOAuthLoginUrl($provider);
+          if ($login_url):
+        ?>
+          <?php if ($provider === 'google'): ?>
+            <a href="<?php echo htmlspecialchars($login_url); ?>" class="oauth-btn google">
+              <img src="https://www.google.com/favicon.ico" width="20" height="20" alt="Google">
+              <span>Google<?php echo $lang['oauth_login_suffix'] ?? '로 로그인'; ?></span>
+            </a>
+          <?php elseif ($provider === 'line'): ?>
+            <a href="<?php echo htmlspecialchars($login_url); ?>" class="oauth-btn line">
+              <span style="font-weight: bold;">LINE</span>
+              <span><?php echo $lang['oauth_login_suffix'] ?? '로 로그인'; ?></span>
+            </a>
+          <?php elseif ($provider === 'apple'): ?>
+            <a href="<?php echo htmlspecialchars($login_url); ?>" class="oauth-btn apple">
+              <img src="https://www.apple.com/favicon.ico" width="20" height="20" alt="Apple">
+              <span>Apple<?php echo $lang['oauth_login_suffix'] ?? '로 로그인'; ?></span>
+            </a>
+          <?php endif; ?>
+        <?php 
+          endif;
+        endforeach; 
+        ?>
+      </div>
+      <?php endif; ?>
+    </div>
+    
+    <div class="login-footer">
+      <p><?php echo $lang['first_visit']; ?> <a href="register.php"><?php echo $lang['register']; ?></a></p>
     </div>
   </div>
-  <?php endif; ?>
-  
-  <div style="margin-top: 30px; padding: 15px; border-top: 1px solid #ddd; text-align: center;">
-    <p><?php echo $lang['first_visit']; ?> <a href="register.php" style="color: #28a745; text-decoration: none; font-weight: bold;"><?php echo $lang['register']; ?></a></p>
-  </div>
 </div>
-</div>
+
 <?php require_once 'inc/footer.php'; ?>
