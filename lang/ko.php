@@ -65,6 +65,7 @@ return [
     'number' => '번호',
     'writer' => '작성자',
     'view_post' => '게시물 보기',
+    'post_edit' => '게시물 수정',
     'delete_permission_denied' => '삭제 권한이 없습니다.',
     'board' => '게시판',
     'login_input_required' => '아이디와 비밀번호를 모두 입력해주세요.',

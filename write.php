@@ -93,10 +93,30 @@ if (file_exists($skin_path)) {
 $(document).ready(function() {
   $('#summernote').summernote({
     height: 300,
+    lang: '<?php echo substr($_SESSION['lang'] ?? 'ko', 0, 2); ?>',
+    fontNames: [
+      // 기본 폰트
+      'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana',
+      // 한국어 폰트
+      '맑은 고딕', '돋움', '굴림', '바탕', '궁서', 'Noto Sans KR', 'Nanum Gothic', 'Nanum Myeongjo',
+      // 일본어 폰트
+      'メイリオ', 'MS Pゴシック', 'MS P明朝', 'Noto Sans JP', 'Yu Gothic',
+      // 중국어 폰트
+      '微软雅黑', '宋体', '黑体', 'Noto Sans SC', 'SimSun', 'SimHei',
+      // 웹 안전 폰트
+      'Georgia', 'Palatino Linotype', 'Book Antiqua', 'Palatino'
+    ],
+    fontNamesIgnoreCheck: [
+      '맑은 고딕', '돋움', '굴림', '바탕', '궁서', 'Noto Sans KR', 'Nanum Gothic', 'Nanum Myeongjo',
+      'メイリオ', 'MS Pゴシック', 'MS P明朝', 'Noto Sans JP', 'Yu Gothic',
+      '微软雅黑', '宋体', '黑体', 'Noto Sans SC', 'SimSun', 'SimHei'
+    ],
+    fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '24', '28', '32', '36', '48', '64', '72'],
     toolbar: [
       ['style', ['style']],
       ['font', ['bold', 'underline', 'clear']],
       ['fontname', ['fontname']],
+      ['fontsize', ['fontsize']],
       ['color', ['color']],
       ['para', ['ul', 'ol', 'paragraph']],
       ['table', ['table']],

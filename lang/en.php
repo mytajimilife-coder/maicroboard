@@ -65,6 +65,7 @@ return [
     'number' => 'No.',
     'writer' => 'Writer',
     'view_post' => 'View Post',
+    'post_edit' => 'Edit Post',
     'delete_permission_denied' => 'Delete permission denied.',
     'board' => 'Board',
     'login_input_required' => 'Please enter both username and password.',
