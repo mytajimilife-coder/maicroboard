@@ -874,35 +874,6 @@
     </footer>
 
     <script>
-
-        // 테마 토글 기능
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const body = document.body;
-
-        // 저장된 테마 불러오기
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        if (savedTheme === 'light') {
-            body.classList.add('light-mode');
-            themeIcon.textContent = '🌙';
-        } else {
-            themeIcon.textContent = '☀️';
-        }
-
-        // 테마 토글 이벤트
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
-
-            if (body.classList.contains('light-mode')) {
-                themeIcon.textContent = '🌙';
-                localStorage.setItem('theme', 'light');
-            } else {
-                themeIcon.textContent = '☀️';
-                localStorage.setItem('theme', 'dark');
-            }
-        });
-
-
         // 별 생성
         function createStars() {
             const starsContainer = document.getElementById('stars');
