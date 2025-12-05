@@ -240,5 +240,20 @@ return [
     'secure_desc' => 'Built with security in mind. XSS protection, CSRF prevention, and secure authentication.',
     'explore' => 'Explore',
     'join_discussion' => 'Join the discussion in %s',
+    
+    // Admin Config
+    'theme_settings' => 'Theme Settings',
+    'default_theme_mode' => 'Default Theme Mode',
+    'default_theme_desc' => 'Default theme for first-time visitors.',
+    'background_settings' => 'Background Settings',
+    'bg_type_color' => 'Color / Gradient',
+    'bg_type_image' => 'Image',
+    'bg_color_placeholder' => 'Ex: #ffffff or linear-gradient(...)',
+    'bg_color_help' => 'Enter CSS color code (#ffffff) or gradient syntax.',
+    'bg_image_help' => 'Uploading a new image will replace the current setting.',
+    'current_bg' => 'Current Background',
+    'plugin_settings' => 'Plugin Settings',
+    'no_plugins_installed' => 'No plugins installed.',
+    'table_name_help' => 'Only letters, numbers, and underscores (_) are allowed.',
 ];
 ?>

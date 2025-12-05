@@ -122,10 +122,10 @@ if (!isset($config['cf_bg_value'])) $config['cf_bg_value'] = '#ffffff';
 
     <!-- 테마 설정 -->
     <div class="admin-card">
-        <h2 style="margin-top: 0; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); color: var(--secondary-color);">테마 설정 (Theme Settings)</h2>
+        <h2 style="margin-top: 0; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); color: var(--secondary-color);"><?php echo $lang['theme_settings']; ?></h2>
         
         <div class="config-group">
-            <h4 style="margin: 0 0 1rem 0;">기본 테마 모드</h4>
+            <h4 style="margin: 0 0 1rem 0;"><?php echo $lang['default_theme_mode']; ?></h4>
             <div class="radio-group">
                 <label class="radio-label">
                     <input type="radio" name="cf_theme" value="light" <?php echo $config['cf_theme'] === 'light' ? 'checked' : ''; ?>>
@@ -136,30 +136,30 @@ if (!isset($config['cf_bg_value'])) $config['cf_bg_value'] = '#ffffff';
                     🌙 Dark Mode
                 </label>
             </div>
-            <p class="help-text">사용자가 처음 방문했을 때 적용될 기본 테마입니다.</p>
+            <p class="help-text"><?php echo $lang['default_theme_desc']; ?></p>
         </div>
 
         <div class="config-group">
-            <h4 style="margin: 0 0 1rem 0;">배경 설정 (Background)</h4>
+            <h4 style="margin: 0 0 1rem 0;"><?php echo $lang['background_settings']; ?></h4>
             <div class="radio-group" style="margin-bottom: 1rem;">
                 <label class="radio-label">
                     <input type="radio" name="cf_bg_type" value="color" <?php echo $config['cf_bg_type'] === 'color' ? 'checked' : ''; ?> onclick="toggleBgInput('color')">
-                    🎨 단색/그라데이션
+                    🎨 <?php echo $lang['bg_type_color']; ?>
                 </label>
                 <label class="radio-label">
                     <input type="radio" name="cf_bg_type" value="image" <?php echo $config['cf_bg_type'] === 'image' ? 'checked' : ''; ?> onclick="toggleBgInput('image')">
-                    🖼️ 이미지
+                    🖼️ <?php echo $lang['bg_type_image']; ?>
                 </label>
             </div>
 
             <!-- 색상 입력 -->
             <div id="bg_color_input" class="input-preview" style="display: <?php echo $config['cf_bg_type'] === 'color' ? 'block' : 'none'; ?>;">
                 <input type="text" name="cf_bg_value" id="cf_bg_value_color" value="<?php echo $config['cf_bg_type'] === 'color' ? htmlspecialchars($config['cf_bg_value']) : ''; ?>" 
-                       placeholder="예: #ffffff 또는 linear-gradient(...)"
+                       placeholder="<?php echo $lang['bg_color_placeholder']; ?>"
                        class="form-control">
                 <p class="help-text">
-                    CSS 색상 코드(#ffffff) 또는 그라데이션(linear-gradient(...))을 입력하세요.<br>
-                    예시: <code>linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)</code>
+                    <?php echo $lang['bg_color_help']; ?><br>
+                    Ex: <code>linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)</code>
                 </p>
             </div>
 
@@ -168,11 +168,11 @@ if (!isset($config['cf_bg_value'])) $config['cf_bg_value'] = '#ffffff';
                 <?php if ($config['cf_bg_type'] === 'image' && !empty($config['cf_bg_value'])): ?>
                     <div style="margin-bottom: 1rem;">
                         <img src="../<?php echo htmlspecialchars($config['cf_bg_value']); ?>" style="max-width: 200px; max-height: 150px; border-radius: var(--radius); border: 1px solid var(--border-color);">
-                        <p class="help-text">현재 배경: <?php echo htmlspecialchars($config['cf_bg_value']); ?></p>
+                        <p class="help-text"><?php echo $lang['current_bg']; ?>: <?php echo htmlspecialchars($config['cf_bg_value']); ?></p>
                     </div>
                 <?php endif; ?>
                 <input type="file" name="cf_bg_image" accept="image/*" class="form-control">
-                <p class="help-text">새 이미지를 업로드하면 기존 설정이 변경됩니다.</p>
+                <p class="help-text"><?php echo $lang['bg_image_help']; ?></p>
             </div>
         </div>
     </div>

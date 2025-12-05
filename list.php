@@ -41,14 +41,20 @@ if ($board) {
 // 헤더 포함
 require_once 'inc/header.php';
 
+// bo_table 필수 체크
+if (!$bo_table) {
+    echo "<script>alert('{$lang['access_denied']}'); location.href='index.php';</script>";
+    exit;
+}
+
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $stx = $_GET['stx'] ?? '';
 $sfl = $_GET['sfl'] ?? '';
 $limit = 15;
 
-$total_posts = getTotalPostCount($stx, $sfl);
+$total_posts = getTotalPostCount($bo_table, $stx, $sfl);
 $total_pages = ceil($total_posts / $limit);
-$posts = loadPosts($page, $limit, $stx, $sfl);
+$posts = loadPosts($bo_table, $page, $limit, $stx, $sfl);
 ?>
 
 <link rel="stylesheet" href="skin/<?php echo $board_skin; ?>/style.css">

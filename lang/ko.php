@@ -240,5 +240,20 @@ return [
     'secure_desc' => '보안을 최우선으로 고려했습니다. XSS 방지, CSRF 보호, 안전한 인증 시스템이 포함되어 있습니다.',
     'explore' => '둘러보기',
     'join_discussion' => '%s에서 대화에 참여하세요',
+
+    // 관리자 설정
+    'theme_settings' => '테마 설정',
+    'default_theme_mode' => '기본 테마 모드',
+    'default_theme_desc' => '사용자가 처음 방문했을 때 적용될 기본 테마입니다.',
+    'background_settings' => '배경 설정',
+    'bg_type_color' => '단색/그라데이션',
+    'bg_type_image' => '이미지',
+    'bg_color_placeholder' => '예: #ffffff 또는 linear-gradient(...)',
+    'bg_color_help' => 'CSS 색상 코드(#ffffff) 또는 그라데이션(linear-gradient(...))을 입력하세요.',
+    'bg_image_help' => '새 이미지를 업로드하면 기존 설정이 변경됩니다.',
+    'current_bg' => '현재 배경',
+    'plugin_settings' => '플러그인 설정',
+    'no_plugins_installed' => '설치된 플러그인이 없습니다.',
+    'table_name_help' => '영문, 숫자, 언더스코어(_)만 입력 가능합니다.',
 ];
 ?>

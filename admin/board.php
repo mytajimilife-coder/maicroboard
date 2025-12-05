@@ -327,7 +327,7 @@ if (is_dir($plugin_dir)) {
             <label><?php echo $lang['table_name_eng']; ?></label>
             <input type="text" name="bo_table" class="form-control" value="<?php echo htmlspecialchars($board['bo_table'] ?? ''); ?>" required <?php echo $bo_table ? 'readonly' : ''; ?>>
             <?php if (!$bo_table): ?>
-                <small style="color: var(--text-light);">영문, 숫자, 언더스코어(_)만 입력 가능합니다.</small>
+                <small style="color: var(--text-light);"><?php echo $lang['table_name_help']; ?></small>
             <?php endif; ?>
           </div>
           <div class="form-group">
@@ -358,9 +358,9 @@ if (is_dir($plugin_dir)) {
       </div>
       
       <div class="plugin-section">
-        <label style="display: block; margin-bottom: 1rem; font-weight: 600; color: var(--secondary-color);">🧩 플러그인 설정 (Plugins)</label>
+        <label style="display: block; margin-bottom: 1rem; font-weight: 600; color: var(--secondary-color);">🧩 <?php echo $lang['plugin_settings']; ?> (Plugins)</label>
         <?php if (empty($available_plugins)): ?>
-            <p style="color: var(--text-light);">설치된 플러그인이 없습니다.</p>
+            <p style="color: var(--text-light);"><?php echo $lang['no_plugins_installed']; ?></p>
         <?php else: ?>
             <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
             <?php 

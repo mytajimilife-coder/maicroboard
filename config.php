@@ -122,8 +122,12 @@ function createTables() {
 }
 
 // 게시물 함수들
-function loadPosts($page = 1, $limit = 15, $stx = '', $sfl = '') {
+function loadPosts($bo_table, $page = 1, $limit = 15, $stx = '', $sfl = '') {
   $db = getDB();
+  $write_table = 'mb1_write_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+  
+  // 테이블 존재 여부 체크는 생략 (성능) 또는 try-catch
+  
   $offset = ($page - 1) * $limit;
   $where = '1';
   $params = [];
@@ -142,14 +146,19 @@ function loadPosts($page = 1, $limit = 15, $stx = '', $sfl = '') {
     $params[] = "%$stx%";
   }
 
-  $sql = "SELECT * FROM mb1_board WHERE $where ORDER BY wr_id DESC LIMIT $limit OFFSET $offset";
-  $stmt = $db->prepare($sql);
-  $stmt->execute($params);
-  return $stmt->fetchAll();
+  try {
+      $sql = "SELECT * FROM {$write_table} WHERE $where ORDER BY wr_id DESC LIMIT $limit OFFSET $offset";
+      $stmt = $db->prepare($sql);
+      $stmt->execute($params);
+      return $stmt->fetchAll();
+  } catch (PDOException $e) {
+      return [];
+  }
 }
 
-function getTotalPostCount($stx = '', $sfl = '') {
+function getTotalPostCount($bo_table, $stx = '', $sfl = '') {
   $db = getDB();
+  $write_table = 'mb1_write_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
   $where = '1';
   $params = [];
 
@@ -167,44 +176,74 @@ function getTotalPostCount($stx = '', $sfl = '') {
     $params[] = "%$stx%";
   }
 
-  $stmt = $db->prepare("SELECT COUNT(*) FROM mb1_board WHERE $where");
-  $stmt->execute($params);
-  return $stmt->fetchColumn();
+  try {
+      $stmt = $db->prepare("SELECT COUNT(*) FROM {$write_table} WHERE $where");
+      $stmt->execute($params);
+      return $stmt->fetchColumn();
+  } catch (PDOException $e) {
+      return 0;
+  }
 }
 
-function insertPost($data) {
+function insertPost($bo_table, $data) {
   $db = getDB();
-  $sql = 'INSERT INTO mb1_board (wr_subject, wr_content, wr_name, wr_datetime, wr_hit) VALUES (?, ?, ?, NOW(), 0)';
+  $write_table = 'mb1_write_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+  $sql = "INSERT INTO {$write_table} (wr_subject, wr_content, wr_name, wr_datetime, wr_hit) VALUES (?, ?, ?, NOW(), 0)";
   $stmt = $db->prepare($sql);
   $stmt->execute([$data['title'], $data['content'], $data['writer']]);
   return $db->lastInsertId();
 }
 
-function updatePost($id, $data) {
+function updatePost($bo_table, $id, $data) {
   $db = getDB();
-  $sql = 'UPDATE mb1_board SET wr_subject = ?, wr_content = ?, wr_name = ?, wr_datetime = NOW() WHERE wr_id = ?';
+  $write_table = 'mb1_write_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+  $sql = "UPDATE {$write_table} SET wr_subject = ?, wr_content = ?, wr_name = ?, wr_datetime = NOW() WHERE wr_id = ?";
   $stmt = $db->prepare($sql);
   $stmt->execute([$data['title'], $data['content'], $data['writer'], $id]);
 }
 
-function getPost($id) {
+function getPost($bo_table, $id) {
   $db = getDB();
-  $stmt = $db->prepare('SELECT * FROM mb1_board WHERE wr_id = ?');
-  $stmt->execute([$id]);
-  return $stmt->fetch() ?: ['wr_subject' => '', 'wr_content' => '', 'wr_name' => '', 'wr_datetime' => '', 'wr_hit' => 0];
+  $write_table = 'mb1_write_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+  // 댓글 수 카운트 추가 (없으면 0)
+  try {
+      $stmt = $db->prepare("SELECT * FROM {$write_table} WHERE wr_id = ?");
+      $stmt->execute([$id]);
+      $post = $stmt->fetch();
+      if (!$post) return ['wr_subject' => '', 'wr_content' => '', 'wr_name' => '', 'wr_datetime' => '', 'wr_hit' => 0, 'wr_id' => 0];
+      
+      // 댓글 수 조회 (optional)
+      /*
+      $comment_table = "mb1_comment_" . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+      $stmt = $db->prepare("SELECT COUNT(*) FROM {$comment_table} WHERE wr_id = ?");
+      $stmt->execute([$id]);
+      $post['wr_comment'] = $stmt->fetchColumn();
+      */
+      
+      return $post;
+  } catch (PDOException $e) {
+      return ['wr_subject' => '', 'wr_content' => '', 'wr_name' => '', 'wr_datetime' => '', 'wr_hit' => 0, 'wr_id' => 0];
+  }
 }
 
-function incrementView($id) {
+function incrementView($bo_table, $id) {
   $db = getDB();
-  $stmt = $db->prepare('UPDATE mb1_board SET wr_hit = wr_hit + 1 WHERE wr_id = ?');
-  $stmt->execute([$id]);
+  $write_table = 'mb1_write_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+  try {
+    $stmt = $db->prepare("UPDATE {$write_table} SET wr_hit = wr_hit + 1 WHERE wr_id = ?");
+    $stmt->execute([$id]);
+  } catch (Exception $e) {}
 }
 
-function deletePost($id) {
+function deletePost($bo_table, $id) {
   $db = getDB();
+  $safe_bo_table = preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+  $write_table = 'mb1_write_' . $safe_bo_table;
+  $comment_table = 'mb1_comment_' . $safe_bo_table;
+  $file_table = 'mb1_board_file_' . $safe_bo_table;
   
   // 포인트 차감 로직 (게시글 작성자 확인 필요)
-  $post = getPost($id);
+  $post = getPost($bo_table, $id);
   if ($post['wr_name']) {
       $config = get_config();
       if ($config['cf_use_point'] && $config['cf_write_point'] != 0) {
@@ -213,7 +252,7 @@ function deletePost($id) {
               $post['wr_name'], 
               $config['cf_write_point'] * -1, 
               '글삭제', 
-              'mb1_board', 
+              $bo_table, 
               $id, 
               'delete'
           );
@@ -221,27 +260,36 @@ function deletePost($id) {
   }
 
   // 댓글 삭제
-  $stmt = $db->prepare('DELETE FROM mb1_comment WHERE wr_id = ?');
-  $stmt->execute([$id]);
+  try {
+      $stmt = $db->prepare("DELETE FROM {$comment_table} WHERE wr_id = ?");
+      $stmt->execute([$id]);
+  } catch(Exception $e) {}
   
-  // 파일 삭제 (실제 파일도 삭제해야 함 - 별도 처리 필요)
-  $files = getPostFiles($id);
+  // 파일 삭제 (실제 파일도 삭제해야 함)
+  $files = getPostFiles($bo_table, $id);
   foreach ($files as $file) {
       @unlink('data/file/' . $file['bf_file']);
   }
-  $stmt = $db->prepare('DELETE FROM mb1_board_file WHERE wr_id = ?');
-  $stmt->execute([$id]);
+  try {
+      $stmt = $db->prepare("DELETE FROM {$file_table} WHERE wr_id = ?");
+      $stmt->execute([$id]);
+  } catch(Exception $e) {}
 
-  $stmt = $db->prepare('DELETE FROM mb1_board WHERE wr_id = ?');
-  $stmt->execute([$id]);
+  // 본문 삭제
+  try {
+      $stmt = $db->prepare("DELETE FROM {$write_table} WHERE wr_id = ?");
+      $stmt->execute([$id]);
+  } catch(Exception $e) {}
 }
 
 // 파일 관련 함수
-function insertFile($wr_id, $file) {
+function insertFile($bo_table, $wr_id, $file) {
     $upload_dir = 'data/file/';
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0777, true);
     }
+    
+    $file_table = 'mb1_board_file_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
 
     $filename = basename($file['name']);
     $ext = pathinfo($filename, PATHINFO_EXTENSION);
@@ -250,44 +298,55 @@ function insertFile($wr_id, $file) {
 
     if (move_uploaded_file($file['tmp_name'], $dest_path)) {
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO mb1_board_file (wr_id, bf_source, bf_file, bf_filesize, bf_datetime) VALUES (?, ?, ?, ?, NOW())");
+        $stmt = $db->prepare("INSERT INTO {$file_table} (wr_id, bf_source, bf_file, bf_filesize, bf_datetime) VALUES (?, ?, ?, ?, NOW())");
         $stmt->execute([$wr_id, $filename, $new_filename, $file['size']]);
         return true;
     }
     return false;
 }
 
-function getPostFiles($wr_id) {
+function getPostFiles($bo_table, $wr_id) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT * FROM mb1_board_file WHERE wr_id = ?");
-    $stmt->execute([$wr_id]);
-    return $stmt->fetchAll();
+    $file_table = 'mb1_board_file_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+    try {
+        $stmt = $db->prepare("SELECT * FROM {$file_table} WHERE wr_id = ?");
+        $stmt->execute([$wr_id]);
+        return $stmt->fetchAll();
+    } catch(Exception $e) { return []; }
 }
 
-function getFile($bf_no) {
+function getFile($bo_table, $bf_no) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT * FROM mb1_board_file WHERE bf_no = ?");
-    $stmt->execute([$bf_no]);
-    return $stmt->fetch();
+    $file_table = 'mb1_board_file_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+    try {
+        $stmt = $db->prepare("SELECT * FROM {$file_table} WHERE bf_no = ?");
+        $stmt->execute([$bf_no]);
+        return $stmt->fetch();
+    } catch(Exception $e) { return null; }
 }
 
 // 댓글 관련 함수
-function getComments($wr_id) {
+function getComments($bo_table, $wr_id) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT * FROM mb1_comment WHERE wr_id = ? ORDER BY co_id ASC");
-    $stmt->execute([$wr_id]);
-    return $stmt->fetchAll();
+    $comment_table = 'mb1_comment_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+    try {
+        $stmt = $db->prepare("SELECT * FROM {$comment_table} WHERE wr_id = ? ORDER BY co_id ASC");
+        $stmt->execute([$wr_id]);
+        return $stmt->fetchAll();
+    } catch(Exception $e) { return []; }
 }
 
-function insertComment($wr_id, $name, $content) {
+function insertComment($bo_table, $wr_id, $name, $content) {
     $db = getDB();
-    $stmt = $db->prepare("INSERT INTO mb1_comment (wr_id, co_name, co_content, co_datetime) VALUES (?, ?, ?, NOW())");
+    $comment_table = 'mb1_comment_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+    $stmt = $db->prepare("INSERT INTO {$comment_table} (wr_id, co_name, co_content, co_datetime) VALUES (?, ?, ?, NOW())");
     $stmt->execute([$wr_id, $name, $content]);
 }
 
-function deleteComment($co_id) {
+function deleteComment($bo_table, $co_id) {
     $db = getDB();
-    $stmt = $db->prepare("DELETE FROM mb1_comment WHERE co_id = ?");
+    $comment_table = 'mb1_comment_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+    $stmt = $db->prepare("DELETE FROM {$comment_table} WHERE co_id = ?");
     $stmt->execute([$co_id]);
 }
 
@@ -370,19 +429,40 @@ function isUsernameExists($username) {
   return $result['count'] > 0;
 }
 
-// 사용자 게시물 조회 함수
+// 사용자 게시물 조회 함수 (모든 게시판 통합 검색 - 비용이 큼)
 function getUserPosts($username) {
   $username = trim($username);
-  
-  if (empty($username)) {
-    return [];
-  }
+  if (empty($username)) return [];
   
   $db = getDB();
-  $stmt = $db->prepare('SELECT * FROM mb1_board WHERE wr_name = ? ORDER BY wr_id DESC');
-  $stmt->execute([$username]);
   
-  return $stmt->fetchAll();
+  // 모든 게시판 테이블 가져오기
+  try {
+      $boards = $db->query("SELECT bo_table, bo_subject FROM mb1_board_config")->fetchAll();
+      
+      $all_posts = [];
+      foreach ($boards as $board) {
+          $bo_table = $board['bo_table'];
+          $write_table = "mb1_write_" . $bo_table;
+          
+          try {
+              // 각 게시판에서 해당 사용자의 글 조회
+              $stmt = $db->prepare("SELECT *, ? as bo_table, ? as bo_subject FROM {$write_table} WHERE wr_name = ? ORDER BY wr_id DESC LIMIT 5");
+              $stmt->execute([$bo_table, $board['bo_subject'], $username]);
+              $posts = $stmt->fetchAll();
+              $all_posts = array_merge($all_posts, $posts);
+          } catch(Exception $e) { continue; }
+      }
+      
+      // 날짜순 정렬 (최신순)
+      usort($all_posts, function($a, $b) {
+          return strtotime($b['wr_datetime']) - strtotime($a['wr_datetime']);
+      });
+      
+      return array_slice($all_posts, 0, 20); // 최근 20개만 반환
+  } catch(Exception $e) {
+      return [];
+  }
 }
 
 // 사용자 댓글 조회 함수 (댓글 테이블이 없는 경우를 대비한 기본 구조)
@@ -418,9 +498,15 @@ function deleteUser($username) {
   $db = getDB();
   
   try {
-    // 회원이 작성한 게시물도 함께 삭제
-    $stmt = $db->prepare('DELETE FROM mb1_board WHERE wr_name = ?');
-    $stmt->execute([$username]);
+    // 회원이 작성한 게시물도 함께 삭제 (모든 게시판 순회)
+    $boards = $db->query("SELECT bo_table FROM mb1_board_config")->fetchAll();
+    foreach ($boards as $board) {
+        $write_table = "mb1_write_" . $board['bo_table'];
+        try {
+            $stmt = $db->prepare("DELETE FROM {$write_table} WHERE wr_name = ?");
+            $stmt->execute([$username]);
+        } catch(Exception $e) {}
+    }
     
     // 회원 삭제
     $stmt = $db->prepare('DELETE FROM mb1_member WHERE mb_id = ?');

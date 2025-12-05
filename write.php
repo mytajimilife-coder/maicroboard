@@ -3,7 +3,15 @@ require_once 'config.php';
 requireLogin();
 
 $id = $_GET['id'] ?? null;
-$post = getPost($id);
+$bo_table = $_GET['bo_table'] ?? '';
+
+// bo_table 필수 체크
+if (!$bo_table) {
+    echo "<script>alert('{$lang['access_denied']}'); location.href='index.php';</script>";
+    exit;
+}
+
+$post = $id ? getPost($bo_table, $id) : [];
 $post['wr_subject'] = $post['wr_subject'] ?? '';
 $post['wr_content'] = $post['wr_content'] ?? '';
 $post['wr_name'] = $_SESSION['user'];
@@ -18,10 +26,10 @@ if ($_POST) {
       'writer' => $_SESSION['user']
     ];
     if ($id !== null) {
-      updatePost($id, $data);
+      updatePost($bo_table, $id, $data);
       $wr_id = $id;
     } else {
-      $wr_id = insertPost($data);
+      $wr_id = insertPost($bo_table, $data);
       
       // 포인트 지급
       $config = get_config();
@@ -30,7 +38,7 @@ if ($_POST) {
           $_SESSION['user'], 
           $config['cf_write_point'], 
           $lang['post_write_action'], 
-          'mb1_board', 
+          $bo_table, 
           $wr_id, 
           'write'
         );
@@ -49,11 +57,11 @@ if ($_POST) {
                     'error' => $files['error'][$i],
                     'size' => $files['size'][$i]
                 ];
-                insertFile($wr_id, $file);
+                insertFile($bo_table, $wr_id, $file);
             }
         }
     }
-    header('Location: list.php');
+    header('Location: list.php?bo_table=' . $bo_table);
     exit;
   }
 }

@@ -388,7 +388,7 @@
         <ul>
             <?php foreach ($files as $file): ?>
             <li>
-                <a href="download.php?bf_no=<?php echo $file['bf_no']; ?>">
+                <a href="download.php?bo_table=<?php echo htmlspecialchars($bo_table); ?>&bf_no=<?php echo $file['bf_no']; ?>">
                     <span>📁 <?php echo $file['bf_source']; ?></span>
                     <span class="file-size"><?php echo number_format($file['bf_filesize']); ?> bytes</span>
                 </a>
@@ -399,10 +399,10 @@
     <?php endif; ?>
 
     <div class="post-actions">
-        <a href="list.php" class="btn btn-outline"><?php echo $lang['list']; ?></a>
+        <a href="list.php?bo_table=<?php echo htmlspecialchars($bo_table); ?>" class="btn btn-outline"><?php echo $lang['list']; ?></a>
         <?php if (isLoggedIn() && ($_SESSION['user'] === $post['wr_name'] || isAdmin())): ?>
-        <a href="write.php?id=<?php echo $post['wr_id']; ?>" class="btn"><?php echo $lang['edit']; ?></a>
-        <a href="view.php?id=<?php echo $post['wr_id']; ?>&action=delete&token=<?php echo $_SESSION['csrf_token']; ?>" 
+        <a href="write.php?w=u&id=<?php echo $post['wr_id']; ?>&bo_table=<?php echo htmlspecialchars($bo_table); ?>" class="btn"><?php echo $lang['edit']; ?></a>
+        <a href="view.php?id=<?php echo $post['wr_id']; ?>&action=delete&bo_table=<?php echo htmlspecialchars($bo_table); ?>&token=<?php echo $_SESSION['csrf_token']; ?>" 
            class="btn btn-danger" 
            onclick="return confirm('<?php echo $lang['delete_confirm']; ?>');"><?php echo $lang['delete']; ?></a>
         <?php endif; ?>
@@ -428,6 +428,7 @@
                     <?php if (isLoggedIn() && ($_SESSION['user'] === $comment['co_name'] || isAdmin())): ?>
                     <form action="comment_update.php" method="post" style="display: inline; margin-left: auto;">
                         <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="bo_table" value="<?php echo htmlspecialchars($bo_table); ?>">
                         <input type="hidden" name="wr_id" value="<?php echo $post['wr_id']; ?>">
                         <input type="hidden" name="co_id" value="<?php echo $comment['co_id']; ?>">
                         <button type="submit" class="comment-delete" onclick="return confirm('<?php echo $lang['delete_confirm']; ?>');">
@@ -449,6 +450,7 @@
     <div class="comment-form">
         <form action="comment_update.php" method="post">
             <input type="hidden" name="action" value="insert">
+            <input type="hidden" name="bo_table" value="<?php echo htmlspecialchars($bo_table); ?>">
             <input type="hidden" name="wr_id" value="<?php echo $post['wr_id']; ?>">
             <textarea name="co_content" required placeholder="<?php echo $lang['comment_placeholder'] ?? '댓글을 입력하세요...'; ?>"></textarea>
             <div class="comment-submit">
