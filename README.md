@@ -12,7 +12,7 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/mytajimilife-coder/microboard)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-[**Explore Docs**](https://mytajimilife-coder.github.io/microboard/) | [**View Demo**](#) | [**Report Bug**](https://github.com/mytajimilife-coder/microboard/issues)
+[**Explore Docs**](https://mytajimilife-coder.github.io/microboard/) | [**Report Bug**](https://github.com/mytajimilife-coder/microboard/issues)
 
 </div>
 
