@@ -2,9 +2,10 @@
 
 <div align="center">
 
-<!-- ![MicroBoard](https://mytajimilife-coder.github.io/microboard/img/logo.svg?text=MicroBoard) -->
-<img src="![이미지주소.png](https://mytajimilife-coder.github.io/microboard/img/logo.svg)" />
-MicroBoard
+![MicroBoard](https://mytajimilife-coder.github.io/microboard/img/slogo.png?text=MicroBoard)
+
+<!-- <img src="![이미지주소.png](https://mytajimilife-coder.github.io/microboard/img/logo.svg)" /> -->
+<!-- MicroBoard -->
 
 ### A Lightweight, High-Performance Community Platform
 
