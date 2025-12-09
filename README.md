@@ -143,6 +143,9 @@ microboard/
 ## 📖 Documentation & Guides
 
 - **[Features Guide (Korean)](FEATURES.md):** Detailed breakdown of all features.
+- **[Features Guide (English)](FEATURES_EN.md):** Detailed breakdown of all features in English.
+- **[Features Guide (Japanese)](FEATURES_JA.md):** Detailed breakdown of all features in Japanese.
+- **[Features Guide (Chinese)](FEATURES_ZH.md):** Detailed breakdown of all features in Chinese.
 - **[OAuth Setup Guide](OAUTH_SETUP.md):** Step-by-step instructions for Google, LINE, and Apple login.
 - **[Security Policy](SECURITY.md):** Information on security practices and vulnerability reporting.
 
