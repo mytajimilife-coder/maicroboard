@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![MicroBoard](https://mytajimilife-coder.github.io/microboard/img/slogo.png?text=MicroBoard)
+**MicroBoard**
 
 <!-- <img src="![이미지주소.png](https://mytajimilife-coder.github.io/microboard/img/logo.svg)" /> -->
 <!-- MicroBoard -->

@@ -98,7 +98,6 @@ if ($bg_type === 'image') {
         <div class="header-container">
             <div class="logo">
                 <a href="<?php echo $root_path; ?>index.php" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
-                    <img src="<?php echo $root_path; ?>img/logo.svg" alt="MicroBoard Logo" style="height: 36px; width: 36px;">
                     <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">MicroBoard</span>
                 </a>
             </div>
