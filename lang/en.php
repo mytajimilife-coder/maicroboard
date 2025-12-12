@@ -304,5 +304,22 @@ return [
     'no_plugins_installed' => 'No plugins installed.',
     'table_name_help' => 'Only letters, numbers, and underscores (_) are allowed.',
     'apple_key_help' => 'For Apple, additional settings like Key ID and Private Key may be required.',
+
+    // Theme Settings
+    'theme_settings' => 'Theme Settings',
+    'theme_settings_desc' => 'Update your site\'s favicon and logo images.',
+    'favicon_settings' => 'Favicon Settings',
+    'upload_favicon' => 'Upload Favicon',
+    'favicon_help' => 'Recommended size: 32x32 or 64x64 pixels. Supports ICO, PNG, JPG, GIF formats.',
+    'favicon_size' => 'Favicon Size',
+    'current_favicon' => 'Current Favicon',
+    'logo_settings' => 'Logo Settings',
+    'upload_logo' => 'Upload Logo',
+    'logo_help' => 'Recommended size: 200x50 pixels. Supports PNG, JPG, GIF, SVG formats.',
+    'logo_size' => 'Logo Size',
+    'current_logo' => 'Current Logo',
+    'favicon_updated' => 'Favicon updated successfully',
+    'logo_updated' => 'Logo updated successfully',
+    'save_settings' => 'Save Settings',
 ];
 ?>

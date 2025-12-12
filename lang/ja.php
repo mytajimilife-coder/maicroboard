@@ -303,5 +303,22 @@ return [
     'edit_privacy' => '個人情報保護方針編集',
     'last_updated' => '最終更新',
     'no_content' => 'コンテンツはまだ設定されていません。',
+
+    // テーマ設定
+    'theme_settings' => 'テーマ設定',
+    'theme_settings_desc' => 'サイトのファビコンとロゴ画像を更新します。',
+    'favicon_settings' => 'ファビコン設定',
+    'upload_favicon' => 'ファビコンをアップロード',
+    'favicon_help' => '推奨サイズ: 32x32または64x64ピクセル。ICO, PNG, JPG, GIF形式をサポートします。',
+    'favicon_size' => 'ファビコンサイズ',
+    'current_favicon' => '現在のファビコン',
+    'logo_settings' => 'ロゴ設定',
+    'upload_logo' => 'ロゴをアップロード',
+    'logo_help' => '推奨サイズ: 200x50ピクセル。PNG, JPG, GIF, SVG形式をサポートします。',
+    'logo_size' => 'ロゴサイズ',
+    'current_logo' => '現在のロゴ',
+    'favicon_updated' => 'ファビコンが正常に更新されました',
+    'logo_updated' => 'ロゴが正常に更新されました',
+    'save_settings' => '設定を保存',
 ];
 ?>

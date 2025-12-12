@@ -303,5 +303,22 @@ return [
     'edit_privacy' => '编辑隐私政策',
     'last_updated' => '最后更新',
     'no_content' => '内容尚未设置。',
+
+    // 主题设置
+    'theme_settings' => '主题设置',
+    'theme_settings_desc' => '更新您网站的网站图标和标志图像。',
+    'favicon_settings' => '网站图标设置',
+    'upload_favicon' => '上传网站图标',
+    'favicon_help' => '推荐大小：32x32或64x64像素。支持ICO、PNG、JPG、GIF格式。',
+    'favicon_size' => '网站图标大小',
+    'current_favicon' => '当前网站图标',
+    'logo_settings' => '标志设置',
+    'upload_logo' => '上传标志',
+    'logo_help' => '推荐大小：200x50像素。支持PNG、JPG、GIF、SVG格式。',
+    'logo_size' => '标志大小',
+    'current_logo' => '当前标志',
+    'favicon_updated' => '网站图标更新成功',
+    'logo_updated' => '标志更新成功',
+    'save_settings' => '保存设置',
 ];
 ?>
