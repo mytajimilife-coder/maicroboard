@@ -1,6 +1,6 @@
 <?php
 require_once 'config.php';
-requireLogin();
+// requireLogin()을 제거 - 게시판별로 권한을 체크함
 
 // 게시판 정보 가져오기
 $board = [];
@@ -14,6 +14,24 @@ if ($bo_table) {
     $board = $stmt->fetch();
     
     if ($board) {
+        // 목록 보기 권한 체크
+        $bo_list_level = $board['bo_list_level'] ?? 0;
+        $user_level = $_SESSION['mb_level'] ?? 0;
+        
+        // 레벨 0이면 비회원도 볼 수 있음, 1 이상이면 로그인 및 레벨 체크 필요
+        if ($bo_list_level > 0) {
+            // 로그인이 필요한 경우
+            if (!isset($_SESSION['user'])) {
+                echo "<script>alert('" . ($lang['login_required_for_list'] ?? '목록을 보려면 로그인이 필요합니다.') . "'); location.href='login.php';</script>";
+                exit;
+            }
+            // 레벨 체크
+            if ($user_level < $bo_list_level) {
+                echo "<script>alert('" . ($lang['insufficient_level_for_list'] ?? '목록을 볼 권한이 없습니다.') . "'); history.back();</script>";
+                exit;
+            }
+        }
+        
         $board_skin = $board['bo_skin'] ?? 'default';
         
         // 플러그인 로드

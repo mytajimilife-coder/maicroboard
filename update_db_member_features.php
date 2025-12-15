@@ -56,7 +56,7 @@ try {
 
     // 5. 관리자 계정의 등급을 10으로 설정
     $db->exec("UPDATE mb1_member SET mb_level = 10 WHERE mb_id = 'admin'");
-    echo "✓ 관리자 계정 등급을 10으로 설정했습니다.<br>";
+    echo $lang['admin_level_set'] . "<br>";
 
     echo "<br><strong>" . $lang['db_update_complete'] . "</strong>";
     echo "<br><br><a href='admin/index.php' class='btn'>관리자 페이지로 돌아가기</a>";

@@ -1,9 +1,18 @@
 <?php
 require_once 'config.php';
 
+// 언어 파일 로드
+$lang_code = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ko';
+$lang_file = "lang/{$lang_code}.php";
+if (file_exists($lang_file)) {
+    $lang = require $lang_file;
+} else {
+    $lang = require 'lang/ko.php';
+}
+
 // 관리자 확인
 if (!isAdmin()) {
-    die("관리자만 실행할 수 있습니다.");
+    die($lang['admin_only_exec']);
 }
 
 $db = getDB();
@@ -111,16 +120,16 @@ try {
     $stmt = $db->prepare("INSERT INTO mb1_policy (policy_type, policy_title, policy_content, updated_at) VALUES (?, ?, ?, NOW()) ON DUPLICATE KEY UPDATE policy_title = VALUES(policy_title), policy_content = VALUES(policy_content), updated_at = NOW()");
     $stmt->execute(['privacy_ko', '개인정보 보호정책', $privacy_content]);
 
-    echo "이용약관 및 개인정보보호정책이 성공적으로 업데이트되었습니다.";
-    echo "<br>보안을 위해 이 파일은 자동으로 삭제됩니다.";
+    echo $lang['policies_updated'];
+    echo "<br>" . $lang['file_auto_deleted'];
     echo "<meta http-equiv='refresh' content='3;url=policy.php'>";
-    
+
     // 파일 자동 삭제
     register_shutdown_function(function() {
         @unlink(__FILE__);
     });
-    
+
 } catch (PDOException $e) {
-    echo "오류 발생: " . $e->getMessage();
+    echo $lang['error_occurred'] . ": " . $e->getMessage();
 }
 ?>

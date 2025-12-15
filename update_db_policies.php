@@ -36,17 +36,17 @@ try {
         $default_terms = "<h2>이용약관</h2><p>본 약관은 MicroBoard 서비스 이용에 관한 기본적인 사항을 규정합니다.</p><h3>제1조 (목적)</h3><p>이 약관은 MicroBoard가 제공하는 서비스의 이용조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>";
         
         $stmt = $db->prepare("INSERT INTO mb1_policy (policy_type, policy_title, policy_content) VALUES (?, ?, ?)");
-        $stmt->execute(['terms', '이용약관', $default_terms]);
-        echo "✓ 기본 이용약관 추가 완료<br>";
+        $stmt->execute(['terms', $lang['terms_of_service'], $default_terms]);
+        echo $lang['terms_added'] . "<br>";
     }
 
     $stmt = $db->query("SELECT COUNT(*) FROM mb1_policy WHERE policy_type = 'privacy'");
     if ($stmt->fetchColumn() == 0) {
-        $default_privacy = "<h2>개인정보 보호정책</h2><p>MicroBoard는 이용자의 개인정보를 중요시하며, 관련 법규를 준수합니다.</p><h3>제1조 (수집하는 개인정보 항목)</h3><p>회원가입 시 아이디, 비밀번호를 수집합니다.</p>";
-        
+        $default_privacy = "<h2>" . $lang['privacy_policy'] . "</h2><p>MicroBoard는 이용자의 개인정보를 중요시하며, 관련 법규를 준수합니다.</p><h3>제1조 (수집하는 개인정보 항목)</h3><p>회원가입 시 아이디, 비밀번호를 수집합니다.</p>";
+
         $stmt = $db->prepare("INSERT INTO mb1_policy (policy_type, policy_title, policy_content) VALUES (?, ?, ?)");
-        $stmt->execute(['privacy', '개인정보 보호정책', $default_privacy]);
-        echo "✓ 기본 개인정보 보호정책 추가 완료<br>";
+        $stmt->execute(['privacy', $lang['privacy_policy'], $default_privacy]);
+        echo $lang['privacy_added'] . "<br>";
     }
 
     echo "<br><strong>" . $lang['db_update_complete'] . "</strong>";

@@ -11,6 +11,22 @@ if (!$bo_table) {
     exit;
 }
 
+// 쓰기 권한 체크
+$db = getDB();
+$stmt = $db->prepare('SELECT bo_write_level FROM mb1_board_config WHERE bo_table = ?');
+$stmt->execute([$bo_table]);
+$board_config = $stmt->fetch();
+
+if ($board_config) {
+    $bo_write_level = $board_config['bo_write_level'] ?? 1;
+    $user_level = $_SESSION['mb_level'] ?? 1;
+    
+    if ($user_level < $bo_write_level) {
+        echo "<script>alert('" . ($lang['insufficient_level_for_write'] ?? '글을 쓸 권한이 없습니다.') . "'); history.back();</script>";
+        exit;
+    }
+}
+
 $post = $id ? getPost($bo_table, $id) : [];
 $post['wr_subject'] = $post['wr_subject'] ?? '';
 $post['wr_content'] = $post['wr_content'] ?? '';

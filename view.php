@@ -13,6 +13,22 @@ if (!$bo_table) {
     exit;
 }
 
+// 게시판 권한 체크
+$db = getDB();
+$stmt = $db->prepare('SELECT bo_read_level FROM mb1_board_config WHERE bo_table = ?');
+$stmt->execute([$bo_table]);
+$board_config = $stmt->fetch();
+
+if ($board_config) {
+    $bo_read_level = $board_config['bo_read_level'] ?? 1;
+    $user_level = $_SESSION['mb_level'] ?? 1;
+    
+    if ($user_level < $bo_read_level) {
+        echo "<script>alert('" . ($lang['insufficient_level_for_read'] ?? '글을 읽을 권한이 없습니다.') . "'); history.back();</script>";
+        exit;
+    }
+}
+
 if (!$id || $id <= 0) {
   header('Location: list.php?bo_table=' . $bo_table);
   exit;

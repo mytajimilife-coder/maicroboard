@@ -18,8 +18,8 @@ try {
             PRIMARY KEY (`provider`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ");
-    echo "✓ mb1_oauth_config 테이블 생성 완료<br>";
-    
+    echo $lang['oauth_config_table_created'] . "<br>";
+
     // OAuth 사용자 연동 테이블 생성
     $db->exec("
         CREATE TABLE IF NOT EXISTS `mb1_oauth_users` (
@@ -31,24 +31,24 @@ try {
             KEY `mb_id` (`mb_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ");
-    echo "✓ mb1_oauth_users 테이블 생성 완료<br>";
-    
+    echo $lang['oauth_users_table_created'] . "<br>";
+
     // mb1_member 테이블에 oauth_provider 컬럼 추가 (이미 있으면 무시)
     $stmt = $db->query("SHOW COLUMNS FROM mb1_member LIKE 'oauth_provider'");
     if ($stmt->rowCount() == 0) {
         $db->exec("ALTER TABLE mb1_member ADD COLUMN oauth_provider varchar(50) DEFAULT NULL");
-        echo "✓ mb1_member 테이블에 oauth_provider 컬럼 추가 완료<br>";
+        echo $lang['oauth_provider_column_added'] . "<br>";
     } else {
-        echo "✓ mb1_member 테이블에 oauth_provider 컬럼이 이미 존재합니다.<br>";
+        echo $lang['oauth_provider_column_exists'] . "<br>";
     }
-    
+
     // 기본 OAuth 설정 데이터 삽입
     $providers = ['google', 'line', 'apple'];
     foreach ($providers as $provider) {
         $stmt = $db->prepare("INSERT IGNORE INTO mb1_oauth_config (provider, client_id, client_secret, enabled) VALUES (?, '', '', 0)");
         $stmt->execute([$provider]);
     }
-    echo "✓ 기본 OAuth 설정 데이터 추가 완료<br>";
+    echo $lang['oauth_default_data_added'] . "<br>";
     
     echo "<br><strong>" . $lang['db_update_complete'] . "</strong>";
     

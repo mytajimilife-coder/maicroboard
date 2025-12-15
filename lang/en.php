@@ -304,6 +304,24 @@ return [
     'no_plugins_installed' => 'No plugins installed.',
     'table_name_help' => 'Only letters, numbers, and underscores (_) are allowed.',
     'apple_key_help' => 'For Apple, additional settings like Key ID and Private Key may be required.',
+    
+    // Board Permission Settings
+    'permission_settings' => 'Permission Settings',
+    'list_permission' => 'List View Permission',
+    'read_permission' => 'Read Permission',
+    'write_permission' => 'Write Permission',
+    'level' => 'Level',
+    'all_users' => 'All Users',
+    'guest_users' => 'Including Guests',
+    'admin_only' => 'Admin Only',
+    'permission_help' => 'Level 0 includes guests, Level 1 is members only, Level 10 is admin only.',
+    'permission_denied' => 'Permission denied.',
+    'login_required_for_list' => 'Login required to view the list.',
+    'login_required_for_read' => 'Login required to read posts.',
+    'login_required_for_write' => 'Login required to write posts.',
+    'insufficient_level_for_list' => 'Insufficient permission to view the list.',
+    'insufficient_level_for_read' => 'Insufficient permission to read posts.',
+    'insufficient_level_for_write' => 'Insufficient permission to write posts.',
 
     // Theme Settings
     'theme_settings' => 'Theme Settings',
@@ -321,5 +339,34 @@ return [
     'favicon_updated' => 'Favicon updated successfully',
     'logo_updated' => 'Logo updated successfully',
     'save_settings' => 'Save Settings',
+
+    // Database update messages
+    'admin_level_set' => 'Administrator account level set to 10.',
+    'oauth_config_table_created' => 'mb1_oauth_config table created successfully',
+    'oauth_users_table_created' => 'mb1_oauth_users table created successfully',
+    'oauth_provider_column_added' => 'oauth_provider column added to mb1_member table',
+    'oauth_provider_column_exists' => 'oauth_provider column already exists in mb1_member table',
+    'oauth_default_data_added' => 'Default OAuth configuration data added',
+    'terms_added' => 'Default terms of service added',
+    'privacy_added' => 'Default privacy policy added',
+    'plugins_column_added' => 'bo_plugins column added to mb1_board_config table',
+    'policies_updated' => 'Terms of service and privacy policy updated successfully.',
+    'file_auto_deleted' => 'This file will be automatically deleted for security.',
+    'error_occurred' => 'Error occurred',
+    'database_updated_success' => 'Database updated successfully for plugin system.',
+    'column_added_msg' => 'Added column: %s',
+    'theme_database_updated' => 'Database updated successfully for theme settings.',
+    'free_board_tables_created' => 'Free board tables created successfully.',
+    'db_structure_check' => 'Columns: %s',
+    'bo_plugins_exists' => 'bo_plugins column exists.',
+    'bo_plugins_missing' => 'bo_plugins column MISSING.',
+    'skin_not_found' => 'Skin not found: %s',
+
+    // MIT License text
+    'mit_license' => 'MIT License',
+    'mit_copyright' => 'Copyright (c) 2025 YECHANHO',
+    'mit_permission' => 'Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:',
+    'mit_notice' => 'The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.',
+    'mit_warranty' => 'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.',
 ];
 ?>

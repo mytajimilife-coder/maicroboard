@@ -94,6 +94,12 @@ if ($bg_type === 'image') {
     </script>
 </head>
 <body>
+    <!-- 공지사항 바 -->
+    <div id="notice-bar" style="background: var(--primary-color); color: white; padding: 0.75rem 1rem; text-align: center; position: relative; display: none;">
+        <div id="notice-content" style="font-weight: 600; font-size: 0.9rem;"></div>
+        <button id="close-notice" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer; line-height: 1;">×</button>
+    </div>
+
     <header class="main-header">
         <div class="header-container">
             <div class="logo">
@@ -184,7 +190,7 @@ if ($bg_type === 'image') {
         const toggleBtn = document.getElementById('theme-toggle');
         const iconSun = toggleBtn.querySelector('.icon-sun');
         const iconMoon = toggleBtn.querySelector('.icon-moon');
-        
+
         function updateIcon() {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             if (isDark) {
@@ -195,12 +201,12 @@ if ($bg_type === 'image') {
                 iconMoon.style.display = 'none';
             }
         }
-        
+
         updateIcon();
-        
+
         toggleBtn.addEventListener('click', function() {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            
+
             if (isDark) {
                 document.documentElement.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'light');
@@ -208,8 +214,59 @@ if ($bg_type === 'image') {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
             }
-            
+
             updateIcon();
         });
+
+        // 공지사항 슬라이드 기능
+        const noticeBar = document.getElementById('notice-bar');
+        const noticeContent = document.getElementById('notice-content');
+        const closeNotice = document.getElementById('close-notice');
+
+        // 공지사항 가져오기
+        fetch('<?php echo $root_path; ?>get_notices.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.notices && data.notices.length > 0) {
+                    let currentIndex = 0;
+                    const notices = data.notices;
+
+                    // 공지사항 표시
+                    noticeContent.textContent = notices[currentIndex].title;
+                    noticeBar.style.display = 'block';
+
+                    // 공지사항 클릭 시 공지사항 페이지로 이동
+                    noticeContent.addEventListener('click', function() {
+                        window.location.href = '<?php echo $root_path; ?>notice_view.php?id=' + notices[currentIndex].id;
+                    });
+
+                    // 공지사항 닫기 버튼
+                    closeNotice.addEventListener('click', function() {
+                        noticeBar.style.display = 'none';
+                        localStorage.setItem('noticeHidden', 'true');
+                    });
+
+                    // 오늘은 공지 끄기 기능
+                    if (localStorage.getItem('noticeHidden') === 'true') {
+                        noticeBar.style.display = 'none';
+                    }
+
+                    // 슬라이드 기능 (5초 간격)
+                    if (notices.length > 1) {
+                        setInterval(function() {
+                            currentIndex = (currentIndex + 1) % notices.length;
+                            noticeContent.textContent = notices[currentIndex].title;
+
+                            // 공지사항 클릭 시 공지사항 페이지로 이동
+                            noticeContent.onclick = function() {
+                                window.location.href = '<?php echo $root_path; ?>notice_view.php?id=' + notices[currentIndex].id;
+                            };
+                        }, 5000);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching notices:', error);
+            });
     });
     </script>

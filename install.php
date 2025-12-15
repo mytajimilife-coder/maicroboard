@@ -925,23 +925,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 if (file_exists($license_file)) {
                     echo htmlspecialchars(file_get_contents($license_file));
                 } else {
-                    echo "MIT License\n\n";
-                    echo "Copyright (c) 2025 YECHANHO\n\n";
-                    echo "Permission is hereby granted, free of charge, to any person obtaining a copy\n";
-                    echo "of this software and associated documentation files (the \"Software\"), to deal\n";
-                    echo "in the Software without restriction, including without limitation the rights\n";
-                    echo "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n";
-                    echo "copies of the Software, and to permit persons to whom the Software is\n";
-                    echo "furnished to do so, subject to the following conditions:\n\n";
-                    echo "The above copyright notice and this permission notice shall be included in all\n";
-                    echo "copies or substantial portions of the Software.\n\n";
-                    echo "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n";
-                    echo "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n";
-                    echo "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n";
-                    echo "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n";
-                    echo "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n";
-                    echo "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n";
-                    echo "SOFTWARE.";
+                    echo $lang['mit_license'] . "\n\n";
+                    echo $lang['mit_copyright'] . "\n\n";
+                    echo $lang['mit_permission'] . "\n\n";
+                    echo $lang['mit_notice'] . "\n\n";
+                    echo $lang['mit_warranty'];
                 }
                 ?></pre>
             </div>

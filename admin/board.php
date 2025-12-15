@@ -7,11 +7,27 @@ $db = getDB();
 $action = $_GET['action'] ?? '';
 $bo_table = $_GET['bo_table'] ?? '';
 
-// DB 스키마 자동 업데이트: bo_plugins 컬럼 확인 및 추가
+// DB 스키마 자동 업데이트: bo_plugins 및 권한 컬럼 확인 및 추가
 try {
     $stmt = $db->query("SHOW COLUMNS FROM mb1_board_config LIKE 'bo_plugins'");
     if ($stmt->rowCount() == 0) {
         $db->exec("ALTER TABLE mb1_board_config ADD COLUMN bo_plugins TEXT");
+    }
+    
+    // 권한 레벨 컬럼 추가
+    $stmt = $db->query("SHOW COLUMNS FROM mb1_board_config LIKE 'bo_read_level'");
+    if ($stmt->rowCount() == 0) {
+        $db->exec("ALTER TABLE mb1_board_config ADD COLUMN bo_read_level TINYINT(4) NOT NULL DEFAULT 1");
+    }
+    
+    $stmt = $db->query("SHOW COLUMNS FROM mb1_board_config LIKE 'bo_write_level'");
+    if ($stmt->rowCount() == 0) {
+        $db->exec("ALTER TABLE mb1_board_config ADD COLUMN bo_write_level TINYINT(4) NOT NULL DEFAULT 1");
+    }
+    
+    $stmt = $db->query("SHOW COLUMNS FROM mb1_board_config LIKE 'bo_list_level'");
+    if ($stmt->rowCount() == 0) {
+        $db->exec("ALTER TABLE mb1_board_config ADD COLUMN bo_list_level TINYINT(4) NOT NULL DEFAULT 0");
     }
 } catch (Exception $e) {
     // 오류 무시 (권한 문제 등)
@@ -43,7 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['act']) && $_POST['act
     'bo_list_count' => (int)$_POST['bo_list_count'],
     'bo_use_comment' => isset($_POST['bo_use_comment']) ? 1 : 0,
     'bo_skin' => $_POST['bo_skin'] ?? 'default',
-    'bo_plugins' => $bo_plugins
+    'bo_plugins' => $bo_plugins,
+    'bo_read_level' => (int)($_POST['bo_read_level'] ?? 1),
+    'bo_write_level' => (int)($_POST['bo_write_level'] ?? 1),
+    'bo_list_level' => (int)($_POST['bo_list_level'] ?? 0)
   ];
   
   // 기존 게시판인지 확인
@@ -59,7 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['act']) && $_POST['act
     bo_list_count = :bo_list_count, 
     bo_use_comment = :bo_use_comment,
     bo_skin = :bo_skin,
-    bo_plugins = :bo_plugins";
+    bo_plugins = :bo_plugins,
+    bo_read_level = :bo_read_level,
+    bo_write_level = :bo_write_level,
+    bo_list_level = :bo_list_level";
   
   $stmt = $db->prepare($sql);
   $stmt->execute($data);
@@ -366,6 +388,48 @@ if (is_dir($plugin_dir)) {
               <?php echo $lang['use_comment_label']; ?>
             </label>
           </div>
+      </div>
+      
+      <div class="plugin-section">
+        <label style="display: block; margin-bottom: 1rem; font-weight: 600; color: var(--secondary-color);">🔐 <?php echo $lang['permission_settings'] ?? '권한 설정'; ?></label>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          <div class="form-group">
+            <label><?php echo $lang['list_permission'] ?? '목록 보기 권한'; ?></label>
+            <select name="bo_list_level" class="form-control">
+              <option value="0" <?php echo ($board['bo_list_level'] ?? 0) == 0 ? 'selected' : ''; ?>>
+                <?php echo $lang['level'] ?? '레벨'; ?> 0 (<?php echo $lang['guest_users'] ?? '비회원 포함'; ?>)
+              </option>
+              <?php for ($i = 1; $i <= 10; $i++): ?>
+                <option value="<?php echo $i; ?>" <?php echo ($board['bo_list_level'] ?? 0) == $i ? 'selected' : ''; ?>>
+                  <?php echo $lang['level'] ?? '레벨'; ?> <?php echo $i; ?><?php echo $i == 1 ? ' (' . ($lang['all_users'] ?? '모든 사용자') . ')' : ($i == 10 ? ' (' . ($lang['admin_only'] ?? '관리자만') . ')' : ''); ?>
+                </option>
+              <?php endfor; ?>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><?php echo $lang['read_permission'] ?? '읽기 권한'; ?></label>
+            <select name="bo_read_level" class="form-control">
+              <?php for ($i = 1; $i <= 10; $i++): ?>
+                <option value="<?php echo $i; ?>" <?php echo ($board['bo_read_level'] ?? 1) == $i ? 'selected' : ''; ?>>
+                  <?php echo $lang['level'] ?? '레벨'; ?> <?php echo $i; ?><?php echo $i == 1 ? ' (' . ($lang['all_users'] ?? '모든 사용자') . ')' : ($i == 10 ? ' (' . ($lang['admin_only'] ?? '관리자만') . ')' : ''); ?>
+                </option>
+              <?php endfor; ?>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><?php echo $lang['write_permission'] ?? '쓰기 권한'; ?></label>
+            <select name="bo_write_level" class="form-control">
+              <?php for ($i = 1; $i <= 10; $i++): ?>
+                <option value="<?php echo $i; ?>" <?php echo ($board['bo_write_level'] ?? 1) == $i ? 'selected' : ''; ?>>
+                  <?php echo $lang['level'] ?? '레벨'; ?> <?php echo $i; ?><?php echo $i == 1 ? ' (' . ($lang['all_users'] ?? '모든 사용자') . ')' : ($i == 10 ? ' (' . ($lang['admin_only'] ?? '관리자만') . ')' : ''); ?>
+                </option>
+              <?php endfor; ?>
+            </select>
+          </div>
+        </div>
+        <small style="color: var(--text-light); display: block; margin-top: 0.5rem;">
+          💡 <?php echo $lang['permission_help'] ?? '레벨 1은 모든 사용자, 레벨 10은 관리자만 접근 가능합니다.'; ?>
+        </small>
       </div>
       
       <div class="plugin-section">
