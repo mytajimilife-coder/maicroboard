@@ -29,5 +29,21 @@
             });
         });
     </script>
+    
+    <?php
+    // 푸터 추가 스크립트
+    try {
+        $db = getDB();
+        $stmt = $db->query("SELECT footer_script FROM mb1_seo_config WHERE id = 1");
+        $seo_config = $stmt->fetch();
+        
+        if ($seo_config && !empty($seo_config['footer_script'])) {
+            echo "<!-- Custom Footer Script -->\n    ";
+            echo $seo_config['footer_script'] . "\n    ";
+        }
+    } catch (Exception $e) {
+        // SEO 테이블이 없을 경우 무시
+    }
+    ?>
 </body>
 </html>

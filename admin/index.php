@@ -58,6 +58,12 @@ require_once 'common.php';
                 <div style="font-weight: 600; font-size: 1.1rem;">Notice Management</div>
             </div>
         </a>
+        <a href="seo.php" style="text-decoration: none; color: inherit;">
+            <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border-color); text-align: center; transition: transform 0.2s; box-shadow: var(--shadow-sm);">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔍</div>
+                <div style="font-weight: 600; font-size: 1.1rem;"><?php echo $lang['seo_settings'] ?? 'SEO Settings'; ?></div>
+            </div>
+        </a>
     </div>
 </div>
 

@@ -139,7 +139,7 @@ $posts = loadPosts($bo_table, $page, $limit, $stx, $sfl);
       ];
     }, array_keys($posts), $posts);
     
-    // 스킨 파일 로드
+    // 스킨 파일 로드 (검색 변수 포함)
     include $skin_path;
   } else {
     echo "Skin not found: $skin_path";

@@ -61,6 +61,58 @@ if ($bg_type === 'image') {
     <meta name="twitter:description" content="<?php echo htmlspecialchars($meta_description); ?>">
     <meta name="twitter:image" content="<?php echo htmlspecialchars($og_image); ?>">
     
+    <?php
+    // SEO 설정 불러오기
+    try {
+        $db = getDB();
+        $stmt = $db->query("SELECT * FROM mb1_seo_config WHERE id = 1");
+        $seo_config = $stmt->fetch();
+        
+        if ($seo_config) {
+            // Bing Webmaster 인증
+            if (!empty($seo_config['bing_verification'])) {
+                echo '<meta name="msvalidate.01" content="' . htmlspecialchars($seo_config['bing_verification']) . '">' . "\n    ";
+            }
+            
+            // Google Search Console 인증
+            if (!empty($seo_config['google_search_console'])) {
+                echo '<meta name="google-site-verification" content="' . htmlspecialchars($seo_config['google_search_console']) . '">' . "\n    ";
+            }
+            
+            // Google Analytics (GA4)
+            if (!empty($seo_config['google_analytics'])) {
+                $ga_id = htmlspecialchars($seo_config['google_analytics']);
+                echo "<!-- Google Analytics -->\n    ";
+                echo "<script async src=\"https://www.googletagmanager.com/gtag/js?id={$ga_id}\"></script>\n    ";
+                echo "<script>\n      window.dataLayer = window.dataLayer || [];\n      function gtag(){dataLayer.push(arguments);}\n      gtag('js', new Date());\n      gtag('config', '{$ga_id}');\n    </script>\n    ";
+            }
+            
+            // Google Tag Manager (Head)
+            if (!empty($seo_config['google_tag_manager'])) {
+                $gtm_id = htmlspecialchars($seo_config['google_tag_manager']);
+                echo "<!-- Google Tag Manager -->\n    ";
+                echo "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n    })(window,document,'script','dataLayer','{$gtm_id}');</script>\n    ";
+                echo "<!-- End Google Tag Manager -->\n    ";
+            }
+            
+            // Google AdSense
+            if (!empty($seo_config['google_adsense'])) {
+                $adsense_id = htmlspecialchars($seo_config['google_adsense']);
+                echo "<!-- Google AdSense -->\n    ";
+                echo "<script async src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={$adsense_id}\" crossorigin=\"anonymous\"></script>\n    ";
+            }
+            
+            // 헤더 추가 스크립트
+            if (!empty($seo_config['header_script'])) {
+                echo "<!-- Custom Header Script -->\n    ";
+                echo $seo_config['header_script'] . "\n    ";
+            }
+        }
+    } catch (Exception $e) {
+        // SEO 테이블이 없을 경우 무시
+    }
+    ?>
+    
     <link rel="stylesheet" href="<?php echo $root_path; ?>skin/default/style.css">
     <link rel="icon" type="image/svg+xml" href="<?php echo $root_path; ?>img/favicon.svg">
     <link rel="alternate icon" href="<?php echo $root_path; ?>img/favicon.svg">
@@ -94,6 +146,19 @@ if ($bg_type === 'image') {
     </script>
 </head>
 <body>
+    <?php
+    // Google Tag Manager (Body) - noscript 버전
+    try {
+        if (isset($seo_config) && !empty($seo_config['google_tag_manager'])) {
+            $gtm_id = htmlspecialchars($seo_config['google_tag_manager']);
+            echo "<!-- Google Tag Manager (noscript) -->\n    ";
+            echo "<noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id={$gtm_id}\"\n    height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>\n    ";
+            echo "<!-- End Google Tag Manager (noscript) -->\n    ";
+        }
+    } catch (Exception $e) {
+        // 무시
+    }
+    ?>
     <!-- 공지사항 바 -->
     <div id="notice-bar" style="background: var(--primary-color); color: white; padding: 0.75rem 1rem; text-align: center; position: relative; display: none;">
         <div id="notice-content" style="font-weight: 600; font-size: 0.9rem;"></div>
@@ -128,11 +193,14 @@ if ($bg_type === 'image') {
                 <ul class="nav-menu">
                     <?php if (isLoggedIn()): ?>
                         <li><a href="<?php echo $root_path; ?>list.php"><?php echo $lang['board_list']; ?></a></li>
+                        <li><a href="<?php echo $root_path; ?>search.php">🔍 <?php echo $lang['integrated_search'] ?? '통합검색'; ?></a></li>
                         <li><a href="<?php echo $root_path; ?>user/mypage.php"><?php echo $lang['mypage']; ?></a></li>
                         <?php if (isAdmin()): ?>
                             <li><a href="<?php echo $root_path; ?>admin/index.php"><?php echo $lang['admin_home']; ?></a></li>
                             <li><a href="<?php echo $root_path; ?>admin/users.php"><?php echo $lang['user_management']; ?></a></li>
                         <?php endif; ?>
+                    <?php else: ?>
+                        <li><a href="<?php echo $root_path; ?>search.php">🔍 <?php echo $lang['integrated_search'] ?? '통합검색'; ?></a></li>
                     <?php endif; ?>
                 </ul>
             </nav>
