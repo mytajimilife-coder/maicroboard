@@ -6,10 +6,15 @@ session_start();
 
 // DB 설정 상수 정의 (config.php 없이도 작동하도록)
 if (!defined('DB_HOST')) {
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');
-    define('DB_NAME', 'microboard');
+    $db_config_file = __DIR__ . '/config_db.php';
+    if (file_exists($db_config_file)) {
+        require_once $db_config_file;
+    } else {
+        define('DB_HOST', 'localhost');
+        define('DB_USER', 'root');
+        define('DB_PASS', '');
+        define('DB_NAME', 'microboard');
+    }
 }
 
 // 이미 설치되었는지 확인 (DB 연결 테스트)
@@ -408,34 +413,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     $stmt->execute(['privacy', $policies['en']['privacy_title'], $policies['en']['privacy']]);
                 }
                 
-                // config.php 파일 업데이트 (DB 정보만 수정)
-                $config_path = __DIR__ . '/config.php';
-                $config_content = file_get_contents($config_path);
-                
-                // DB 설정 부분만 교체
-                // DB 설정 부분만 교체 (정규식 개선)
-                $config_content = preg_replace(
-                    "/define\s*\(\s*'DB_HOST'\s*,\s*'[^']*'\s*\)\s*;/",
-                    "define('DB_HOST', '{$db_host}');",
-                    $config_content
-                );
-                $config_content = preg_replace(
-                    "/define\s*\(\s*'DB_USER'\s*,\s*'[^']*'\s*\)\s*;/",
-                    "define('DB_USER', '{$db_user}');",
-                    $config_content
-                );
-                $config_content = preg_replace(
-                    "/define\s*\(\s*'DB_PASS'\s*,\s*'[^']*'\s*\)\s*;/",
-                    "define('DB_PASS', '" . addslashes($db_pass) . "');",
-                    $config_content
-                );
-                $config_content = preg_replace(
-                    "/define\s*\(\s*'DB_NAME'\s*,\s*'[^']*'\s*\)\s*;/",
-                    "define('DB_NAME', '{$db_name}');",
-                    $config_content
-                );
-                
-                file_put_contents($config_path, $config_content);
+                // config_db.php 파일 생성 (확실한 설정 저장)
+                $db_config_content = "<?php
+define('DB_HOST', '{$db_host}');
+define('DB_USER', '{$db_user}');
+define('DB_PASS', '" . addslashes($db_pass) . "');
+define('DB_NAME', '{$db_name}');
+";
+                file_put_contents(__DIR__ . '/config_db.php', $db_config_content);
                 
                 $success = $lang['installation_success'];
                 

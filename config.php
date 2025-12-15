@@ -2,10 +2,16 @@
 session_start();
 
 // DB 설정 - 웹호스팅에서 수정하세요 (예: cPanel의 MySQL 정보)
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'microboard');
+// DB 설정 - config_db.php 파일에서 로드
+$db_config_file = __DIR__ . '/config_db.php';
+if (file_exists($db_config_file)) {
+    require_once $db_config_file;
+} else {
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+    define('DB_NAME', 'microboard');
+}
 
 // 버전 정보
 define('MICROBOARD_VERSION', '1.0.0');
