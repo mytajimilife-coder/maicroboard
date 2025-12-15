@@ -25,8 +25,34 @@ if (file_exists('config.php')) {
         $stmt = $test_pdo->query("SHOW TABLES LIKE 'mb1_member'");
         if ($stmt->rowCount() > 0) {
             $already_installed = true;
-            // 설치 완료 후에는 install.php에 접근할 수 없게 차단
-            die('<h1>Installation Already Complete</h1><p>MicroBoard has already been installed. Please access the <a href="index.php">main page</a>.</p>');
+            // 설치 완료 후 접근 차단 (보안 강화)
+            die('<!DOCTYPE html>
+<html>
+<head>
+    <title>Installation Complete</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f3f4f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 90%; }
+        h1 { color: #111827; margin: 0 0 1rem 0; font-size: 1.5rem; }
+        p { color: #4b5563; line-height: 1.5; margin-bottom: 1.5rem; }
+        .btn { display: inline-block; background: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; transition: background 0.2s; }
+        .btn:hover { background: #4338ca; }
+        .warning { background: #fee2e2; color: #991b1b; padding: 12px; border-radius: 6px; font-size: 0.9em; margin-top: 20px; border: 1px solid #fecaca; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ 설치 완료됨</h1>
+        <p>MicroBoard가 이미 설치되어 있습니다.<br>메인 페이지로 이동하세요.</p>
+        <a href="index.php" class="btn">메인으로 이동</a>
+        <div class="warning">
+            ⚠️ <strong>보안 경고</strong><br>설치가 완료되었다면 서버에서<br><code>install.php</code> 파일을 반드시 삭제해주세요.
+        </div>
+    </div>
+</body>
+</html>');
         }
     } catch (Exception $e) {
         // 연결 실패 시 설치 계속 진행
@@ -225,13 +251,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 
                 $pdo->exec($sql);
                 
-                // 기본 관리자 사용자 생성
+                // 스키마 보정 (기존 테이블이 있을 경우 대비)
+                try { $pdo->exec("ALTER TABLE mb1_config ADD COLUMN cf_site_title varchar(255) NOT NULL DEFAULT 'MicroBoard'"); } catch(Exception $e) {}
+                try { $pdo->exec("ALTER TABLE mb1_member ADD COLUMN mb_nickname varchar(100) NOT NULL"); } catch(Exception $e) {}
+                try { $pdo->exec("ALTER TABLE mb1_member ADD COLUMN mb_email varchar(100) NOT NULL"); } catch(Exception $e) {}
+
+                // 기본 관리자 사용자 생성 (이미 존재하면 업데이트)
                 $password_hash = password_hash($admin_password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO mb1_member (mb_id, mb_password, mb_nickname, mb_email, mb_level) VALUES (?, ?, ?, ?, 10)");
+                $stmt = $pdo->prepare("INSERT INTO mb1_member (mb_id, mb_password, mb_nickname, mb_email, mb_level) VALUES (?, ?, ?, ?, 10) ON DUPLICATE KEY UPDATE mb_password = VALUES(mb_password), mb_nickname = VALUES(mb_nickname), mb_email = VALUES(mb_email), mb_level = 10");
                 $stmt->execute([$admin_username, $password_hash, $admin_username, 'admin@example.com']);
                 
-                // 기본 게시판 생성
-                $stmt = $pdo->prepare("INSERT INTO mb1_board_config (bo_table, bo_subject) VALUES ('free', ?)");
+                // 기본 게시판 생성 (중복 무시)
+                $stmt = $pdo->prepare("INSERT IGNORE INTO mb1_board_config (bo_table, bo_subject) VALUES ('free', ?)");
                 $stmt->execute([$lang['free_board']]);
 
                 // 기본 게시판 테이블 생성 (이 부분이 누락되어 있었음)
@@ -277,12 +308,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 // OAuth 기본 설정 추가
                 $providers = ['google', 'line', 'apple'];
                 foreach ($providers as $provider) {
-                    $stmt = $pdo->prepare("INSERT INTO mb1_oauth_config (provider, client_id, client_secret, enabled) VALUES (?, '', '', 0)");
+                    $stmt = $pdo->prepare("INSERT IGNORE INTO mb1_oauth_config (provider, client_id, client_secret, enabled) VALUES (?, '', '', 0)");
                     $stmt->execute([$provider]);
                 }
                 
-                // 기본 설정 추가
-                $stmt = $pdo->prepare("INSERT INTO mb1_config (cf_use_point, cf_write_point, cf_site_title) VALUES (0, 0, ?)");
+                // 기본 설정 추가 (이미 있으면 무시, 수동 업데이트 필요시 관리자 페이지 등 이용)
+                $stmt = $pdo->prepare("INSERT INTO mb1_config (cf_use_point, cf_write_point, cf_site_title) VALUES (0, 0, ?) ON DUPLICATE KEY UPDATE cf_site_title = VALUES(cf_site_title)");
                 $stmt->execute([$site_title]);
                 
                 // 다국어 정책 데이터 준비
