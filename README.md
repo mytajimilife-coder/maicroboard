@@ -45,10 +45,13 @@ It is built with **vanilla PHP and MySQL**, making it easy to deploy on any stan
 
 ### 👥 Community Engagement
 
-
 - **Point System:** Reward users for posting, commenting, and logging in. Configurable levels and ranks.
 - **Member Levels:** 10-tier ranking system with automatic promotion capabilities.
 - **Social Login (OAuth):** One-click sign-in with **Google**, **LINE**, and **Apple**.
+- **Post Likes:** Users can like/recommend posts with real-time counter updates.
+- **Report System:** Built-in content moderation with user reporting and admin review.
+- **Visit Statistics:** Track daily/monthly visitors, unique users, and page views.
+
 
 ### 🛠️ Powerful Extensibility
 
@@ -63,6 +66,10 @@ It is built with **vanilla PHP and MySQL**, making it easy to deploy on any stan
 - **Policy Management:** Auto-generating "Terms of Service" and "Privacy Policy" in 4 languages.
 - **Two-Factor Authentication (2FA):** Email-based 2FA system for enhanced account security. Users can enable 2FA in their profile settings, and administrators can control 2FA availability through email settings.
 - **Advanced Permission System:** Granular control over board access with 10-tier level system for list, read, and write permissions.
+- **Password Reset:** Secure password recovery via email with time-limited tokens.
+- **IP Ban System:** Block unwanted access by IP address with optional expiration dates.
+- **Report System:** Users can report inappropriate posts/comments with admin review workflow.
+
 
 ### 🔍 Advanced Search Capabilities
 

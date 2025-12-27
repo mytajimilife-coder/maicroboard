@@ -425,6 +425,11 @@ require_once 'inc/header.php';
     
     <div class="login-footer">
       <p><?php echo $lang['first_visit']; ?> <a href="register.php"><?php echo $lang['register']; ?></a></p>
+      <p style="margin-top: 0.5rem;">
+        <a href="password_reset.php" style="font-size: 0.85rem;">
+          🔑 <?php echo $lang['forgot_password'] ?? '비밀번호를 잊으셨나요?'; ?>
+        </a>
+      </p>
     </div>
   </div>
 </div>

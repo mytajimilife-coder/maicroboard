@@ -353,6 +353,17 @@ function getFile($bo_table, $bf_no) {
     } catch(Exception $e) { return null; }
 }
 
+function incrementDownload($bo_table, $bf_no) {
+    if (empty($bo_table)) return;
+    $db = getDB();
+    $file_table = 'mb1_board_file_' . preg_replace('/[^a-zA-Z0-9_]/', '', $bo_table);
+    try {
+        $stmt = $db->prepare("UPDATE {$file_table} SET bf_download = bf_download + 1 WHERE bf_no = ?");
+        $stmt->execute([$bf_no]);
+    } catch(Exception $e) {}
+}
+
+
 // 댓글 관련 함수
 function getComments($bo_table, $wr_id) {
     $db = getDB();

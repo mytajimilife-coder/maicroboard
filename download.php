@@ -20,8 +20,9 @@ if (!file_exists($filepath)) {
     die('파일을 찾을 수 없습니다.');
 }
 
-// 다운로드 횟수 증가 (필요하다면)
-// incrementDownload($bf_no);
+// 다운로드 횟수 증가
+incrementDownload($_GET['bo_table'] ?? '', $bf_no);
+
 
 $original_name = $file['bf_source'];
 
