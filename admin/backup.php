@@ -60,10 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $output .= "SET FOREIGN_KEY_CHECKS=1;\n";
             
             file_put_contents($filepath, $output);
-            $message = $lang['backup_success'] ?? "백업이 성공적으로 생성되었습니다: $filename";
+            $message = isset($lang['backup_success']) ? $lang['backup_success'] . ": $filename" : "Backup created successfully: $filename";
             
         } catch (Exception $e) {
-            $error = $lang['backup_failed'] ?? "백업 실패: " . $e->getMessage();
+            $error = isset($lang['backup_failed']) ? $lang['backup_failed'] . ": " . $e->getMessage() : "Backup failed: " . $e->getMessage();
         }
     } elseif ($_POST['action'] === 'restore' && isset($_FILES['backup_file'])) {
         try {
@@ -78,21 +78,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $db->exec($sql);
                 
                 $db->commit();
-                $message = $lang['restore_success'] ?? "데이터베이스가 성공적으로 복원되었습니다.";
+                $message = $lang['restore_success'] ?? "Database restored successfully.";
             } else {
-                $error = $lang['file_upload_error'] ?? "파일 업로드 오류";
+                $error = $lang['file_upload_error'] ?? "File upload error";
             }
         } catch (Exception $e) {
             $db->rollBack();
-            $error = $lang['restore_failed'] ?? "복원 실패: " . $e->getMessage();
+            $error = isset($lang['restore_failed']) ? $lang['restore_failed'] . ": " . $e->getMessage() : "Restore failed: " . $e->getMessage();
         }
     } elseif ($_POST['action'] === 'delete' && isset($_POST['filename'])) {
         $filename = basename($_POST['filename']);
         $filepath = __DIR__ . '/../data/backup/' . $filename;
         if (file_exists($filepath) && unlink($filepath)) {
-            $message = $lang['delete_success'] ?? "백업 파일이 삭제되었습니다.";
+            $message = $lang['backup_deleted'] ?? "Backup file has been deleted.";
         } else {
-            $error = $lang['delete_failed'] ?? "파일 삭제 실패";
+            $error = $lang['delete_failed'] ?? "Delete failed";
         }
     }
 }
@@ -133,36 +133,36 @@ include 'common.php';
     <?php endif; ?>
     
     <div class="card">
-        <h3>🔄 새 백업 생성</h3>
-        <p><?php echo $lang['backup_description'] ?? '현재 데이터베이스의 전체 백업을 생성합니다.'; ?></p>
+        <h3>🔄 <?php echo $lang['create_new_backup'] ?? 'Create New Backup'; ?></h3>
+        <p><?php echo $lang['backup_description'] ?? 'Create a full backup of the current database.'; ?></p>
         <form method="post" style="margin-top: 1rem;">
             <input type="hidden" name="action" value="backup">
-            <button type="submit" class="btn btn-primary">백업 생성</button>
+            <button type="submit" class="btn btn-primary"><?php echo $lang['create_backup'] ?? 'Create Backup'; ?></button>
         </form>
     </div>
     
     <div class="card" style="margin-top: 2rem;">
-        <h3>📥 백업 복원</h3>
-        <p><?php echo $lang['restore_description'] ?? '백업 파일에서 데이터베이스를 복원합니다. 주의: 현재 데이터가 모두 삭제됩니다!'; ?></p>
-        <form method="post" enctype="multipart/form-data" style="margin-top: 1rem;" onsubmit="return confirm('정말로 복원하시겠습니까? 현재 데이터가 모두 삭제됩니다!');">
+        <h3>📥 <?php echo $lang['restore_backup_title'] ?? 'Restore Backup'; ?></h3>
+        <p><?php echo $lang['restore_description'] ?? 'Restore the database from a backup file. Warning: All current data will be deleted!'; ?></p>
+        <form method="post" enctype="multipart/form-data" style="margin-top: 1rem;" onsubmit="return confirm('<?php echo $lang['confirm_restore'] ?? 'Are you sure you want to restore? All current data will be deleted!'; ?>');">
             <input type="hidden" name="action" value="restore">
             <input type="file" name="backup_file" accept=".sql" required>
-            <button type="submit" class="btn btn-warning" style="margin-top: 0.5rem;">복원 실행</button>
+            <button type="submit" class="btn btn-warning" style="margin-top: 0.5rem;"><?php echo $lang['run_restore'] ?? 'Run Restore'; ?></button>
         </form>
     </div>
     
     <div class="card" style="margin-top: 2rem;">
-        <h3>📂 백업 파일 목록</h3>
+        <h3>📂 <?php echo $lang['backup_file_list'] ?? 'Backup File List'; ?></h3>
         <?php if (empty($backup_files)): ?>
-            <p><?php echo $lang['no_backups'] ?? '백업 파일이 없습니다.'; ?></p>
+            <p><?php echo $lang['no_backups'] ?? 'No backup files found.'; ?></p>
         <?php else: ?>
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th><?php echo $lang['filename'] ?? '파일명'; ?></th>
-                        <th><?php echo $lang['size'] ?? '크기'; ?></th>
-                        <th><?php echo $lang['date'] ?? '날짜'; ?></th>
-                        <th><?php echo $lang['actions'] ?? '작업'; ?></th>
+                        <th><?php echo $lang['filename'] ?? 'Filename'; ?></th>
+                        <th><?php echo $lang['size'] ?? 'Size'; ?></th>
+                        <th><?php echo $lang['date'] ?? 'Date'; ?></th>
+                        <th><?php echo $lang['actions'] ?? 'Actions'; ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -172,11 +172,11 @@ include 'common.php';
                             <td><?php echo number_format($file['size'] / 1024, 2); ?> KB</td>
                             <td><?php echo date('Y-m-d H:i:s', $file['date']); ?></td>
                             <td>
-                                <a href="../data/backup/<?php echo urlencode($file['name']); ?>" download class="btn btn-sm">다운로드</a>
-                                <form method="post" style="display: inline;" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+                                <a href="../data/backup/<?php echo urlencode($file['name']); ?>" download class="btn btn-sm"><?php echo $lang['download'] ?? 'Download'; ?></a>
+                                <form method="post" style="display: inline;" onsubmit="return confirm('<?php echo $lang['delete_confirm'] ?? 'Are you sure you want to delete?'; ?>');">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="filename" value="<?php echo htmlspecialchars($file['name']); ?>">
-                                    <button type="submit" class="btn btn-sm btn-danger">삭제</button>
+                                    <button type="submit" class="btn btn-sm btn-danger"><?php echo $lang['delete'] ?? 'Delete'; ?></button>
                                 </form>
                             </td>
                         </tr>

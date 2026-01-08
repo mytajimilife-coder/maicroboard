@@ -57,19 +57,19 @@ function formatSize($bytes) {
     <div class="stat-box" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border-color);">
         <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem;"><?php echo $lang['total_posts'] ?? 'Total Posts'; ?></div>
         <div style="font-size: 1.75rem; font-weight: 700; color: #8b5cf6;"><?php echo number_format($total_posts); ?></div>
-        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #6b7280;"><?php echo $board_count; ?> Boards</div>
+        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #6b7280;"><?php echo $board_count; ?> <?php echo $lang['board'] ?? 'Boards'; ?></div>
     </div>
     <div class="stat-box" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border-color);">
         <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem;"><?php echo $lang['total_size'] ?? 'Storage Used'; ?></div>
         <div style="font-size: 1.75rem; font-weight: 700; color: #f59e0b;"><?php echo formatSize($file_stats['total_size'] ?? 0); ?></div>
-        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #6b7280;"><?php echo $file_stats['count'] ?? 0; ?> Files</div>
+        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #6b7280;"><?php echo $file_stats['count'] ?? 0; ?> <?php echo $lang['total_files'] ?? 'Files'; ?></div>
     </div>
     <div class="stat-box" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border-color);">
         <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem;"><?php echo $lang['latest_backup'] ?? 'Latest Backup'; ?></div>
         <div style="font-size: 1.1rem; font-weight: 700; color: #3b82f6; margin-top: 0.25rem;">
-            <?php echo $latest_backup ?? 'No Backups Found'; ?>
+            <?php echo $latest_backup ?? ($lang['no_backups'] ?? 'No Backups Found'); ?>
         </div>
-        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #6b7280;">Auto backup status: OK</div>
+        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #6b7280;"><?php echo $lang['auto_backup_status'] ?? 'Auto backup status'; ?>: OK</div>
     </div>
 </div>
 
@@ -78,7 +78,7 @@ function formatSize($bytes) {
     <div class="admin-card" style="margin: 0; padding: 1.5rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h3 style="margin: 0;">📋 <?php echo $lang['admin_logs'] ?? 'Recent Activity'; ?></h3>
-            <a href="logs.php" style="font-size: 0.875rem; color: var(--primary-color); text-decoration: none;">View All →</a>
+            <a href="logs.php" style="font-size: 0.875rem; color: var(--primary-color); text-decoration: none;"><?php echo $lang['view_all'] ?? 'View All'; ?> &rarr;</a>
         </div>
         <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
             <thead>
@@ -90,7 +90,7 @@ function formatSize($bytes) {
             </thead>
             <tbody>
                 <?php if (empty($recent_logs)): ?>
-                    <tr><td colspan="3" style="padding: 2rem; text-align: center; color: #9ca3af;">No recent logs.</td></tr>
+                    <tr><td colspan="3" style="padding: 2rem; text-align: center; color: #9ca3af;"><?php echo $lang['no_recent_logs'] ?? 'No recent logs.'; ?></td></tr>
                 <?php else: ?>
                     <?php foreach ($recent_logs as $log): ?>
                         <tr style="border-bottom: 1px solid #f3f4f6;">
@@ -110,12 +110,12 @@ function formatSize($bytes) {
 
     <!-- 빠른 실행 메뉴 -->
     <div class="admin-card" style="margin: 0; padding: 1.5rem;">
-        <h3 style="margin: 0 0 1.5rem 0;">⚡ Quick Access</h3>
+        <h3 style="margin: 0 0 1.5rem 0;">⚡ <?php echo $lang['quick_access'] ?? 'Quick Access'; ?></h3>
         <div style="display: grid; gap: 0.75rem;">
-            <a href="backup.php" class="quick-link">💾 Backup Database</a>
-            <a href="file_manager.php" class="quick-link">📁 Clean Up Files</a>
-            <a href="users.php" class="quick-link">👥 Manage Members</a>
-            <a href="config.php" class="quick-link">⚙️ System Settings</a>
+            <a href="backup.php" class="quick-link">💾 <?php echo $lang['create_backup'] ?? 'Backup Database'; ?></a>
+            <a href="file_manager.php" class="quick-link">📁 <?php echo $lang['clean_up_files'] ?? 'Clean Up Files'; ?></a>
+            <a href="users.php" class="quick-link">👥 <?php echo $lang['manage_members'] ?? 'Manage Members'; ?></a>
+            <a href="config.php" class="quick-link">⚙️ <?php echo $lang['system_settings'] ?? 'System Settings'; ?></a>
         </div>
         <style>
             .quick-link {
@@ -183,10 +183,5 @@ function formatSize($bytes) {
         background: white;
     }
 </style>
-</body>
-</html>
-
-</main> <!-- admin-main end -->
-</div> <!-- admin-layout end -->
 </body>
 </html>
